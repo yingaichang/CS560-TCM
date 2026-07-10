@@ -23,7 +23,7 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <main className="bg-white">
+    <main className="bg-cream">
       <Header />
       <HeroBanner />
       <AboutSection />

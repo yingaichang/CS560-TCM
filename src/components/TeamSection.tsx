@@ -13,7 +13,7 @@ const doctors: Doctor[] = [
     name: '李明智',
     title: '院長',
     specialty: '內科調理',
-    experience: '25年臨床經驗',
+    experience: '15年臨床經驗',
     bio: '國家高級中醫師，擅長體質調理與慢性病管理，深受患者信賴。',
   },
   {
@@ -21,7 +21,7 @@ const doctors: Doctor[] = [
     name: '王芳妤',
     title: '主任醫師',
     specialty: '婦科調理',
-    experience: '18年臨床經驗',
+    experience: '8年臨床經驗',
     bio: '專攻女性健康，特別擅長月經調理與更年期症狀改善。',
   },
   {

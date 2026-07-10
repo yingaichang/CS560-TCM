@@ -1,10 +1,12 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 
 export default function ContactSection() {
   const [isLoading, setIsLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,9 +15,7 @@ export default function ContactSection() {
   })
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
     setFormData((prev) => ({
@@ -27,6 +27,8 @@ export default function ContactSection() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
+    setErrorMessage('')
+    setSuccessMessage('')
 
     try {
       const response = await fetch('/api/contact', {
@@ -37,8 +39,11 @@ export default function ContactSection() {
         body: JSON.stringify(formData),
       })
 
+      const data = await response.json().catch(() => null)
+
       if (response.ok) {
         setSubmitted(true)
+        setSuccessMessage(data?.message || '✓ 感謝您的訊息！我們會盡快回覆。')
         setFormData({
           name: '',
           email: '',
@@ -48,10 +53,16 @@ export default function ContactSection() {
 
         setTimeout(() => {
           setSubmitted(false)
+          setSuccessMessage('')
         }, 5000)
+      } else {
+        setSubmitted(false)
+        setErrorMessage(data?.error || '送出失敗，請稍後再試。')
       }
     } catch (error) {
       console.error('Error submitting form:', error)
+      setSubmitted(false)
+      setErrorMessage('網路異常，請稍後再試。')
     } finally {
       setIsLoading(false)
     }
@@ -122,11 +133,17 @@ export default function ContactSection() {
               發送訊息給我們
             </h3>
 
-            {submitted && (
+            {submitted && successMessage && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-green-800 font-medium">
-                  ✓ 感謝您的訊息！我們會盡快回覆。
+                  {successMessage}
                 </p>
+              </div>
+            )}
+
+            {errorMessage && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-700 font-medium">{errorMessage}</p>
               </div>
             )}
 
