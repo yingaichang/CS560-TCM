@@ -2,8 +2,23 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+const holidaySeeds = [
+  { date: '2026-01-01', name: "New Year's Day" },
+  { date: '2026-01-19', name: 'Martin Luther King Jr. Day' },
+  { date: '2026-02-16', name: "Washington's Birthday" },
+  { date: '2026-05-25', name: 'Memorial Day' },
+  { date: '2026-06-19', name: 'Juneteenth National Independence Day' },
+  { date: '2026-07-03', name: 'Independence Day' },
+  { date: '2026-09-07', name: 'Labor Day' },
+  { date: '2026-10-12', name: 'Columbus Day' },
+  { date: '2026-11-11', name: 'Veterans Day' },
+  { date: '2026-11-26', name: 'Thanksgiving Day' },
+  { date: '2026-12-25', name: 'Christmas Day' },
+]
+
 async function main() {
   // Clear existing data
+  await prisma.holiday.deleteMany()
   await prisma.healthArticle.deleteMany()
   await prisma.doctor.deleteMany()
 
@@ -98,6 +113,16 @@ async function main() {
   ])
 
   console.log('✓ Created articles:', articles.length)
+
+  const holidays = await prisma.holiday.createMany({
+    data: holidaySeeds.map((holiday) => ({
+      holidayDate: new Date(`${holiday.date}T00:00:00`),
+      name: holiday.name,
+      isClosed: true,
+    })),
+  })
+
+  console.log('✓ Created holidays:', holidays.count)
   console.log('✓ Database seed completed successfully!')
 }
 

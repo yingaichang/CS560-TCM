@@ -11,19 +11,34 @@ datasource db {
 }
 
 model Appointment {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  phone     String
-  date      DateTime
-  service   String
-  message   String?
-  status    String   @default("pending")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  doctorId        String
+  date            DateTime
+  appointmentTime String
+  service         String
+  message         String?
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([email])
   @@index([date])
+  @@index([doctorId])
+  @@unique([doctorId, date, appointmentTime])
+}
+
+model Holiday {
+  id          String   @id @default(cuid())
+  holidayDate DateTime @unique
+  name        String
+  isClosed    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([holidayDate])
 }
 
 model Contact {
