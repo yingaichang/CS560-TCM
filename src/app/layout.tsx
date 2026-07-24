@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
-  title: '瀛爱 | 全人健康管理中心',
-  description: '结合传统中医智慧与现代健康管理，从体质、饮食、生活习惯与长期追踪，陪伴您建立更安定、自然的养生生活。',
+  title: '瀛愛全人健康管理中心 | WELLSPRING Wellness Center',
+  description:
+    'AI 健康分析 × 中醫診療 × 預防醫學 × 健康教育 × 長期健康管理，打造可持續擴充的全人健康平台。',
 }
 
 export default function RootLayout({

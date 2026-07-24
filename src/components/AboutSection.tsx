@@ -1,114 +1,78 @@
 export default function AboutSection() {
+  const pillars = [
+    {
+      title: 'AI 健康分析',
+      detail: '從問卷、生活習慣與生理數據建立個人化健康輪廓。',
+    },
+    {
+      title: '中醫診療',
+      detail: '由中醫師結合脈診、問診與現代檢測，制定調理處方。',
+    },
+    {
+      title: '預防醫學',
+      detail: '針對高血壓、血糖、壓力與睡眠提供早期介入策略。',
+    },
+    {
+      title: '健康教育',
+      detail: '透過健康學院課程，建立可實踐的飲食與作息知識。',
+    },
+    {
+      title: '長期管理',
+      detail: '按月追蹤改善指標，陪伴個人與家庭持續優化生活型態。',
+    },
+  ]
+
+  const audiences = [
+    '希望改善睡眠、疼痛、壓力或婦科困擾者',
+    '需要中醫診療與針灸服務的使用者',
+    '關心高血壓、血糖與銀髮健康的家庭',
+    '想要長期健康管理與預防方案的個人',
+    '對養生課程與健康教育有興趣的學習者',
+  ]
+
   return (
-    <section id="about" className="py-20 md:py-28 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Content */}
-          <div className="fade-in">
-            <span className="text-tcm-green font-medium text-sm tracking-widest uppercase">
-              關於診所
-            </span>
-            <h2 className="section-title mt-4">
-              在這裡，我們用心守護每一個生命
-            </h2>
-            <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-              YUAN中醫診所成立於2008年，始終秉持著「傳承古智，創新療法」的理念，為患者提供最專業、最溫暖的醫療服務。
-            </p>
+    <section id="about" className="relative bg-white py-20 md:py-28">
+      <div className="absolute left-0 top-8 h-44 w-44 rounded-full bg-primary/5 blur-3xl" />
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.03fr_0.97fr] lg:px-8">
+        <div>
+          <span className="text-sm font-medium tracking-[0.18em] text-primary">
+            PLATFORM POSITIONING
+          </span>
+          <h2 className="section-title mt-4">從診所網站，升級為全人健康管理平台</h2>
+          <p className="section-subtitle mb-8 max-w-2xl">
+            我們不是單次看診頁面，而是一個可持續擴充的照護平台。每位使用者都能得到專屬健康地圖、
+            可追蹤計畫與跨領域照護服務。
+          </p>
 
-            <div className="space-y-4 mb-8">
-              <div className="flex gap-4">
-                <div className="w-6 h-6 rounded-full bg-tcm-green/10 flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg
-                    className="w-4 h-4 text-tcm-green"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-800">專業醫療團隊</h3>
-                  <p className="text-gray-600 text-sm">
-                    由經驗豐富的中醫師組成，每位都擁有15年以上的臨床經驗
-                  </p>
-                </div>
+          <div className="space-y-4">
+            {pillars.map((pillar) => (
+              <div key={pillar.title} className="rounded-2xl border border-primary/10 bg-surface px-5 py-4 transition hover:border-primary/25 hover:bg-[#f7f4ec]">
+                <h3 className="text-base font-semibold text-primary">{pillar.title}</h3>
+                <p className="mt-1 text-sm leading-7 text-ink/80">{pillar.detail}</p>
               </div>
-
-              <div className="flex gap-4">
-                <div className="w-6 h-6 rounded-full bg-tcm-green/10 flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg
-                    className="w-4 h-4 text-tcm-green"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-800">現代化設備</h3>
-                  <p className="text-gray-600 text-sm">
-                    引進國際先進診療設備，結合傳統療法與現代科技
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="w-6 h-6 rounded-full bg-tcm-green/10 flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg
-                    className="w-4 h-4 text-tcm-green"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-800">溫暖舒適環境</h3>
-                  <p className="text-gray-600 text-sm">
-                    打造如家般溫暖的就診環境，讓患者感到放鬆與安心
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-gray-600 leading-relaxed">
-              我們相信每個人都值得擁有健康與幸福。無論您是初次就診還是長期調理患者，我們都準備好用最專業的態度和最溫暖的服務，陪伴您走向健康之路。
-            </p>
-          </div>
-
-          {/* Image */}
-          <div className="relative h-96 md:h-full rounded-2xl overflow-hidden shadow-xl slide-in-right">
-            <div className="absolute inset-0 bg-gradient-to-br from-tcm-green/20 to-tcm-light-green/20 z-10"></div>
-            <div className="w-full h-full bg-gradient-to-br from-tcm-beige to-tcm-light-green/30 flex items-center justify-center">
-              {/* Placeholder image - replace with actual clinic image */}
-              <div className="text-center">
-                <svg
-                  className="w-32 h-32 mx-auto text-tcm-green/30 mb-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                </svg>
-                <p className="text-tcm-green/50 font-medium">診所環境照片</p>
-                <p className="text-sm text-gray-400 mt-1">
-                  請替換為實際診所照片
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
+
+        <aside className="rounded-3xl border border-primary/10 bg-gradient-to-br from-[#f7f3ea] via-white to-[#f0ebdd] p-7 shadow-[0_15px_40px_rgba(52,74,57,0.08)]">
+          <p className="text-xs font-semibold tracking-[0.2em] text-wood">WHO WE SERVE</p>
+          <h3 className="mt-3 font-display text-2xl text-primary">主要使用者場景</h3>
+          <ul className="mt-6 space-y-4 text-sm leading-7 text-ink/85">
+            {audiences.map((audience) => (
+              <li key={audience} className="flex gap-3 rounded-2xl border border-primary/10 bg-white/75 px-4 py-3">
+                <span className="mt-1 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-primary" />
+                <span>{audience}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-6 rounded-2xl border border-primary/10 bg-white/80 p-5">
+            <p className="text-sm font-semibold text-primary">品牌核心理念</p>
+            <p className="mt-2 text-sm leading-7 text-ink/80">
+              AI 健康分析 × 中醫診療 × 預防醫學 × 健康教育 × 長期健康管理
+            </p>
+          </div>
+        </aside>
       </div>
     </section>
   )

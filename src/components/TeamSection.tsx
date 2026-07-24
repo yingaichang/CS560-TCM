@@ -1,114 +1,97 @@
-interface Doctor {
+interface CareTrack {
   id: string
-  name: string
   title: string
-  specialty: string
-  experience: string
-  bio: string
+  focus: string
+  detail: string
+  cadence: string
 }
 
-const doctors: Doctor[] = [
+const tracks: CareTrack[] = [
   {
     id: '1',
-    name: '李明智',
-    title: '院長',
-    specialty: '內科調理',
-    experience: '15年臨床經驗',
-    bio: '國家高級中醫師，擅長體質調理與慢性病管理，深受患者信賴。',
+    title: '壓力與睡眠優化計畫',
+    focus: '睡眠不足、焦慮與自律神經失衡',
+    cadence: '每週追蹤',
+    detail: '結合 AI 量表與中醫調理方案，並搭配呼吸訓練與作息校正。',
   },
   {
     id: '2',
-    name: '王芳妤',
-    title: '主任醫師',
-    specialty: '婦科調理',
-    experience: '8年臨床經驗',
-    bio: '專攻女性健康，特別擅長月經調理與更年期症狀改善。',
+    title: '疼痛與骨骼功能照護',
+    focus: '肩頸腰背疼痛、關節不適',
+    cadence: '每 2 週追蹤',
+    detail: '透過針灸、推拿與動作建議降低疼痛，並持續追蹤生活中的復發因子。',
   },
   {
     id: '3',
-    name: '張瑋翔',
-    title: '醫師',
-    specialty: '骨傷科',
-    experience: '15年臨床經驗',
-    bio: '專精於推拿、拔罐等物理療法，幫助患者快速恢復。',
+    title: '女性週期與內分泌管理',
+    focus: '經期不規律、更年期不適',
+    cadence: '每月追蹤',
+    detail: '以中醫辨證與生活型態記錄調整照護節奏，建立穩定的週期健康計畫。',
   },
   {
     id: '4',
-    name: '陳雅琪',
-    title: '醫師',
-    specialty: '針灸推拿',
-    experience: '12年臨床經驗',
-    bio: '運用針灸、艾灸等傳統療法，改善各類疼痛與功能障礙。',
+    title: '慢性病與銀髮支持方案',
+    focus: '血壓、血糖與高齡生活管理',
+    cadence: '每月複評',
+    detail: '結合門診追蹤、飲食建議與家庭健康帳戶，協助長輩穩定日常指標。',
   },
 ]
 
 export default function TeamSection() {
   return (
-    <section id="team" className="py-20 md:py-28 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="text-tcm-green font-medium text-sm tracking-widest uppercase">
-            醫療團隊
-          </span>
-          <h2 className="section-title mt-4">
-            專業的醫師團隊
-          </h2>
-          <p className="section-subtitle max-w-2xl mx-auto">
-            每位醫師都擁有豐富的臨床經驗和專業知識
+    <section id="team" className="bg-white py-20 md:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <span className="text-sm font-medium tracking-[0.18em] text-primary">CARE JOURNEY</span>
+          <h2 className="section-title mt-4">從評估到追蹤的照護旅程</h2>
+          <p className="section-subtitle mx-auto mb-12 max-w-3xl">
+            平台將使用者需求轉為可執行路徑，讓中醫照護、健康教育與日常習慣維持在同一節奏。
           </p>
         </div>
 
-        {/* Doctors Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {doctors.map((doctor) => (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {tracks.map((track, index) => (
             <div
-              key={doctor.id}
-              className="group bg-gradient-to-br from-white to-tcm-beige/10 rounded-xl overflow-hidden border border-gray-100 hover:border-tcm-green/30 transition-all duration-300 hover:shadow-lg"
+              key={track.id}
+              className="group rounded-3xl border border-primary/10 bg-[linear-gradient(180deg,#ffffff_0%,#f8f4ea_100%)] p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-[0_18px_45px_rgba(70,100,77,0.14)]"
             >
-              {/* Avatar placeholder */}
-              <div className="h-48 bg-gradient-to-br from-tcm-green/20 to-tcm-light-green/10 flex items-center justify-center overflow-hidden relative">
-                <svg
-                  className="w-24 h-24 text-tcm-green/40"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                </svg>
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/5 text-lg font-semibold text-primary">
+                0{index + 1}
               </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-tcm-dark mb-2">
-                  {doctor.name}
-                </h3>
-                <p className="text-tcm-green font-medium text-sm mb-3">
-                  {doctor.title} / {doctor.specialty}
-                </p>
-                <p className="text-sm text-gray-500 mb-3">{doctor.experience}</p>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                  {doctor.bio}
-                </p>
-
-                {/* Contact button */}
-                <button className="w-full py-2 rounded-lg bg-tcm-beige/50 text-tcm-green font-medium hover:bg-tcm-green hover:text-white transition-colors text-sm">
-                  預約諮詢
-                </button>
-              </div>
+              <h3 className="text-lg font-semibold text-primary">{track.title}</h3>
+              <p className="mt-2 text-sm font-medium text-wood">{track.focus}</p>
+              <p className="mt-3 text-sm leading-7 text-ink/80">{track.detail}</p>
+              <p className="mt-4 inline-flex rounded-full border border-primary/15 px-3 py-1 text-xs font-medium tracking-[0.08em] text-primary">
+                {track.cadence}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* Additional info */}
-        <div className="mt-16 bg-tcm-beige/30 rounded-2xl p-8 text-center">
-          <h3 className="text-2xl font-bold text-tcm-dark mb-3">
-            尋找適合您的醫師
-          </h3>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            每位患者都有獨特的需求。我們提供初診諮詢服務，幫助您找到最適合您的醫師進行治療。
+        <div className="mt-12 grid gap-6 rounded-3xl border border-primary/10 bg-surface p-8 md:grid-cols-3">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.2em] text-wood">STEP 1</p>
+            <h3 className="mt-2 text-xl font-semibold text-primary">初始評估</h3>
+            <p className="mt-2 text-sm leading-7 text-ink/80">完成問卷、症狀登錄與生活型態盤點。</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold tracking-[0.2em] text-wood">STEP 2</p>
+            <h3 className="mt-2 text-xl font-semibold text-primary">門診計畫</h3>
+            <p className="mt-2 text-sm leading-7 text-ink/80">中醫師制定階段性照護與療程安排。</p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold tracking-[0.2em] text-wood">STEP 3</p>
+            <h3 className="mt-2 text-xl font-semibold text-primary">AI 追蹤優化</h3>
+            <p className="mt-2 text-sm leading-7 text-ink/80">依據追蹤結果動態調整日常任務與療程。</p>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="mx-auto max-w-3xl text-base text-ink/85">
+            你可以先從一次健康諮詢開始，再逐步擴展成個人或家庭的全年健康管理方案。
           </p>
-          <a href="/#booking" className="btn-primary">
-            預約諮詢
+          <a href="#appointment" className="btn-primary mt-6">
+            開始健康旅程
           </a>
         </div>
       </div>

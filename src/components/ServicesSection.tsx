@@ -1,79 +1,93 @@
 interface Service {
+  id: string
   icon: string
   title: string
   description: string
+  tag: string
 }
 
 const services: Service[] = [
   {
-    icon: '🧬',
-    title: 'AI體質分析',
+    id: 'ai-health-profile',
+    icon: '01',
+    title: 'AI 健康分析引擎',
+    tag: 'Assessment',
     description:
-      '利用先進的AI技術結合中醫體質理論，精準分析您的體質類型，制定個性化的調理方案。',
+      '以 AI 與中醫體質理論整合問卷、生活型態與症狀資料，生成個人健康風險地圖與優先改善建議。',
   },
   {
-    icon: '🌿',
-    title: '中藥調理',
+    id: 'integrated-tcm-care',
+    icon: '02',
+    title: '中醫診療與針灸照護',
+    tag: 'Clinical Care',
     description:
-      '精選上等中藥材，根據患者體質和病況，由經驗豐富的中醫師親自配方調理。',
+      '中醫師依個人狀態安排門診、針灸、推拿與藥膳建議，讓治療從單點處置轉為完整照護路徑。',
   },
   {
-    icon: '📚',
-    title: '健康教育',
+    id: 'chronic-monitoring',
+    icon: '03',
+    title: '慢性健康監測模組',
+    tag: 'Monitoring',
     description:
-      '定期舉辦健康講座和工作坊，幫助患者了解中醫養生知識和健康生活方式。',
+      '追蹤血壓、血糖、睡眠、壓力與疼痛等關鍵指標，提供週期提醒與異常回報機制。',
   },
   {
-    icon: '💚',
-    title: '長期健康管理',
+    id: 'health-academy',
+    icon: '04',
+    title: '健康學院與課程系統',
+    tag: 'Education',
     description:
-      '提供完整的健康管理計畫，透過定期評估和調整，幫助患者維持最佳健康狀態。',
+      '透過主題講座、工作坊與影片學習，協助使用者把健康知識轉化為每天可實踐的習慣。',
+  },
+  {
+    id: 'family-plan',
+    icon: '05',
+    title: '家庭健康管理帳戶',
+    tag: 'Family Plan',
+    description:
+      '支援家庭共同追蹤與跨世代健康管理，特別適合銀髮照護與親子同步維護日常健康。',
   },
 ]
 
 export default function ServicesSection() {
   return (
-    <section id="services" className="py-20 md:py-28 bg-tcm-beige/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="text-tcm-green font-medium text-sm tracking-widest uppercase">
-            主要服務
-          </span>
-          <h2 className="section-title mt-4">
-            我們提供四大診療服務
-          </h2>
-          <p className="section-subtitle max-w-2xl mx-auto">
-            以患者為中心，結合傳統中醫智慧與現代醫療技術
+    <section id="services" className="bg-[linear-gradient(180deg,#f6f1e8_0%,#f1ecdf_100%)] py-20 md:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <span className="text-sm font-medium tracking-[0.18em] text-primary">CORE MODULES</span>
+          <h2 className="section-title mt-4">可持續擴充的五大平台模組</h2>
+          <p className="section-subtitle mx-auto mb-14 max-w-3xl">
+            每個模組可獨立運作，也可串接成完整健康旅程，從首次評估到長期照護都能持續擴充。
           </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {services.map((service, index) => (
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {services.map((service) => (
             <div
-              key={index}
-              className="group bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:translate-y-[-8px] border border-gray-100"
+              key={service.id}
+              className="group flex flex-col rounded-3xl border border-primary/10 bg-white/75 p-7 shadow-[0_12px_35px_rgba(70,100,77,0.1)] transition duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-[0_20px_45px_rgba(70,100,77,0.16)]"
             >
-              {/* Icon */}
-              <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                {service.icon}
+              <div className="mb-5 flex items-start justify-between">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/5 text-lg font-semibold text-primary">
+                  {service.icon}
+                </div>
+                <span className="rounded-full border border-primary/15 px-3 py-1 text-xs font-medium tracking-[0.08em] text-primary/80">
+                  {service.tag}
+                </span>
               </div>
 
-              {/* Content */}
-              <h3 className="text-2xl font-bold text-tcm-dark mb-4">
+              <h3 className="text-2xl font-semibold text-primary">
                 {service.title}
               </h3>
-              <p className="text-gray-600 leading-relaxed mb-6">
+              <p className="mt-4 flex-grow text-sm leading-7 text-ink/80">
                 {service.description}
               </p>
 
-              {/* Learn more link */}
               <a
-                href="#"
-                className="inline-flex items-center text-tcm-green font-medium hover:gap-2 transition-all gap-1"
+                href="#appointment"
+                className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary transition group-hover:gap-3"
               >
-                了解更多
+                了解模組方案
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -92,13 +106,12 @@ export default function ServicesSection() {
           ))}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <p className="text-gray-600 mb-6">
-            想了解更多服務？預約諮詢由專業醫師為您評估。
+        <div className="mt-14 rounded-3xl border border-primary/15 bg-[#FAF8F2] px-6 py-8 text-center md:px-10">
+          <p className="text-base text-ink/85 md:text-lg">
+            需要企業健康方案、社區課程或跨院區部署？我們提供平台型客製化服務。
           </p>
-          <a href="/#booking" className="btn-primary">
-            預約初診
+          <a href="#contact" className="btn-primary mt-5">
+            與平台顧問洽談
           </a>
         </div>
       </div>

@@ -47,9 +47,9 @@ type FormData = {
 type FormErrors = Partial<Record<keyof FormData, string>>
 
 const toDateString = (date: Date) => {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
 
@@ -246,7 +246,7 @@ export default function AppointmentForm() {
   }
 
   return (
-    <section id="booking" className="py-20 md:py-28 bg-white">
+    <section id="appointment" className="py-20 md:py-28 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <span className="text-tcm-green font-medium text-sm tracking-widest uppercase">

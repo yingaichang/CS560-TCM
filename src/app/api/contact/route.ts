@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     const body = (await request.json()) as Partial<ContactPayload>
     const validation = validateContactPayload(body)
 
-    if (!validation.valid) {
+    if (!validation.valid || !validation.value) {
       return NextResponse.json(
         { error: validation.error },
         { status: 400 }
@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const contacts = await prisma.contact.findMany({
       orderBy: {

@@ -1,118 +1,113 @@
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
-
   return (
-    <footer className="bg-tcm-dark text-white mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid md:grid-cols-4 gap-8 mb-12">
-          {/* Brand */}
+    <footer className="mt-20 bg-[#355C46] text-white">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mb-12 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-tcm-green to-tcm-light-green rounded-full flex items-center justify-center font-bold text-lg">
-                元
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/15 text-lg font-semibold">
+                瀛
               </div>
               <div>
-                <h3 className="text-xl font-bold">YUAN</h3>
-                <p className="text-sm text-gray-300">中醫診所</p>
+                <h3 className="text-base font-semibold tracking-[0.12em]">瀛愛全人健康管理中心</h3>
+                <p className="font-brand text-sm tracking-[0.05em] text-white/78">WELLSPRING Wellness Center</p>
               </div>
             </div>
-            <p className="text-gray-400 text-sm">
-              傳統中醫智慧與現代醫療的完美結合，守護您與家人的健康。
+            <p className="text-sm leading-7 text-white/75">
+              AI 智慧中醫健康管理平台，結合中醫診療、預防醫學、健康教育與長期追蹤，
+              讓個人與家庭擁有更穩定的健康生活。
             </p>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h4 className="font-bold mb-4 text-tcm-gold">快速連結</h4>
-            <ul className="space-y-2 text-gray-400">
+            <h4 className="mb-4 font-semibold text-[#A78D60]">網站連結</h4>
+            <ul className="space-y-2 text-sm text-white/75">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  關於診所
+                <a href="#about" className="transition-colors hover:text-white">
+                  關於我們
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="#services" className="transition-colors hover:text-white">
                   診療服務
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  醫師團隊
+                <a href="/ai-health-analysis" className="transition-colors hover:text-white">
+                  AI 健康分析
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  健康專欄
+                <a href="/health-academy" className="transition-colors hover:text-white">
+                  健康學院
+                </a>
+              </li>
+              <li>
+                <a href="/courses-events" className="transition-colors hover:text-white">
+                  課程與活動
+                </a>
+              </li>
+              <li>
+                <a href="/patient-center" className="transition-colors hover:text-white">
+                  病人中心
+                </a>
+              </li>
+              <li>
+                <a href="/coming-soon?feature=health-store" className="transition-colors hover:text-white">
+                  健康商城
+                </a>
+              </li>
+              <li>
+                <a href="/faq" className="transition-colors hover:text-white">
+                  FAQ
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Services */}
           <div>
-            <h4 className="font-bold mb-4 text-tcm-gold">主要服務</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  AI體質分析
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  中藥調理
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  健康教育
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  長期健康管理
-                </a>
-              </li>
+            <h4 className="mb-4 font-semibold text-[#A78D60]">聯絡資料</h4>
+            <ul className="space-y-2 text-sm text-white/75">
+              <li>地址：地址 placeholder</li>
+              <li>電話：電話 placeholder</li>
+              <li>Email：Email placeholder</li>
+              <li>LINE 官方帳號：LINE 官方帳號 placeholder</li>
+              <li>微信：微信 placeholder</li>
+              <li>營業時間：營業時間 placeholder</li>
+              <li>Google 地圖：Google 地圖 placeholder</li>
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
-            <h4 className="font-bold mb-4 text-tcm-gold">聯絡資訊</h4>
-            <ul className="space-y-3 text-gray-400">
-              <li className="flex gap-2">
-                <span>📍</span>
-                <span>台北市中山區民生東路123號</span>
+            <h4 className="mb-4 font-semibold text-[#A78D60]">法律與聲明</h4>
+            <ul className="space-y-2 text-sm text-white/75">
+              <li>
+                <a href="/coming-soon?feature=privacy-policy" className="transition-colors hover:text-white">
+                  隱私權政策
+                </a>
               </li>
-              <li className="flex gap-2">
-                <span>☎️</span>
-                <span>(02) 2567-8901</span>
+              <li>
+                <a href="/coming-soon?feature=terms-of-use" className="transition-colors hover:text-white">
+                  使用條款
+                </a>
               </li>
-              <li className="flex gap-2">
-                <span>🕐</span>
-                <span>一 - 五: 09:00 - 20:00</span>
+              <li>
+                <a href="/coming-soon?feature=hipaa-pdpa" className="transition-colors hover:text-white">
+                  HIPAA／個資相關聲明 placeholder
+                </a>
               </li>
-              <li className="text-sm">六日：09:00 - 17:00</li>
+              <li>
+                <a href="/coming-soon?feature=ai-health-disclaimer" className="transition-colors hover:text-white">
+                  AI 健康資訊免責聲明
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-700 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">
-              © {currentYear} YUAN 中醫診所. All rights reserved.
-            </p>
-            <div className="flex gap-6 text-gray-400">
-              <a href="#" className="hover:text-white transition-colors text-sm">
-                隱私政策
-              </a>
-              <a href="#" className="hover:text-white transition-colors text-sm">
-                服務條款
-              </a>
-              <a href="#" className="hover:text-white transition-colors text-sm">
-                聯絡我們
-              </a>
-            </div>
+        <div className="border-t border-white/20 pt-8">
+          <div className="flex justify-center">
+            <p className="text-sm text-white/60">© 2026 WELLSPRING Wellness Center. All rights reserved.</p>
           </div>
         </div>
       </div>

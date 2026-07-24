@@ -4,38 +4,50 @@
 
 @layer base {
   :root {
-    --background: #f6f1e8;
-    --surface: #fef9f0;
-    --primary: #46644d;
-    --primary-soft: #5e7d65;
-    --wood: #735a36;
-    --wood-light: #c8a97e;
-    --gold-soft: #d6c3a5;
-    --ink: #4b4b4b;
+    --deep-sage: #355c46;
+    --natural-green: #6f8a72;
+    --soft-green-bg: #e9efe7;
+    --warm-white: #faf8f2;
+    --beige: #eee5d6;
+    --ink: #343a36;
+    --soft-gold: #a78d60;
+
+    --background: var(--warm-white);
+    --surface: var(--warm-white);
+    --primary: var(--deep-sage);
+    --primary-soft: var(--natural-green);
+    --wood: var(--soft-gold);
+    --wood-light: var(--beige);
+    --gold-soft: var(--soft-gold);
   }
 
   body {
     background:
       radial-gradient(
         circle at top left,
-        rgba(214, 195, 165, 0.12),
-        transparent 36%
+        rgba(238, 229, 214, 0.7),
+        transparent 44%
       ),
-      #f6f1e8;
+      radial-gradient(
+        circle at bottom right,
+        rgba(233, 239, 231, 0.85),
+        transparent 48%
+      ),
+      #faf8f2;
 
-    color: #4b4b4b;
+    color: #343a36;
   }
 }
 
 .btn-primary {
-  @apply inline-flex min-h-12 items-center justify-center rounded-2xl bg-[#46644D] px-7 py-3.5 font-medium text-white shadow-[0_10px_30px_rgba(70,100,77,0.18)] transition hover:bg-[#395440];
+  @apply inline-flex min-h-12 items-center justify-center rounded-full bg-[#355C46] px-7 py-3.5 font-semibold text-white shadow-[0_10px_24px_rgba(53,92,70,0.18)] transition hover:bg-[#2f503d];
 }
 
 .btn-secondary {
-  @apply inline-flex min-h-12 items-center justify-center rounded-2xl bg-white/55 px-7 py-3.5 font-medium text-[#46644D] backdrop-blur-md transition hover:bg-white/75;
+  @apply inline-flex min-h-12 items-center justify-center rounded-full border border-primary/20 bg-[#FAF8F2] px-7 py-3.5 font-semibold text-[#355C46] transition hover:bg-[#f4f1e8];
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -49,8 +61,22 @@ html {
 }
 
 body {
-  background-color: #f6f1e8;
-  color: #4b4b4b;
+  background-color: #faf8f2;
+  color: #343a36;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgba(53, 92, 70, 0.45);
+  outline-offset: 2px;
+}
+
+.font-display {
+  font-family: 'Noto Serif TC', serif;
+}
+
+.font-brand {
+  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
 }
 
 /* Custom scrollbar */
@@ -63,12 +89,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #46644d;
+  background: #355c46;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #395440;
+  background: #2f503d;
 }
 
 /* Animations */
@@ -76,6 +102,29 @@ body {
   from {
     opacity: 0;
     transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatSlow {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -117,13 +166,30 @@ body {
   animation: slideInFromRight 0.6s ease-out;
 }
 
+.hero-float {
+  animation: floatSlow 9s ease-in-out infinite;
+}
+
+.hero-float-delayed {
+  animation: floatSlow 10s ease-in-out 1.2s infinite;
+}
+
+.reveal-up {
+  animation: revealUp 0.8s ease-out;
+}
+
+.reveal-up-delayed {
+  animation: revealUp 0.8s ease-out 0.15s both;
+}
+
 /* Component styles */
 .section-title {
   font-size: 2.25rem;
-  line-height: 1.25;
-  font-weight: 700;
-  color: #46644D;
+  line-height: 1.2;
+  font-weight: 600;
+  color: #355c46;
   margin-bottom: 1rem;
+  font-family: 'Noto Serif TC', serif;
 }
 
 @media (min-width: 768px) {
@@ -135,7 +201,7 @@ body {
 .section-subtitle {
   font-size: 1.125rem;
   line-height: 1.75;
-  color: #4B4B4B;
+  color: #4d5b53;
   margin-bottom: 3rem;
 }
 
