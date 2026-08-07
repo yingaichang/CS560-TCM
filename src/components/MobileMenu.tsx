@@ -33,18 +33,15 @@ export default function MobileMenu({ items, onClose, onNavClick }: MobileMenuPro
             </summary>
 
             {item.children?.length ? (
-              <ul className="mt-2 grid grid-cols-1 gap-1 px-2 pb-2">
+              <ul className="mt-2 space-y-1 px-2 pb-2">
                 {item.children.map((child) => (
                   <li key={`mobile-${item.key}-${child.label}`}>
                     <Link
                       href={child.href}
                       onClick={onClose}
-                      className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-ink/90 transition hover:bg-primary/6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                      className="block rounded-xl px-3 py-2 text-sm text-ink/90 transition hover:bg-primary/6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                     >
-                      <span>{child.label}</span>
-                      {child.comingSoon ? (
-                        <span className="text-[10px] tracking-[0.05em] text-primary/70">Coming Soon</span>
-                      ) : null}
+                      {child.label}
                     </Link>
                   </li>
                 ))}

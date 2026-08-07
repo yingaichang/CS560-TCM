@@ -35,6 +35,21 @@ export const MAIN_NAV_ITEMS: MainNavItem[] = [
     ],
   },
   {
+    key: 'appointments',
+    label: '線上預約',
+    href: '/appointments',
+    children: [
+      { label: '初診預約', href: '/appointments#appointment-center' },
+      { label: '複診預約', href: '/appointments#appointment-center' },
+      { label: 'AI 初診問卷', href: '/appointments#appointment-center' },
+      { label: '健康資料填寫', href: '/appointments#appointment-center' },
+      { label: '預約查詢 / 取消', href: '/appointments#appointment-center' },
+      { label: '修改預約', href: '/appointments#appointment-center' },
+      { label: '候補名單', href: '/appointments#appointment-center' },
+      { label: '回診提醒', href: '/appointments#appointment-center' },
+    ],
+  },
+  {
     key: 'services',
     label: '診療服務',
     href: homeAnchor('#services'),
@@ -119,6 +134,15 @@ export const MAIN_NAV_ITEMS: MainNavItem[] = [
       { label: '健康日誌', href: '/patient-center#health-journal' },
       { label: '用藥紀錄', href: '/patient-center#medication-records' },
       { label: '回診提醒', href: '/patient-center#follow-up-reminders' },
+    ],
+  },
+  {
+    key: 'clinic',
+    label: '診所管理',
+    href: '/clinic-login',
+    children: [
+      { label: '帳單與付款', href: '/admin/billing' },
+      { label: '診所管理系統', href: '/clinic-login' },
     ],
   },
 ]

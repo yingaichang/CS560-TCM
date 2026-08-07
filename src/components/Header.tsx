@@ -34,6 +34,11 @@ export default function Header() {
   }, [])
 
   useEffect(() => {
+    if (pathname === '/appointments') {
+      setActiveKey('appointments')
+      return
+    }
+
     if (pathname === '/payment') {
       setActiveKey('shop')
       return
@@ -85,6 +90,11 @@ export default function Header() {
     if (pathname === '/') {
       const hash = window.location.hash
       setActiveKey(HASH_ACTIVE_MAP[hash] || 'home')
+      return
+    }
+
+    if (pathname === '/appointments') {
+      setActiveKey('appointments')
       return
     }
 
@@ -168,20 +178,22 @@ export default function Header() {
                     aria-label={`${item.label} 子選單`}
                     className="
                       invisible absolute left-1/2 top-[calc(100%+10px)] z-50 -translate-x-1/2
-                      rounded-2xl border border-primary/10 bg-[#faf8f2] p-4 opacity-0 shadow-[0_14px_30px_rgba(53,92,70,0.12)]
-                      transition duration-200 group-hover:visible group-hover:opacity-100
+                      rounded-3xl border border-[#d8e1cf] bg-[#fcf7ee] p-4 shadow-[0_18px_38px_rgba(62,80,57,0.12)]
+                      opacity-0 transition duration-200 group-hover:visible group-hover:opacity-100
                       group-focus-within:visible group-focus-within:opacity-100
                     "
-                    style={{ width: item.children.length > 6 ? '480px' : '260px' }}
+                    style={{ width: item.children.length > 6 ? '520px' : '280px' }}
                   >
-                    <p className="px-2 pb-2 text-[11px] font-semibold tracking-[0.14em] text-wood">{item.label}</p>
-                    <ul className={`gap-1.5 ${item.children.length > 6 ? 'grid grid-cols-2' : 'space-y-1.5'}`}>
+                    <p className="px-2 pb-3 text-[11px] font-semibold tracking-[0.14em] text-[#365e45]">
+                      {item.label}
+                    </p>
+                    <ul className={`gap-2 ${item.children.length > 6 ? 'grid grid-cols-2' : 'space-y-2'}`}>
                       {item.children.map((child) => (
                         <li key={`${item.key}-${child.label}`}>
                           <Link
                             href={child.href}
                             onClick={() => handleNavClick(item.key)}
-                            className="flex items-center justify-between rounded-xl px-3 py-2 text-sm text-ink transition hover:bg-primary/8 hover:text-primary"
+                            className="flex items-center justify-between rounded-2xl border border-[#d9e4d1] bg-white px-3 py-2 text-sm font-medium text-[#264432] transition hover:bg-[#ebf4e8] hover:text-[#1f3e2e]"
                           >
                             <span>{child.label}</span>
                             {child.comingSoon ? (

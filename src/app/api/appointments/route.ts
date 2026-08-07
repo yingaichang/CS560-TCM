@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     const date = (body.date || '').trim()
     const doctor = (body.doctor || '').trim()
     const time = (body.time || '').trim()
-    const message = (body.message || '').trim()
+    const message = ((body.message || body.questionnaire) || '').trim()
 
     if (!firstName || !lastName || !phone || !date || !service || !doctor || !time) {
       return NextResponse.json(
@@ -204,13 +204,25 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url)
+    const status = searchParams.get('status')
+    const takeParam = Number(searchParams.get('take') || '10')
+    const skipParam = Number(searchParams.get('skip') || '0')
+
+    const where: any = {}
+    if (status) {
+      where.status = status
+    }
+
     const appointments = await prisma.appointment.findMany({
+      where,
       orderBy: {
         createdAt: 'desc',
       },
-      take: 10,
+      skip: skipParam,
+      take: Math.min(Math.max(1, takeParam), 100),
     })
 
     return NextResponse.json(appointments)

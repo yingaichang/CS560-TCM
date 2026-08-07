@@ -14,6 +14,7 @@ import AboutSection from '@/components/AboutSection'
 import ServicesSection from '@/components/ServicesSection'
 import TeamSection from '@/components/TeamSection'
 import ArticlesSection from '@/components/ArticlesSection'
+import HealthDashboardSection from '@/components/HealthDashboardSection'
 import AppointmentForm from '@/components/AppointmentForm'
 import ContactSection from '@/components/ContactSection'
 
@@ -45,6 +46,7 @@ export default function Home() {
       <HealthStorePreviewSection />
       <AboutSection />
       <ServicesSection />
+      <HealthDashboardSection />
       <TeamSection />
       <ArticlesSection />
       <AppointmentForm />
