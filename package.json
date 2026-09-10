@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "npx prisma db push",
-    "db:studio": "npx prisma studio",
+    "db:studio": "set \"DATABASE_URL=postgresql://user:password@localhost:5432/tcm_clinic\" && npx.cmd prisma studio --schema=./prisma/schema.prisma",
     "db:seed": "npx prisma db seed"
   },
   "prisma": {

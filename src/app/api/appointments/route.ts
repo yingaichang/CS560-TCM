@@ -162,6 +162,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const appointmentCount = await prisma.appointment.count({
+      where: {
+        date: {
+          gte: dayStart,
+          lte: dayEnd,
+        },
+      },
+    })
+
+    const appointmentNumber = `YA-${date.replace(/-/g, '')}-${String(appointmentCount + 1).padStart(3, '0')}`
+
     const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ')
     const detailLines = [
       `Doctor: ${doctor}`,
@@ -183,7 +194,10 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(appointment, { status: 201 })
+    return NextResponse.json({
+      ...appointment,
+      appointmentNumber,
+    }, { status: 201 })
   } catch (error) {
     console.error('Error creating appointment:', error)
 

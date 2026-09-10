@@ -24,16 +24,16 @@ export type AppointmentStep = {
 export const appointmentSteps: AppointmentStep[] = [
   {
     id: 1,
-    title: '選擇服務',
-    shortTitle: '服務',
-    description: '選擇本次需要的診療服務',
+    title: '初診前說明',
+    shortTitle: '說明',
+    description: '適用第一次來診、非緊急服務、預估看診時間',
     icon: HeartPulse,
   },
   {
     id: 2,
-    title: '選擇醫師',
-    shortTitle: '醫師',
-    description: '選擇適合您的中醫師',
+    title: '選擇服務類型',
+    shortTitle: '服務',
+    description: '選擇初診服務類型與醫師',
     icon: Stethoscope,
   },
   {
@@ -52,23 +52,23 @@ export const appointmentSteps: AppointmentStep[] = [
   },
   {
     id: 5,
-    title: '填寫資料',
+    title: '填寫基本聯絡資料',
     shortTitle: '資料',
-    description: '填寫基本聯絡資料',
+    description: '填寫姓名、電話與聯絡方式',
     icon: UserRound,
   },
   {
     id: 6,
-    title: '健康問卷',
-    shortTitle: '問卷',
-    description: '填寫初步健康狀況',
+    title: '簡短說明主要需求',
+    shortTitle: '說明',
+    description: '描述此次初診主要訴求',
     icon: ClipboardList,
   },
   {
     id: 7,
     title: '確認預約',
     shortTitle: '確認',
-    description: '檢查資料並送出預約',
+    description: '檢查資料並閱讀預約政策',
     icon: FileCheck2,
   },
 ]
