@@ -14,6 +14,15 @@ type Appointment = {
   message?: string | null
   status: string
   createdAt: string
+  checkedIn: boolean
+  checkedInAt?: string | null
+}
+
+type AppointmentUpdates = {
+  status?: string
+  date?: string
+  appointmentTime?: string
+  message?: string | null
 }
 
 function toCsv(rows: Appointment[]) {
@@ -66,8 +75,14 @@ export default function AdminAppointmentsPage() {
       const skip = (pageArg - 1) * size
       const res = await fetch(`/api/appointments?status=${encodeURIComponent(status)}&take=${size}&skip=${skip}`)
       const data = await res.json()
+      if (!res.ok || !Array.isArray(data)) {
+        console.error('Failed to load appointments', res.status, JSON.stringify(data))
+        setAppointments([])
+        setHasMore(false)
+        return
+      }
       setAppointments(data)
-      setHasMore(Array.isArray(data) && data.length === size)
+      setHasMore(data.length === size)
     } catch (e) {
       console.error(e)
     } finally {
@@ -84,6 +99,12 @@ export default function AdminAppointmentsPage() {
     fetchAppointments(filter, page, pageSize)
   }, [page])
 
+  // Poll so kiosk self check-ins show up here without a manual refresh.
+  useEffect(() => {
+    const interval = setInterval(() => fetchAppointments(filter, page, pageSize), 8000)
+    return () => clearInterval(interval)
+  }, [filter, page, pageSize])
+
   useEffect(() => {
     if (selected) {
       setEditDate(new Date(selected.date).toISOString().slice(0, 10))
@@ -94,7 +115,7 @@ export default function AdminAppointmentsPage() {
     }
   }, [selected])
 
-  const updateAppointment = async (id: string, updates: any) => {
+  const updateAppointment = async (id: string, updates: AppointmentUpdates) => {
     try {
       const res = await fetch(`/api/appointments/${id}`, {
         method: 'PATCH',
@@ -165,6 +186,7 @@ export default function AdminAppointmentsPage() {
                 <th>Email</th>
                 <th>問卷完成</th>
                 <th>狀態</th>
+                <th>報到</th>
                 <th>送出時間</th>
                 <th>操作</th>
               </tr>
@@ -182,6 +204,15 @@ export default function AdminAppointmentsPage() {
                   <td className="align-top">{a.email}</td>
                   <td className="align-top">{a.message ? '已填寫' : '未填寫'}</td>
                   <td className="align-top">{a.status}</td>
+                  <td className="align-top">
+                    {a.checkedIn ? (
+                      <span className="rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+                        已報到 {a.checkedInAt ? new Date(a.checkedInAt).toLocaleTimeString() : ''}
+                      </span>
+                    ) : (
+                      <span className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-500">尚未報到</span>
+                    )}
+                  </td>
                   <td className="align-top">{new Date(a.createdAt).toLocaleString()}</td>
                   <td className="space-y-2 py-3 align-top">
                     <div className="flex flex-col gap-2">

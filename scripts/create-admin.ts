@@ -1,37 +1,38 @@
-import bcrypt from 'bcrypt'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
+import { writeAuditLog } from '@/lib/auditLog'
 
-const prisma = new PrismaClient()
+const [,, emailArg, nameArg, roleArg, auditPermissionArg] = process.argv
 
-const [,, emailArg, passwordArg, nameArg, roleArg] = process.argv
-
-if (!emailArg || !passwordArg) {
-  console.error('Usage: npx tsx scripts/create-admin.ts <email> <password> [name] [role]')
+if (!emailArg) {
+  console.error('Usage: npx tsx scripts/create-admin.ts <email> [name] [role] [audit:read]')
   process.exit(1)
 }
 
-const email = emailArg
-const password = passwordArg
+const email = emailArg.trim().toLowerCase()
 const name = nameArg || '診所管理員'
 const role = roleArg || 'admin'
+const canViewAuditLogs = auditPermissionArg === 'audit:read'
 
 async function main() {
-  const existing = await prisma.user.findUnique({ where: { email } })
-  if (existing) {
-    console.log(`User with email ${email} already exists. Updating password and role...`)
-    const passwordHash = await bcrypt.hash(password, 10)
-    const user = await prisma.user.update({
+  const user = await prisma.$transaction(async (transaction) => {
+    const updated = await transaction.user.upsert({
       where: { email },
-      data: { password: passwordHash, name, role },
+      update: { name, role, canViewAuditLogs },
+      create: { email, name, role, canViewAuditLogs },
     })
-    console.log('Updated user:', user.email)
-  } else {
-    const passwordHash = await bcrypt.hash(password, 10)
-    const user = await prisma.user.create({
-      data: { email, password: passwordHash, name, role },
-    })
-    console.log('Created admin user:', user.email)
-  }
+    await writeAuditLog({
+      serviceId: 'admin-provisioning-script',
+      action: 'user_role_configured',
+      resource: 'user_account',
+      resourceId: updated.id,
+      actorRole: 'system',
+      source: 'admin.user-provisioning',
+      module: 'admin',
+      summary: 'Application user role and audit permission configured',
+    }, transaction)
+    return updated
+  })
+  console.log(`Assigned ${user.role} application role to ${user.email}`)
 }
 
 main()

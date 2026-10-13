@@ -7,6 +7,7 @@ export default function AdminSidebar() {
     { label: '病人管理', href: '/admin/patients' },
     { label: '健康資料', href: '/admin/health-data' },
     { label: 'AI 問卷審核', href: '/admin/ai-review' },
+    { label: '安全稽核', href: '/admin/audit-logs' },
     { label: '回診提醒', href: '/admin/reminders' },
     { label: '醫師排班', href: '/admin/schedule' },
     { label: '系統設定', href: '/admin/settings' },
