@@ -141,7 +141,7 @@ GRANT ALL PRIVILEGES ON DATABASE tcm_clinic TO tcm_user;
 編輯 `.env.local`：
 ```env
 DATABASE_URL="postgresql://tcm_user:password@localhost:5432/tcm_clinic"
-NEXTAUTH_SECRET="your-secret-key"
+Clerk development keys are managed in ignored `.env.local` with `npx -y clerk@latest env pull`.
 ```
 
 ### 4️⃣ 初始化數據庫
@@ -381,7 +381,7 @@ const appointment = await response.json()
 
 ### 必須實施
 1. **環境變量保護** - 不提交 `.env.local`
-2. **密碼加密** - 使用 bcrypt 加密密碼
+2. **身份驗證** - Clerk 管理身份驗證；密鑰只保留在服務器環境中
 3. **HTTPS 配置** - 生產環境使用 SSL/TLS
 4. **API 驗證** - 添加身份驗證和授權檢查
 5. **速率限制** - 防止濫用
@@ -462,7 +462,7 @@ const appointment = await response.json()
 
 ### 中期（2-4 週）
 - [ ] 配置電郵通知
-- [ ] 設置 Google OAuth
+- [x] Clerk authentication
 - [ ] 添加評論系統
 - [ ] 實施付款功能
 - [ ] 設置分析追蹤

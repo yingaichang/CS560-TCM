@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import nodemailer from 'nodemailer'
+import { writeAuditLog } from '@/lib/auditLog'
 
 const prisma = new PrismaClient()
 
@@ -125,8 +126,9 @@ export async function POST(request: NextRequest) {
     })
 
     let savedToDatabase = false
+    let contactId: string | null = null
     try {
-      await prisma.contact.create({
+      const contact = await prisma.contact.create({
         data: {
           name,
           email,
@@ -134,11 +136,25 @@ export async function POST(request: NextRequest) {
           message,
           status: 'new',
         },
+        select: { id: true },
       })
+      contactId = contact.id
       savedToDatabase = true
     } catch (dbError) {
       console.error('Contact saved email but DB write failed:', dbError)
     }
+
+    await writeAuditLog({
+      serviceId: 'contact-form',
+      action: 'submit',
+      resource: 'contact_message',
+      resourceId: contactId,
+      actorRole: 'public',
+      source: 'public.contact',
+      module: 'contact',
+      outcome: savedToDatabase ? 'success' : 'email_sent_db_save_failed',
+      summary: savedToDatabase ? 'Contact message submitted' : 'Contact message emailed; database save failed',
+    })
 
     return NextResponse.json(
       {
@@ -163,6 +179,16 @@ export async function GET() {
         createdAt: 'desc',
       },
       take: 20,
+    })
+
+    await writeAuditLog({
+      serviceId: 'contact-api',
+      action: 'read_list',
+      resource: 'contact_message',
+      actorRole: 'system',
+      source: 'system.contact-list',
+      module: 'contact',
+      summary: 'Contact message list read',
     })
 
     return NextResponse.json(contacts)

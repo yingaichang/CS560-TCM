@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'AI 初診問卷 | WELLSPRING Wellness Center',
+  title: 'AI 初診問卷 | AI TCM HEALTH MANAGEMENT CENTER',
   description: '請完成 AI 初診問卷，協助我們更全面了解您的健康狀況與初診需求。',
 }
 

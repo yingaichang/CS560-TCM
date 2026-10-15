@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: '健康資料填寫 | WELLSPRING Wellness Center',
+  title: '健康資料填寫 | AI TCM HEALTH MANAGEMENT CENTER',
   description: '填寫基本健康資料，幫助我們為您安排更適切的初診服務。',
 }
 

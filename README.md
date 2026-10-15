@@ -60,10 +60,13 @@ cp .env.example .env.local
 編輯 `.env.local` 文件，設置以下變量：
 ```
 DATABASE_URL="postgresql://user:password@localhost:5432/tcm_clinic"
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key-here"
-GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
+```
+
+Clerk local development configuration is managed with:
+```bash
+npx clerk@latest env pull
+```
+Keep `.env.local` private; Clerk's secret key must remain server-side.
 ```
 
 4. **數據庫設置**
@@ -186,7 +189,7 @@ npm run lint
 ## 🔐 安全性注意事項
 
 1. **環境變量** - 絕不提交 `.env.local` 到版本控制
-2. **Google OAuth** - 配置正確的重定向URI
+2. **Clerk authentication** - 管理登入配置並將密鑰保存在 `.env.local`
 3. **數據庫** - 使用強密碼和SSL連接
 4. **API驗證** - 建議添加API認證機制
 5. **CORS** - 配置適當的跨域策略

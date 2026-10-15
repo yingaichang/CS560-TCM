@@ -1,6 +1,7 @@
 export interface TrustIndicator {
   title: string
   subtitle: string
+  iconKey: 'team' | 'analysis' | 'personalized' | 'education' | 'tracking'
 }
 
 export interface HealthJourneyCardData {
@@ -39,10 +40,11 @@ export interface CommunityActivityData {
 }
 
 export const trustIndicators: TrustIndicator[] = [
-  { title: '專業中醫團隊', subtitle: '豐富臨床經驗' },
-  { title: 'AI 智慧分析', subtitle: '精準健康評估' },
-  { title: '個人化管理', subtitle: '量身健康計畫' },
-  { title: '專業追蹤', subtitle: '完整健康紀錄' },
+  { title: '專業中醫團隊', subtitle: '豐富臨床經驗', iconKey: 'team' },
+  { title: 'AI 智慧分析', subtitle: '科學健康評估', iconKey: 'analysis' },
+  { title: '個人化管理', subtitle: '量身健康計畫', iconKey: 'personalized' },
+  { title: '健康教育', subtitle: '實用養生知識', iconKey: 'education' },
+  { title: '專業追蹤', subtitle: '完整健康紀錄', iconKey: 'tracking' },
 ]
 
 export const healthJourneyCards: HealthJourneyCardData[] = [

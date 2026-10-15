@@ -151,10 +151,7 @@ GRANT ALL PRIVILEGES ON DATABASE tcm_clinic TO tcm_user;
 編輯 `.env.local` 文件：
 ```env
 DATABASE_URL="postgresql://tcm_user:password@localhost:5432/tcm_clinic"
-NEXTAUTH_SECRET="生成一個隨機密鑰"
-NEXTAUTH_URL="http://localhost:3000"
-GOOGLE_CLIENT_ID="可選"
-GOOGLE_CLIENT_SECRET="可選"
+使用 `npx -y clerk@latest env pull` 將 Clerk 開發環境配置寫入已忽略的 `.env.local`。
 ```
 
 ### 4️⃣ 初始化數據庫
@@ -181,7 +178,7 @@ npm run dev
 - [ ] 添加真實的醫師信息和照片
 - [ ] 更新診療服務描述
 - [ ] 編寫健康文章內容
-- [ ] 配置 Google OAuth（可選）
+- [x] Clerk authentication setup
 - [ ] 設置電郵通知功能
 - [ ] 測試所有表單
 - [ ] 部署到生產環境
@@ -368,7 +365,7 @@ vercel
 
 ### 本月
 1. 配置電郵通知
-2. 設置 Google OAuth
+2. 驗證 Clerk authentication 設定
 3. 性能優化
 4. 部署到生產
 

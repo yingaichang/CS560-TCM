@@ -141,34 +141,16 @@ docker run --name postgres-tcm \
 DATABASE_URL="postgresql://tcm_user:your_secure_password@localhost:5432/tcm_clinic"
 ```
 
-3. **生成安全密鑰**
+3. **Clerk authentication**
+
+Clerk manages authentication and local development keys. Link the repository and pull the development configuration with:
 
 ```bash
-# 在終端運行此命令生成密鑰
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+npx -y clerk@latest init
+npx -y clerk@latest env pull
 ```
 
-4. **更新 NEXTAUTH_SECRET**
-
-```env
-NEXTAUTH_SECRET="<粘貼上面生成的密鑰>"
-```
-
-5. **Google OAuth 設置（可選）**
-
-如果想要 Google 登入功能：
-
-1. 轉到 [Google Cloud Console](https://console.cloud.google.com)
-2. 創建新項目
-3. 啟用 Google+ API
-4. 創建 OAuth 2.0 認證信息（Web 應用）
-5. 設置重定向 URI：`http://localhost:3000/api/auth/callback/google`
-6. 複製 Client ID 和 Client Secret 到 `.env.local`：
-
-```env
-GOOGLE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET="your-client-secret"
-```
+Keep `.env.local` private and never expose Clerk's secret key in client-side code.
 
 ### 步驟 5：初始化數據庫
 

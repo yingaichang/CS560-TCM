@@ -49,23 +49,6 @@ export default function MobileMenu({ items, onClose, onNavClick }: MobileMenuPro
             ) : null}
           </details>
         ))}
-
-        <div className="mt-2 grid grid-cols-1 gap-3 pb-1">
-          <Link
-            href="/#contact"
-            onClick={onClose}
-            className="inline-flex items-center justify-center rounded-full border border-primary/20 bg-white px-5 py-2.5 text-sm font-medium text-primary"
-          >
-            登入 / 註冊
-          </Link>
-          <Link
-            href="/#appointment"
-            onClick={onClose}
-            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white"
-          >
-            立即預約
-          </Link>
-        </div>
       </nav>
     </div>
   )

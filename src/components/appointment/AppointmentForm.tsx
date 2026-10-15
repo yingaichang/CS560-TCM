@@ -250,7 +250,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
           <div className="rounded-[32px] border border-[#D9D5CC] bg-[#FAF8F2] p-6 text-[#343A36] shadow-sm">
             <h2 className="text-2xl font-semibold text-[#355C46]">初診預約</h2>
             <p className="mt-4 text-sm leading-7 text-[#4D5C50]">
-              第一次來到瀛愛全人健康管理中心，請先完成線上預約。預約完成後，您可以繼續填寫健康資料或 AI 初診問卷，協助我們在看診前了解您的主要需求。
+              第一次來到愛中醫健康管理中心，請先完成線上預約。預約完成後，您可以繼續填寫健康資料或 AI 初診問卷，協助我們在看診前了解您的主要需求。
             </p>
             <div className="mt-6 space-y-4 rounded-3xl border border-[#D9D5CC] bg-white p-5 text-[#343A36] shadow-sm">
               <div>
@@ -304,7 +304,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                 name="consultationType"
                 value={formData.consultationType}
                 onChange={(event) => {
-                  setFormData((prev) => ({ ...prev, consultationType: event.currentTarget.value }))
+                  setFormData({ ...formData, consultationType: event.currentTarget.value })
                   setErrors((prev) => ({ ...prev, consultationType: undefined }))
                 }}
                 className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -325,7 +325,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                   name="service"
                   value={formData.service}
                   onChange={(event) => {
-                    setFormData((prev) => ({ ...prev, service: event.currentTarget.value }))
+                    setFormData({ ...formData, service: event.currentTarget.value })
                     setErrors((prev) => ({ ...prev, service: undefined }))
                   }}
                   className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -345,7 +345,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                   name="doctor"
                   value={formData.doctor}
                   onChange={(event) => {
-                    setFormData((prev) => ({ ...prev, doctor: event.currentTarget.value }))
+                    setFormData({ ...formData, doctor: event.currentTarget.value })
                     setErrors((prev) => ({ ...prev, doctor: undefined }))
                   }}
                   className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -372,7 +372,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                 min={today}
                 value={formData.date}
                 onChange={(event) => {
-                  setFormData((prev) => ({ ...prev, date: event.currentTarget.value }))
+                  setFormData({ ...formData, date: event.currentTarget.value })
                   setErrors((prev) => ({ ...prev, date: undefined }))
                 }}
                 className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -409,7 +409,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                       value={time}
                       checked={isSelected}
                       onChange={(event) => {
-                        setFormData((prev) => ({ ...prev, time: event.currentTarget.value }))
+                        setFormData({ ...formData, time: event.currentTarget.value })
                         setErrors((prev) => ({ ...prev, time: undefined }))
                       }}
                       className="h-4 w-4 text-[#355C46]"
@@ -432,7 +432,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                   name="firstName"
                   value={formData.firstName}
                   onChange={(event) => {
-                    setFormData((prev) => ({ ...prev, firstName: event.currentTarget.value }))
+                    setFormData({ ...formData, firstName: event.currentTarget.value })
                     setErrors((prev) => ({ ...prev, firstName: undefined }))
                   }}
                   className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -448,7 +448,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                   name="lastName"
                   value={formData.lastName}
                   onChange={(event) => {
-                    setFormData((prev) => ({ ...prev, lastName: event.currentTarget.value }))
+                    setFormData({ ...formData, lastName: event.currentTarget.value })
                     setErrors((prev) => ({ ...prev, lastName: undefined }))
                   }}
                   className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -465,7 +465,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                   max={today}
                   value={formData.birthDate}
                   onChange={(event) => {
-                    setFormData((prev) => ({ ...prev, birthDate: event.currentTarget.value }))
+                    setFormData({ ...formData, birthDate: event.currentTarget.value })
                     setErrors((prev) => ({ ...prev, birthDate: undefined }))
                   }}
                   className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -496,9 +496,10 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                 <input
                   type="email"
                   name="email"
+                  required
                   value={formData.email}
                   onChange={(event) => {
-                    setFormData((prev) => ({ ...prev, email: event.currentTarget.value }))
+                    setFormData({ ...formData, email: event.currentTarget.value })
                     setErrors((prev) => ({ ...prev, email: undefined }))
                   }}
                   className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -513,7 +514,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                   name="preferredLanguage"
                   value={formData.preferredLanguage}
                   onChange={(event) => {
-                    setFormData((prev) => ({ ...prev, preferredLanguage: event.currentTarget.value }))
+                    setFormData({ ...formData, preferredLanguage: event.currentTarget.value })
                     setErrors((prev) => ({ ...prev, preferredLanguage: undefined }))
                   }}
                   className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
@@ -538,7 +539,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                         value={value}
                         checked={formData.isFirstVisit === value}
                         onChange={(event) => {
-                          setFormData((prev) => ({ ...prev, isFirstVisit: event.currentTarget.value }))
+                          setFormData({ ...formData, isFirstVisit: event.currentTarget.value })
                           setErrors((prev) => ({ ...prev, isFirstVisit: undefined }))
                         }}
                         className="h-4 w-4 text-[#355C46]"
@@ -559,7 +560,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                   <select
                     name="hasInsurance"
                     value={formData.hasInsurance}
-                    onChange={(event) => setFormData((prev) => ({ ...prev, hasInsurance: event.currentTarget.value }))}
+                    onChange={(event) => setFormData({ ...formData, hasInsurance: event.currentTarget.value })}
                     className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
                   >
                     <option value="">請選擇</option>
@@ -573,7 +574,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                     type="text"
                     name="referralSource"
                     value={formData.referralSource}
-                    onChange={(event) => setFormData((prev) => ({ ...prev, referralSource: event.currentTarget.value }))}
+                    onChange={(event) => setFormData({ ...formData, referralSource: event.currentTarget.value })}
                     className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
                     placeholder="如：朋友介紹、網路搜尋"
                   />
@@ -583,7 +584,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                   <select
                     name="preferredContactMethod"
                     value={formData.preferredContactMethod}
-                    onChange={(event) => setFormData((prev) => ({ ...prev, preferredContactMethod: event.currentTarget.value }))}
+                    onChange={(event) => setFormData({ ...formData, preferredContactMethod: event.currentTarget.value })}
                     className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
                   >
                     {preferredContactMethods.map((method) => (
@@ -602,7 +603,8 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                 name="agreedPolicy"
                 checked={formData.agreedPolicy}
                 onChange={(event) => {
-                  setFormData((prev) => ({ ...prev, agreedPolicy: event.currentTarget.checked }))
+                  const checked = event.target.checked
+                  setFormData((prev) => ({ ...prev, agreedPolicy: checked }))
                   setErrors((prev) => ({ ...prev, agreedPolicy: undefined }))
                 }}
                 className="mt-1 h-4 w-4 rounded border-[#D9D5CC] text-[#355C46] focus:ring-[#355C46]"
@@ -641,7 +643,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                       value={option}
                       checked={formData.primaryConcern === option}
                       onChange={(event) => {
-                        setFormData((prev) => ({ ...prev, primaryConcern: event.currentTarget.value }))
+                        setFormData({ ...formData, primaryConcern: event.currentTarget.value })
                         setErrors((prev) => ({ ...prev, primaryConcern: undefined }))
                       }}
                       className="h-4 w-4 text-[#355C46]"
@@ -659,7 +661,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                 name="concernDetail"
                 value={formData.concernDetail}
                 onChange={(event) => {
-                  setFormData((prev) => ({ ...prev, concernDetail: event.currentTarget.value }))
+                  setFormData({ ...formData, concernDetail: event.currentTarget.value })
                   setErrors((prev) => ({ ...prev, concernDetail: undefined }))
                 }}
                 className="min-h-[180px] w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30 resize-none"
@@ -745,7 +747,9 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
       if (!formData.lastName.trim()) nextErrors.lastName = '請輸入姓氏'
       if (!formData.birthDate) nextErrors.birthDate = '請填寫出生日期'
       if (!/^[0-9]{10}$/.test(formData.phone)) nextErrors.phone = '請輸入 10 碼手機號碼'
-      if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      if (!formData.email.trim()) {
+        nextErrors.email = '請輸入 Email'
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         nextErrors.email = '請輸入有效 Email'
       }
       if (!formData.preferredLanguage) nextErrors.preferredLanguage = '請選擇聯絡語言'
@@ -766,7 +770,9 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
       if (!formData.lastName.trim()) nextErrors.lastName = '請輸入姓氏'
       if (!formData.birthDate) nextErrors.birthDate = '請填寫出生日期'
       if (!/^[0-9]{10}$/.test(formData.phone)) nextErrors.phone = '請輸入 10 碼手機號碼'
-      if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      if (!formData.email.trim()) {
+        nextErrors.email = '請輸入 Email'
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         nextErrors.email = '請輸入有效 Email'
       }
       if (!formData.preferredLanguage) nextErrors.preferredLanguage = '請選擇聯絡語言'

@@ -15,17 +15,16 @@ import ServicesSection from '@/components/ServicesSection'
 import TeamSection from '@/components/TeamSection'
 import ArticlesSection from '@/components/ArticlesSection'
 import HealthDashboardSection from '@/components/HealthDashboardSection'
-import AppointmentForm from '@/components/AppointmentForm'
 import ContactSection from '@/components/ContactSection'
 
 export const metadata = {
-  title: '瀛愛全人健康管理中心 | WELLSPRING Wellness Center',
+  title: '愛中醫健康管理中心 | AI TCM HEALTH MANAGEMENT CENTER',
   description:
     'AI 健康分析 × 中醫診療 × 預防醫學 × 健康教育 × 長期健康管理，打造可持續擴充的全人健康平台。',
   keywords: 'AI健康管理, 中醫診療, 針灸, 慢性病管理, 預防醫學, 健康教育',
-  authors: [{ name: 'WELLSPRING Wellness Center' }],
+  authors: [{ name: 'AI TCM HEALTH MANAGEMENT CENTER' }],
   openGraph: {
-    title: '瀛愛全人健康管理中心',
+    title: '愛中醫健康管理中心',
     description: 'AI 智慧中醫健康管理平台',
     type: 'website',
   },
@@ -49,7 +48,6 @@ export default function Home() {
       <HealthDashboardSection />
       <TeamSection />
       <ArticlesSection />
-      <AppointmentForm />
       <ContactSection />
       <FinalCtaSection />
       <Footer />

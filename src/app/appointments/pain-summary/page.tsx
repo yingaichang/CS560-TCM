@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: '疼痛部位簡表 | WELLSPRING Wellness Center',
+  title: '疼痛部位簡表 | AI TCM HEALTH MANAGEMENT CENTER',
   description: '請填寫疼痛部位與症狀摘要，協助醫師為您安排針灸或疼痛調理。',
 }
 

@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 export default function Footer() {
   return (
     <footer className="mt-20 bg-[#355C46] text-white">
@@ -5,12 +7,16 @@ export default function Footer() {
         <div className="mb-12 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/15 text-lg font-semibold">
-                瀛
-              </div>
+              <Image
+                src="/images/ai-tcm-health-management-center-logo.png"
+                alt="愛中醫健康管理中心 Logo"
+                width={44}
+                height={44}
+                className="h-11 w-11 rounded-full border border-white/30 bg-white/15 object-contain"
+              />
               <div>
-                <h3 className="text-base font-semibold tracking-[0.12em]">瀛愛全人健康管理中心</h3>
-                <p className="font-brand text-sm tracking-[0.05em] text-white/78">WELLSPRING Wellness Center</p>
+                <h3 className="text-base font-semibold tracking-[0.12em]">愛中醫健康管理中心</h3>
+                <p className="font-brand text-sm tracking-[0.05em] text-white/78">AI TCM HEALTH MANAGEMENT CENTER</p>
               </div>
             </div>
             <p className="text-sm leading-7 text-white/75">
@@ -107,7 +113,7 @@ export default function Footer() {
 
         <div className="border-t border-white/20 pt-8">
           <div className="flex justify-center">
-            <p className="text-sm text-white/60">© 2026 WELLSPRING Wellness Center. All rights reserved.</p>
+            <p className="text-sm text-white/60">© 2026 AI TCM HEALTH MANAGEMENT CENTER. All rights reserved.</p>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { findHealthTopicById } from '@/lib/healthTopics'
+import { writeAuditLog } from '@/lib/auditLog'
 
 function getStripeClient() {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -66,6 +67,15 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
+
+    await writeAuditLog({
+      action: 'checkout_session_created',
+      resource: 'health_topic_checkout',
+      resourceId: session.id,
+      actorRole: 'public',
+      source: 'public.payment',
+      outcome: 'initiated',
+    })
 
     return NextResponse.json({ sessionId: session.id, sessionUrl: session.url })
   } catch (error) {

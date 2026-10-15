@@ -93,7 +93,7 @@ GRANT ALL PRIVILEGES ON DATABASE tcm_clinic TO tcm_user;
 
 ```env
 DATABASE_URL="postgresql://tcm_user:your_password@localhost:5432/tcm_clinic"
-NEXTAUTH_SECRET="生成一個隨機密鑰"
+Clerk development keys are generated with `npx -y clerk@latest env pull` and stored in ignored `.env.local`.
 ```
 
 ### 6️⃣ 初始化數據庫
@@ -141,7 +141,7 @@ npm run dev
 - [ ] 根據品牌調整字體和排版
 
 ### 功能部署
-- [ ] 配置 Google OAuth（可選）
+- [x] Clerk authentication setup
 - [ ] 設置電郵通知功能（預約和聯絡表單提交時發送郵件）
 - [ ] 添加預約確認郵件
 - [ ] 設置管理員面板查看預約和聯絡消息
@@ -206,7 +206,7 @@ npm run dev
 
 ### 可選擴展
 ⭕ 用戶認證系統
-⭕ Google OAuth 登入
+✅ Clerk authentication
 ⭕ 電郵通知功能
 ⭕ 支付集成
 ⭕ 博客系統

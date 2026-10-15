@@ -247,5 +247,6 @@ export async function verifyAuditChain() {
 
 export function writeAuditLog(event: AuditEvent, transaction?: AuditTransaction) {
   if (transaction) return appendAuditLog(transaction, event)
-  return prisma.$transaction((client) => appendAuditLog(client, event))
+  // Audit writes serialize on a single chain row, so concurrent requests can queue for longer than Prisma's 5s default.
+  return prisma.$transaction((client) => appendAuditLog(client, event), { maxWait: 30000, timeout: 30000 })
 }

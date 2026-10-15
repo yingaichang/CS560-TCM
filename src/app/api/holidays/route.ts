@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Prisma, PrismaClient } from '@prisma/client'
+import { writeAuditLog } from '@/lib/auditLog'
 
 const prisma = new PrismaClient()
 
@@ -94,12 +95,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const holiday = await prisma.holiday.create({
-      data: {
-        holidayDate,
-        name,
-        isClosed,
-      },
+    const holiday = await prisma.$transaction(async (transaction) => {
+      const created = await transaction.holiday.create({
+        data: { holidayDate, name, isClosed },
+      })
+      await writeAuditLog({
+        serviceId: 'holiday-api',
+        action: 'create',
+        resource: 'holiday',
+        resourceId: created.id,
+        actorRole: 'system',
+        source: 'system.holidays',
+        module: 'holidays',
+        summary: 'Holiday record created',
+      }, transaction)
+      return created
     })
 
     return NextResponse.json(holiday, { status: 201 })
@@ -137,8 +147,18 @@ export async function DELETE(request: NextRequest) {
     }
 
     if (id) {
-      await prisma.holiday.delete({
-        where: { id },
+      await prisma.$transaction(async (transaction) => {
+        await transaction.holiday.delete({ where: { id } })
+        await writeAuditLog({
+          serviceId: 'holiday-api',
+          action: 'delete',
+          resource: 'holiday',
+          resourceId: id,
+          actorRole: 'system',
+          source: 'system.holidays',
+          module: 'holidays',
+          summary: 'Holiday record deleted',
+        }, transaction)
       })
 
       return NextResponse.json({ message: '假日已刪除' })
@@ -152,8 +172,19 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    await prisma.holiday.delete({
-      where: { holidayDate },
+    await prisma.$transaction(async (transaction) => {
+      const holiday = await transaction.holiday.findUniqueOrThrow({ where: { holidayDate }, select: { id: true } })
+      await transaction.holiday.delete({ where: { holidayDate } })
+      await writeAuditLog({
+        serviceId: 'holiday-api',
+        action: 'delete',
+        resource: 'holiday',
+        resourceId: holiday.id,
+        actorRole: 'system',
+        source: 'system.holidays',
+        module: 'holidays',
+        summary: 'Holiday record deleted',
+      }, transaction)
     })
 
     return NextResponse.json({ message: '假日已刪除' })

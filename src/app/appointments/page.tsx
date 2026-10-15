@@ -36,7 +36,7 @@ export default function AppointmentsPage() {
           <div className="rounded-[40px] border border-[#D9D5CC] bg-white p-6 shadow-sm md:p-10">
             <div className="mb-8 max-w-2xl">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#6F8A72]">
-                WELLSPRING Wellness Center
+                AI TCM HEALTH MANAGEMENT CENTER
               </p>
               <h1 className="mt-4 text-3xl font-semibold text-[#355C46] sm:text-4xl">
                 線上預約

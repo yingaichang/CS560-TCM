@@ -1,10 +1,12 @@
 ﻿'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import MobileMenu from '@/components/MobileMenu'
+import ClerkAuthControls from '@/components/ClerkAuthControls'
 import { MAIN_NAV_ITEMS } from '@/lib/navigation'
 
 const HASH_ACTIVE_MAP: Record<string, string> = {
@@ -129,21 +131,25 @@ export default function Header() {
     >
       <div
         className="
-          mx-auto flex h-[82px] max-w-[1320px]
+          mx-auto flex h-[72px] max-w-[1320px]
           items-center justify-between
           px-4 md:px-6 lg:px-8
         "
       >
-        <Link href="/#home" className="flex items-center gap-2.5 xl:gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-white text-base font-semibold text-primary shadow-sm xl:h-11 xl:w-11 xl:text-lg">
-            瀛
-          </span>
+        <Link href="/#home" className="flex items-center gap-2 xl:gap-2.5">
+          <Image
+            src="/images/ai-tcm-health-management-center-logo.png"
+            alt="愛中醫健康管理中心 Logo"
+            width={36}
+            height={36}
+            className="h-8 w-8 rounded-full border border-primary/20 bg-white object-contain shadow-sm xl:h-9 xl:w-9"
+          />
           <span className="hidden md:block">
-            <strong className="block text-xs font-semibold tracking-[0.14em] text-primary xl:text-sm xl:tracking-[0.16em]">
-              瀛愛全人健康管理中心
+            <strong className="block text-[11px] font-semibold tracking-[0.12em] text-primary xl:text-xs xl:tracking-[0.14em]">
+              愛中醫健康管理中心
             </strong>
-            <span className="font-brand block text-[10px] tracking-[0.08em] text-wood xl:text-[12px] xl:tracking-[0.1em]">
-              WELLSPRING Wellness Center
+            <span className="font-brand block text-[9px] tracking-[0.06em] text-wood xl:text-[10px] xl:tracking-[0.08em]">
+              AI TCM HEALTH MANAGEMENT CENTER
             </span>
           </span>
         </Link>
@@ -212,20 +218,7 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-2.5 lg:flex">
-          <Link
-            href="/#contact"
-            className="inline-flex min-w-[108px] items-center justify-center rounded-full border border-primary/20 bg-white px-4 py-2 text-sm font-medium text-primary transition hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f3eb]"
-          >
-            登入 / 註冊
-          </Link>
-          <Link
-            href="/#appointment"
-            className="inline-flex min-w-[108px] items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-[0_10px_25px_rgba(70,100,77,0.25)] transition hover:bg-[#395440] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f3eb]"
-          >
-            立即預約
-          </Link>
-        </div>
+        <ClerkAuthControls className="ml-auto mr-3 lg:ml-0 lg:mr-0" />
 
         <button
           type="button"

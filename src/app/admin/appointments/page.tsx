@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Appointment = {
   id: string
@@ -68,6 +68,7 @@ export default function AdminAppointmentsPage() {
   const [selected, setSelected] = useState<Appointment | null>(null)
   const [editDate, setEditDate] = useState('')
   const [editTime, setEditTime] = useState('')
+  const pollInFlight = useRef(false)
 
   const fetchAppointments = async (status = 'pending', pageArg = 1, size = 10) => {
     setLoading(true)
@@ -92,16 +93,21 @@ export default function AdminAppointmentsPage() {
 
   useEffect(() => {
     setPage(1)
-    fetchAppointments(filter, 1, pageSize)
   }, [filter, pageSize])
 
+  // A single fetch effect avoids concurrent duplicate requests, each of which writes an audit-log entry.
   useEffect(() => {
     fetchAppointments(filter, page, pageSize)
-  }, [page])
+  }, [filter, page, pageSize])
 
   // Poll so kiosk self check-ins show up here without a manual refresh.
+  // Skip a tick while a request is still running so slow responses don't pile up.
   useEffect(() => {
-    const interval = setInterval(() => fetchAppointments(filter, page, pageSize), 8000)
+    const interval = setInterval(() => {
+      if (pollInFlight.current) return
+      pollInFlight.current = true
+      fetchAppointments(filter, page, pageSize).finally(() => { pollInFlight.current = false })
+    }, 15000)
     return () => clearInterval(interval)
   }, [filter, page, pageSize])
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
+import { writeAuditLog } from '@/lib/auditLog'
 
 const prisma = new PrismaClient()
 
@@ -99,15 +100,27 @@ export async function POST(request: NextRequest) {
     const existingSet = new Set(existing.map((item) => toDateString(item.holidayDate)))
     const toCreate = holidayItems.filter((item) => !existingSet.has(item.date))
 
-    if (toCreate.length > 0) {
-      await prisma.holiday.createMany({
-        data: toCreate.map((item) => ({
-          holidayDate: new Date(`${item.date}T00:00:00`),
-          name: item.name,
-          isClosed: true,
-        })),
-      })
-    }
+    await prisma.$transaction(async (transaction) => {
+      if (toCreate.length > 0) {
+        await transaction.holiday.createMany({
+          data: toCreate.map((item) => ({
+            holidayDate: new Date(`${item.date}T00:00:00`),
+            name: item.name,
+            isClosed: true,
+          })),
+        })
+      }
+      await writeAuditLog({
+        serviceId: 'holiday-api',
+        action: 'seed',
+        resource: 'holiday_catalog',
+        actorRole: 'system',
+        source: 'system.holiday-seed',
+        module: 'holidays',
+        outcome: toCreate.length ? 'success' : 'no_change',
+        summary: `Holiday catalog seeded; ${toCreate.length} records created`,
+      }, transaction)
+    })
 
     return NextResponse.json(
       {
