@@ -1,5 +1,6 @@
 "use client"
 
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
 type Appointment = {
@@ -154,6 +155,7 @@ export default function AdminAppointmentsPage() {
       <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h1 className="text-2xl font-semibold text-[#355C46]">預約管理</h1>
         <div className="flex items-center gap-2">
+          <Link href="/admin/appointments/new" className="rounded bg-[#355C46] px-3 py-2 text-white text-sm">新增預約</Link>
           <select value={filter} onChange={(e) => setFilter(e.target.value)} className="rounded-md border px-3 py-2">
             <option value="all">全部預約</option>
             <option value="pending">待確認預約</option>
@@ -224,6 +226,7 @@ export default function AdminAppointmentsPage() {
                     <div className="flex flex-col gap-2">
                       <button onClick={() => updateAppointment(a.id, { status: 'confirmed' })} className="rounded bg-green-600 px-2 py-1 text-white text-xs">確認預約</button>
                       <button onClick={() => setSelected(a)} className="rounded bg-blue-600 px-2 py-1 text-white text-xs">查看詳細</button>
+                      <Link href={`/admin/appointments/${a.id}/edit`} className="rounded bg-amber-600 px-2 py-1 text-center text-white text-xs">修改預約</Link>
                       <button onClick={() => {
                         const newDate = prompt('新的預約日期 (YYYY-MM-DD)', new Date(a.date).toISOString().slice(0,10))
                         const newTime = prompt('新的預約時間 (HH:MM)', a.appointmentTime)
