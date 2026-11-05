@@ -1,17 +1,24 @@
-import AdminPlaceholderPage from '@/components/admin/AdminPlaceholderPage'
+import AdminPageScaffold from '@/components/AdminPageScaffold'
 
-export const metadata = { title: '指定角色 | 診所管理系統' }
-
-export default async function AssignRolePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function AssignUserRolePage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
   const { id } = await params
+
   return (
-    <AdminPlaceholderPage
-      title="指定角色"
-      description="此頁將用於為選定的使用者指定角色。目前尚未實作資料儲存與角色權限。"
+    <AdminPageScaffold
+      title="指定使用者角色"
+      description={`使用者編號：${id}。角色選擇與權限儲存尚未實作。`}
       backHref="/admin/users"
-      backLabel="返回使用者清單"
     >
-      <p className="mt-3 text-xs text-gray-500">使用者編號：{id}</p>
-    </AdminPlaceholderPage>
+      <div className="rounded-lg border bg-white p-6 shadow-sm">
+        <p className="text-sm text-gray-600">後續可在此選擇管理員、診所人員或其他角色。</p>
+        <button type="button" disabled className="mt-5 rounded bg-gray-300 px-4 py-2 text-sm font-medium text-gray-600">
+          儲存角色（尚未開放）
+        </button>
+      </div>
+    </AdminPageScaffold>
   )
 }

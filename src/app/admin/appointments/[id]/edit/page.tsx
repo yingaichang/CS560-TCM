@@ -1,17 +1,21 @@
-import AdminPlaceholderPage from '@/components/admin/AdminPlaceholderPage'
+import AdminPageScaffold from '@/components/AdminPageScaffold'
 
-export const metadata = { title: '修改預約 | 診所管理系統' }
-
-export default async function EditAppointmentPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditAppointmentPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
   const { id } = await params
+
   return (
-    <AdminPlaceholderPage
+    <AdminPageScaffold
       title="修改預約"
-      description="此頁將用於修改預約的日期、時間與內容。目前尚未實作資料儲存。"
+      description={`預約編號：${id}。此頁為介面架構，修改表單與資料儲存尚未實作。`}
       backHref="/admin/appointments"
-      backLabel="返回預約清單"
     >
-      <p className="mt-3 text-xs text-gray-500">預約編號：{id}</p>
-    </AdminPlaceholderPage>
+      <div className="rounded-lg border bg-white p-6 shadow-sm">
+        <p className="text-sm text-gray-600">後續可在此調整預約資料。現有清單中的日期、時段與取消操作仍可使用。</p>
+      </div>
+    </AdminPageScaffold>
   )
 }

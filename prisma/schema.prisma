@@ -158,9 +158,11 @@ model PatientProfile {
   city                     String?
   state                    String?
   postalCode               String?
+  country                  String?
   emergencyContact         String?
   emergencyRelationship    String?
   emergencyContactPhone    String?
+  emergencyContactEmail    String?
   lastVisitAt              DateTime?
   createdAt                DateTime @default(now())
   updatedAt                DateTime @updatedAt

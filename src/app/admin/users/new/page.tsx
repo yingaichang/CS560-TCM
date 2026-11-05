@@ -1,14 +1,18 @@
-import AdminPlaceholderPage from '@/components/admin/AdminPlaceholderPage'
+import AdminPageScaffold from '@/components/AdminPageScaffold'
 
-export const metadata = { title: '新增使用者 | 診所管理系統' }
-
-export default function NewUserPage() {
+export default function NewAdminUserPage() {
   return (
-    <AdminPlaceholderPage
+    <AdminPageScaffold
       title="新增使用者"
-      description="此頁將用於建立新的後台使用者。目前尚未實作資料儲存。"
+      description="新增後台使用者的頁面架構。帳號建立與角色權限尚未實作。"
       backHref="/admin/users"
-      backLabel="返回使用者清單"
-    />
+    >
+      <div className="rounded-lg border bg-white p-6 shadow-sm">
+        <p className="text-sm text-gray-600">後續可在此輸入使用者資訊並指定初始角色。</p>
+        <button type="button" disabled className="mt-5 rounded bg-gray-300 px-4 py-2 text-sm font-medium text-gray-600">
+          建立使用者（尚未開放）
+        </button>
+      </div>
+    </AdminPageScaffold>
   )
 }

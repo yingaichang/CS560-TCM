@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "npx prisma db push",
-    "db:studio": "npx.cmd prisma studio --schema=./prisma/schema.prisma",
+    "db:studio": "npx prisma studio --schema=./prisma/schema.prisma",
     "db:seed": "npx prisma db seed",
     "db:seed:ehr": "npx tsx scripts/seed-ehr-catalog.ts",
     "db:seed:ehr-demo": "npx tsx scripts/seed-ehr-demo.ts",
