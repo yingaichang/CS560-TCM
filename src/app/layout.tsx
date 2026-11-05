@@ -1,4 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { LocalClerkBypassProvider } from '@/components/LocalClerkBypassProvider'
+import { isLocalClerkBypassEnabled } from '@/lib/localClerkBypass'
 import type { Metadata } from 'next'
 import '@/styles/globals.css'
 
@@ -13,6 +15,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const localClerkBypass = isLocalClerkBypassEnabled
+
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
@@ -20,9 +24,9 @@ export default function RootLayout({
         <meta charSet="utf-8" />
       </head>
       <body className="antialiased">
-        <ClerkProvider>
-          {children}
-        </ClerkProvider>
+        <LocalClerkBypassProvider enabled={localClerkBypass}>
+          {localClerkBypass ? children : <ClerkProvider>{children}</ClerkProvider>}
+        </LocalClerkBypassProvider>
       </body>
     </html>
   )

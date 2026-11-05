@@ -67,7 +67,15 @@ Clerk local development configuration is managed with:
 npx clerk@latest env pull
 ```
 Keep `.env.local` private; Clerk's secret key must remain server-side.
+
+To preview public UI pages locally without Clerk keys, explicitly opt in for that
+command only:
+```bash
+LOCAL_CLERK_BYPASS=true npm run dev
 ```
+This works only in development. Sign-in, admin/EHR pages, and all API routes are
+unavailable in this mode; it does not create an authenticated user or bypass API
+or database authorization. Omit the variable to restore normal Clerk behavior.
 
 4. **數據庫設置**
 ```bash
