@@ -17,10 +17,14 @@ node_modules
 
 # Misc
 .DS_Store
+__MACOSX/
 *.pem
 *.vsix
 .env
 .env.*
+
+# Local SSH and VPN credentials
+/cse03-ssh-YingAi/
 
 # Logs
 npm-debug.log*

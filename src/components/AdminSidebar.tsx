@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { CalendarDays, ChevronDown, ClipboardList, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
+import { CalendarDays, ChevronDown, ClipboardList, ShieldCheck, Users, Wrench, type LucideIcon } from 'lucide-react'
 
 type MenuItem = { label: string; href?: string; planned?: boolean }
 type MenuSection = { key: string; label: string; icon: LucideIcon; basePath: string; items: MenuItem[] }
@@ -55,6 +55,14 @@ const sections: MenuSection[] = [
 
 const matchesPath = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`)
 
+const developmentSection: MenuSection = {
+  key: 'development',
+  label: 'Development',
+  icon: Wrench,
+  basePath: '/admin/development',
+  items: [{ label: 'Architecture Status', href: '/admin/development/architecture-status' }],
+}
+
 // Patient profile and record pages need an id, so they only appear once a patient is selected.
 function patientContextItems(pathname: string): MenuItem[] {
   const patientId = pathname.match(/^\/admin\/patients\/([^/]+)/)?.[1]
@@ -71,9 +79,10 @@ function patientContextItems(pathname: string): MenuItem[] {
   return items
 }
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ showDevelopment = false }: { showDevelopment?: boolean }) {
   const pathname = usePathname() ?? ''
-  const activeSection = sections.find((section) => matchesPath(pathname, section.basePath))?.key
+  const visibleSections = showDevelopment ? [...sections, developmentSection] : sections
+  const activeSection = visibleSections.find((section) => matchesPath(pathname, section.basePath))?.key
   const [openSections, setOpenSections] = useState<string[]>(activeSection ? [activeSection] : [])
 
   useEffect(() => {
@@ -89,7 +98,7 @@ export default function AdminSidebar() {
     section.key === 'patients' ? [...section.items, ...patientContextItems(pathname)] : section.items
 
   // The most specific matching link wins, so only one submenu item is highlighted.
-  const activeHref = sections
+  const activeHref = visibleSections
     .flatMap(itemsFor)
     .map((item) => item.href)
     .filter((href): href is string => Boolean(href) && matchesPath(pathname, href as string))
@@ -101,7 +110,7 @@ export default function AdminSidebar() {
         <Link href="/admin" className="text-lg font-semibold text-[#355C46]">診所管理</Link>
       </div>
       <nav className="space-y-2" aria-label="後台導覽">
-        {sections.map((section) => {
+        {visibleSections.map((section) => {
           const Icon = section.icon
           const isOpen = openSections.includes(section.key)
           const panelId = `admin-menu-${section.key}`
