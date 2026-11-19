@@ -51,7 +51,7 @@ export const MAIN_NAV_ITEMS: MainNavItem[] = [
     href: homeAnchor('#articles'),
     children: [
       { label: '健康學院', href: homeAnchor('#articles') },
-      { label: '課程與活動', href: homeAnchor('#team') },
+      { label: 'CEU 繼續教育與報名', href: '/courses-events' },
       { label: '健康商城', href: '/payment' },
     ],
   },

@@ -55,6 +55,7 @@ function canonicalAuditFields(entry: HashableAuditEntry) {
     serviceId: entry.serviceId,
     role: entry.actorRole,
     action: entry.action,
+    resource: entry.resource,
     relatedRecordId: entry.resourceId,
     result: entry.outcome,
     sessionId: entry.sessionId,
@@ -64,12 +65,28 @@ function canonicalAuditFields(entry: HashableAuditEntry) {
   }
 }
 
-function entryHash(entry: HashableAuditEntry) {
+// Hash version 2 was deployed before resource was included in the canonical fields.
+// Keep it for validating and migrating chains created by that version.
+function canonicalAuditFieldsV2(entry: HashableAuditEntry) {
+  const { resource, ...fields } = canonicalAuditFields(entry)
+  void resource
+  return fields
+}
+
+function hashCanonicalFields(previousHash: string, fields: object) {
   return createHash('sha256')
-    .update(entry.previousHash)
+    .update(previousHash)
     .update('\n')
-    .update(JSON.stringify(canonicalAuditFields(entry)))
+    .update(JSON.stringify(fields))
     .digest('hex')
+}
+
+function entryHash(entry: HashableAuditEntry) {
+  return hashCanonicalFields(entry.previousHash, canonicalAuditFields(entry))
+}
+
+function entryHashV2(entry: HashableAuditEntry) {
+  return hashCanonicalFields(entry.previousHash, canonicalAuditFieldsV2(entry))
 }
 
 function legacyEntryHash(entry: StoredAuditEntry) {
@@ -112,11 +129,46 @@ async function lockAuditChain(transaction: AuditTransaction) {
 
 async function upgradeAuditChain(transaction: AuditTransaction) {
   const chain = await transaction.auditLogChain.findUniqueOrThrow({ where: { id: 'global' } })
-  if (chain.hashVersion >= 2) return true
+  if (chain.hashVersion >= 3) return true
 
   const entries = await transaction.auditLog.findMany({
     orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
   })
+
+  if (chain.hashVersion === 2) {
+    let previousHash = GENESIS_HASH
+    let valid = true
+    for (const entry of entries) {
+      const hashable: HashableAuditEntry = { ...entry, previousHash }
+      if (entry.previousHash !== previousHash || entry.entryHash !== entryHashV2(hashable)) {
+        valid = false
+        break
+      }
+      previousHash = entry.entryHash
+    }
+    const headMatches = entries.length
+      ? previousHash === chain.headHash && entries[entries.length - 1].createdAt.getTime() === chain.headCreatedAt?.getTime()
+      : chain.headHash === null && chain.headCreatedAt === null
+    if (!valid || !headMatches) return false
+
+    previousHash = GENESIS_HASH
+    let lastCreatedAt: Date | null = null
+    for (const entry of entries) {
+      const hashable: HashableAuditEntry = { ...entry, previousHash }
+      const hash = entryHash(hashable)
+      await transaction.auditLog.update({
+        where: { id: entry.id },
+        data: { previousHash, entryHash: hash },
+      })
+      previousHash = hash
+      lastCreatedAt = entry.createdAt
+    }
+    await transaction.auditLogChain.update({
+      where: { id: 'global' },
+      data: { headHash: entries.length ? previousHash : null, headCreatedAt: lastCreatedAt, hashVersion: 3 },
+    })
+    return true
+  }
 
   let legacyPreviousHash: string | null = null
   let legacyValid = true
@@ -160,7 +212,7 @@ async function upgradeAuditChain(transaction: AuditTransaction) {
       summary,
       previousHash,
     }
-    const hash = entryHash(hashable)
+    const hash = entryHashV2(hashable)
     await transaction.auditLog.update({
       where: { id: entry.id },
       data: { serviceId, module: moduleName, summary, previousHash, entryHash: hash },
@@ -173,7 +225,7 @@ async function upgradeAuditChain(transaction: AuditTransaction) {
     where: { id: 'global' },
     data: { headHash: entries.length ? previousHash : null, headCreatedAt: lastCreatedAt, hashVersion: 2 },
   })
-  return true
+  return upgradeAuditChain(transaction)
 }
 
 async function appendAuditLog(transaction: AuditTransaction, event: AuditEvent) {
@@ -223,13 +275,12 @@ async function appendAuditLog(transaction: AuditTransaction, event: AuditEvent) 
 
 export async function verifyAuditChain() {
   return prisma.$transaction(async (transaction) => {
-    await lockAuditChain(transaction)
-    if (!await upgradeAuditChain(transaction)) return false
-
     const [chain, entries] = await Promise.all([
-      transaction.auditLogChain.findUniqueOrThrow({ where: { id: 'global' } }),
+      transaction.auditLogChain.findUnique({ where: { id: 'global' } }),
       transaction.auditLog.findMany({ orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] }),
     ])
+    if (!chain || chain.hashVersion < 3) return false
+
     let previousHash = GENESIS_HASH
     let lastCreatedAt: Date | null = null
 

@@ -233,10 +233,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const actor = await authorizeEhrRequest(['admin', 'clinic_staff'])
-  if (!actor) return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
-
   try {
+    const actor = await authorizeEhrRequest(['admin', 'clinic_staff'])
+    if (!actor) return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
     const dateParam = searchParams.get('date')
@@ -273,8 +272,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(appointments)
   } catch (error) {
     console.error('Error fetching appointments:', error)
+    const details = process.env.NODE_ENV === 'development'
+      ? error instanceof Error ? error.message : String(error)
+      : undefined
     return NextResponse.json(
-      { error: '無法獲取預約資訊' },
+      { error: '無法獲取預約資訊', ...(details ? { details } : {}) },
       { status: 500 }
     )
   }

@@ -1,0 +1,106 @@
+
+> tcm-clinic-site@1.0.0 dev
+> next dev
+
+   ▲ Next.js 15.5.20
+   - Local:        http://localhost:3000
+   - Network:      http://10.0.0.121:3000
+   - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 3.4s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 5.4s (213 modules)
+ ○ Compiling /api/appointments ...
+ ✓ Compiled / in 24.1s (1259 modules)
+Attention: Clerk collects telemetry data from its SDKs when connected to development instances.
+The data collected is used to inform Clerk's product roadmap.
+To learn more, including how to opt-out from the telemetry program, visit: https://clerk.com/docs/telemetry.
+
+ GET / 200 in 14132ms
+ ✓ Compiled in 1971ms (414 modules)
+ GET /api/appointments?status=pending&take=10&skip=0 200 in 27450ms
+ GET /api/appointments?status=pending&take=10&skip=0 200 in 568ms
+ GET /api/appointments?status=pending&take=10&skip=0 200 in 665ms
+ GET /api/appointments?status=pending&take=10&skip=0 200 in 1102ms
+ GET /api/appointments?status=pending&take=10&skip=0 200 in 2191ms
+ ○ Compiling /admin/appointments ...
+ ✓ Compiled /admin/appointments in 2.6s (1205 modules)
+ GET /admin/appointments 200 in 3495ms
+ GET /api/appointments?status=pending&take=10&skip=0 200 in 1804ms
+ ○ Compiling /admin/appointments/new ...
+ ✓ Compiled /admin/appointments/new in 650ms (1212 modules)
+ GET /admin/appointments/new 200 in 1071ms
+ GET /admin/appointments/new 200 in 134ms
+ GET /admin/appointments 200 in 737ms
+ GET /api/appointments?status=pending&take=10&skip=0 200 in 1547ms
+ GET /api/appointments?status=pending&take=10&skip=0 200 in 713ms
+ GET /admin/appointments/new 200 in 205ms
+ ✓ Compiled in 1807ms (1154 modules)
+ GET /admin/appointments/new 200 in 422ms
+ ○ Compiling /admin/audit-logs ...
+ ✓ Compiled /admin/audit-logs in 1154ms (1177 modules)
+ GET /admin/audit-logs 200 in 1917ms
+ ○ Compiling /api/admin/audit-logs ...
+ ✓ Compiled /api/admin/audit-logs in 616ms (1184 modules)
+ GET /api/admin/audit-logs?take=50&skip=0 200 in 2795ms
+ GET /api/admin/audit-logs?take=50&skip=0 200 in 2804ms
+ ✓ Compiled in 555ms (435 modules)
+ GET /admin/audit-logs 200 in 197ms
+ GET /admin/audit-logs 200 in 817ms
+ GET /api/admin/audit-logs?take=50&skip=0 200 in 2547ms
+ ✓ Compiled in 1904ms (1191 modules)
+ GET /admin/audit-logs 200 in 462ms
+ GET /admin/audit-logs 200 in 744ms
+ ✓ Compiled /api/admin/audit-logs in 467ms (763 modules)
+ GET /api/admin/audit-logs?take=50&skip=0 200 in 1588ms
+ GET /admin/audit-logs 200 in 1001ms
+ GET /api/admin/audit-logs?take=50&skip=0 200 in 488ms
+ ✓ Compiled in 642ms (756 modules)
+ GET /admin/audit-logs 200 in 418ms
+ ✓ Compiled in 422ms (756 modules)
+ GET /admin/audit-logs 200 in 168ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 46.2s (1196 modules)
+ GET /admin/audit-logs 404 in 51117ms
+ ○ Compiling /sign-in/[[...sign-in]] ...
+ ✓ Compiled /sign-in/[[...sign-in]] in 10.7s (1201 modules)
+ GET /sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2Fadmin%2Faudit-logs 200 in 179018ms
+ GET /sign-in/SignIn_clerk_catchall_check_1794549909279 200 in 1357ms
+ GET /admin/audit-logs 200 in 608ms
+ ○ Compiling /api/admin/audit-logs ...
+ ✓ Compiled /api/admin/audit-logs in 1123ms (767 modules)
+ GET /admin/audit-logs 200 in 563ms
+ GET /api/admin/audit-logs?take=50&skip=0 200 in 4324ms
+ GET /admin/audit-logs 200 in 927ms
+ GET /api/admin/audit-logs?take=50&skip=0 200 in 772ms
+ GET /admin/audit-logs 200 in 566ms
+ GET /api/admin/audit-logs?take=50&skip=0 200 in 480ms
+ ✓ Compiled in 877ms (436 modules)
+ GET /admin/audit-logs 200 in 397ms
+ ✓ Compiled in 588ms (422 modules)
+ ○ Compiling /admin ...
+ ✓ Compiled / in 3.1s (1256 modules)
+ GET / 200 in 4027ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 13.7s (1273 modules)
+ GET / 404 in 16046ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 70.4s (1605 modules)
+ GET /sign-in 500 in 92845ms
+ GET /sign-in 200 in 1975ms
+ GET / 200 in 1926ms
+ GET /sign-in 200 in 578ms
+ GET / 200 in 1035ms
+ HEAD /sign-in 200 in 225ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 1801ms (933 modules)
+ GET /admin 200 in 3392ms
+ GET /sign-in 200 in 200ms
+ GET /admin 200 in 240ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 279.5s (1521 modules)
+ GET /admin 404 in 332464ms
+ GET /admin 200 in 57063ms
+ GET /admin 200 in 2716ms
+[?25h

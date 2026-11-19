@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { CalendarDays, ChevronDown, ClipboardList, Users, type LucideIcon } from 'lucide-react'
+import { CalendarDays, ChevronDown, ClipboardList, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
 
 type MenuItem = { label: string; href?: string; planned?: boolean }
 type MenuSection = { key: string; label: string; icon: LucideIcon; basePath: string; items: MenuItem[] }
@@ -40,6 +40,15 @@ const sections: MenuSection[] = [
       { label: '使用者清單', href: '/admin/users' },
       { label: '新增使用者', href: '/admin/users/new' },
       { label: '角色與權限', planned: true },
+    ],
+  },
+  {
+    key: 'security',
+    label: '系統管理／安全性',
+    icon: ShieldCheck,
+    basePath: '/admin/audit-logs',
+    items: [
+      { label: '稽核紀錄', href: '/admin/audit-logs' },
     ],
   },
 ]
@@ -99,6 +108,7 @@ export default function AdminSidebar() {
           return (
             <div key={section.key} className="rounded-lg border border-gray-100">
               <button
+                suppressHydrationWarning
                 type="button"
                 onClick={() => toggle(section.key)}
                 aria-expanded={isOpen}

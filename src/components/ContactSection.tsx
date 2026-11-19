@@ -155,7 +155,7 @@ export default function ContactSection() {
                 >
                   姓名 <span className="text-red-500">*</span>
                 </label>
-                <input
+                <input suppressHydrationWarning
                   type="text"
                   id="name"
                   name="name"
@@ -174,7 +174,7 @@ export default function ContactSection() {
                 >
                   電郵 <span className="text-red-500">*</span>
                 </label>
-                <input
+                <input suppressHydrationWarning
                   type="email"
                   id="email"
                   name="email"
@@ -193,7 +193,7 @@ export default function ContactSection() {
                 >
                   主旨 <span className="text-red-500">*</span>
                 </label>
-                <input
+                <input suppressHydrationWarning
                   type="text"
                   id="subject"
                   name="subject"
@@ -212,7 +212,7 @@ export default function ContactSection() {
                 >
                   訊息 <span className="text-red-500">*</span>
                 </label>
-                <textarea
+                <textarea suppressHydrationWarning
                   id="message"
                   name="message"
                   value={formData.message}
@@ -224,7 +224,7 @@ export default function ContactSection() {
                 ></textarea>
               </div>
 
-              <button
+              <button suppressHydrationWarning
                 type="submit"
                 disabled={isLoading}
                 className="w-full btn-primary py-2 font-semibold disabled:opacity-70 disabled:cursor-not-allowed"

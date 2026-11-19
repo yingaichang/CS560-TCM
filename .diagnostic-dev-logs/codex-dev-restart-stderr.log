@@ -1,0 +1,9 @@
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (280kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\ainap\OneDrive\Documents\CS560\sites\TCM Site\.next\server\app\sign-in\[[...sign-in]]\page.js'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\ainap\\OneDrive\\Documents\\CS560\\sites\\TCM Site\\.next\\server\\app\\sign-in\\[[...sign-in]]\\page.js',
+  page: '/sign-in'
+}

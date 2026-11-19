@@ -100,7 +100,7 @@ export default function AuditLogViewer() {
         <div className="flex flex-wrap items-center gap-3">
           {verifyState === 'valid' ? <span className="text-sm font-semibold text-green-700" role="status">Verify Chain: Valid</span> : null}
           {verifyState === 'failed' ? <span className="text-sm font-semibold text-red-700" role="alert">Verify Chain: Failed</span> : null}
-          <button className="rounded border border-[#426451] px-3 py-2 text-sm font-semibold text-[#426451] disabled:opacity-50" type="button" disabled={verifyState === 'checking'} onClick={verifyChain}>
+          <button suppressHydrationWarning className="rounded border border-[#426451] px-3 py-2 text-sm font-semibold text-[#426451] disabled:opacity-50" type="button" disabled={verifyState === 'checking'} onClick={verifyChain}>
             {verifyState === 'checking' ? 'Verifying…' : 'Verify Chain'}
           </button>
           <span className="rounded border border-[#dce3dd] bg-white px-3 py-2 text-xs text-gray-600">{total} events</span>
@@ -111,14 +111,14 @@ export default function AuditLogViewer() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
           <label className="flex items-center gap-2 rounded border border-gray-200 px-3 lg:col-span-2">
             <Search size={15} className="text-gray-500" />
-            <input className="min-w-0 flex-1 py-2 text-sm outline-none" value={action} onChange={(event) => { setAction(event.target.value); setSkip(0) }} placeholder="Filter action" aria-label="Filter action" />
+            <input suppressHydrationWarning className="min-w-0 flex-1 py-2 text-sm outline-none" value={action} onChange={(event) => { setAction(event.target.value); setSkip(0) }} placeholder="Filter action" aria-label="Filter action" />
           </label>
-          <input className="rounded border border-gray-200 px-3 py-2 text-sm" value={resource} onChange={(event) => { setResource(event.target.value); setSkip(0) }} placeholder="Resource" aria-label="Filter resource" />
-          <input className="rounded border border-gray-200 px-3 py-2 text-sm" value={source} onChange={(event) => { setSource(event.target.value); setSkip(0) }} placeholder="Source" aria-label="Filter source" />
-          <input className="rounded border border-gray-200 px-3 py-2 text-sm" type="date" value={from} onChange={(event) => { setFrom(event.target.value); setSkip(0) }} aria-label="From date" />
-          <input className="rounded border border-gray-200 px-3 py-2 text-sm" type="date" value={to} onChange={(event) => { setTo(event.target.value); setSkip(0) }} aria-label="To date" />
+          <input suppressHydrationWarning className="rounded border border-gray-200 px-3 py-2 text-sm" value={resource} onChange={(event) => { setResource(event.target.value); setSkip(0) }} placeholder="Resource" aria-label="Filter resource" />
+          <input suppressHydrationWarning className="rounded border border-gray-200 px-3 py-2 text-sm" value={source} onChange={(event) => { setSource(event.target.value); setSkip(0) }} placeholder="Source" aria-label="Filter source" />
+          <input suppressHydrationWarning className="rounded border border-gray-200 px-3 py-2 text-sm" type="date" value={from} onChange={(event) => { setFrom(event.target.value); setSkip(0) }} aria-label="From date" />
+          <input suppressHydrationWarning className="rounded border border-gray-200 px-3 py-2 text-sm" type="date" value={to} onChange={(event) => { setTo(event.target.value); setSkip(0) }} aria-label="To date" />
         </div>
-        <button className="mt-3 text-xs font-semibold text-[#426451] hover:underline" type="button" onClick={resetFilters}>Clear filters</button>
+        <button suppressHydrationWarning className="mt-3 text-xs font-semibold text-[#426451] hover:underline" type="button" onClick={resetFilters}>Clear filters</button>
       </section>
 
       <section className="overflow-hidden rounded border border-gray-200 bg-white">
@@ -154,8 +154,8 @@ export default function AuditLogViewer() {
         <footer className="flex items-center justify-between border-t border-gray-100 px-4 py-3 text-xs text-gray-600">
           <span>{total ? `${skip + 1}–${Math.min(skip + pageSize, total)} of ${total}` : '0 events'}</span>
           <div className="flex gap-2">
-            <button className="rounded border border-gray-200 p-2 disabled:opacity-40" type="button" aria-label="Previous page" disabled={skip === 0 || loading} onClick={() => setSkip(Math.max(0, skip - pageSize))}><ChevronLeft size={16} /></button>
-            <button className="rounded border border-gray-200 p-2 disabled:opacity-40" type="button" aria-label="Next page" disabled={skip + pageSize >= total || loading} onClick={() => setSkip(skip + pageSize)}><ChevronRight size={16} /></button>
+            <button suppressHydrationWarning className="rounded border border-gray-200 p-2 disabled:opacity-40" type="button" aria-label="Previous page" disabled={skip === 0 || loading} onClick={() => setSkip(Math.max(0, skip - pageSize))}><ChevronLeft size={16} /></button>
+            <button suppressHydrationWarning className="rounded border border-gray-200 p-2 disabled:opacity-40" type="button" aria-label="Next page" disabled={skip + pageSize >= total || loading} onClick={() => setSkip(skip + pageSize)}><ChevronRight size={16} /></button>
           </div>
         </footer>
       </section>

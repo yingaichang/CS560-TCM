@@ -66,6 +66,7 @@ export default function AdminAppointmentsPage() {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [hasMore, setHasMore] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [selected, setSelected] = useState<Appointment | null>(null)
   const [editDate, setEditDate] = useState('')
   const [editTime, setEditTime] = useState('')
@@ -76,13 +77,25 @@ export default function AdminAppointmentsPage() {
     try {
       const skip = (pageArg - 1) * size
       const res = await fetch(`/api/appointments?status=${encodeURIComponent(status)}&take=${size}&skip=${skip}`)
-      const data = await res.json()
+      const responseText = await res.text()
+      let data: unknown = null
+      if (responseText.trim()) {
+        try {
+          data = JSON.parse(responseText)
+        } catch {
+          console.error('Appointments API returned a non-JSON response', res.status, responseText.slice(0, 500))
+        }
+      }
       if (!res.ok || !Array.isArray(data)) {
-        console.error('Failed to load appointments', res.status, JSON.stringify(data))
-        setAppointments([])
+        const message = data && typeof data === 'object' && 'error' in data && typeof data.error === 'string'
+          ? data.error
+          : 'Unable to load appointments (HTTP ' + res.status + (responseText.trim() ? ': invalid response).' : ': empty response).')
+        console.error('Failed to load appointments', res.status, message, data && typeof data === 'object' && 'details' in data ? data.details : undefined)
+        setLoadError(message)
         setHasMore(false)
         return
       }
+      setLoadError(null)
       setAppointments(data)
       setHasMore(data.length === size)
     } catch (e) {
@@ -181,6 +194,12 @@ export default function AdminAppointmentsPage() {
       </div>
 
       <div className="overflow-x-auto rounded-lg border bg-white p-4 shadow-sm">
+        {loadError ? (
+          <div role="alert" className="mb-3 rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+            {loadError}
+            <button onClick={() => fetchAppointments(filter, page, pageSize)} className="ml-2 underline">Retry</button>
+          </div>
+        ) : null}
         {loading ? (
           <p>讀取中…</p>
         ) : (
