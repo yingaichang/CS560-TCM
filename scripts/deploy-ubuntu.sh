@@ -41,7 +41,8 @@ fi
 docker compose up -d --no-deps web
 healthy=false
 for attempt in {1..15}; do
-  if curl -fsS --max-time 10 -o /dev/null -H 'Host: cse03.tcmusa.ai' http://127.0.0.1/; then
+  code=$(curl -sS --max-time 10 -o /dev/null -w '%{http_code}' -H 'Host: cse03.tcmusa.ai' http://127.0.0.1/ || true)
+  if [[ "$code" == 200 ]]; then
     healthy=true
     break
   fi

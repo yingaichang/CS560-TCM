@@ -18,6 +18,17 @@ SSH/VPN credentials, databases and build outputs stay excluded. Recognized
 credential patterns and staged files outside this scope stop the attempt. Other
 branches require manual publishing. Logs: `.local-deploy/publisher.log`.
 
+Windows task controls (PowerShell):
+
+```powershell
+Get-ScheduledTask -TaskName 'TCM Website Auto Publish'
+Stop-ScheduledTask -TaskName 'TCM Website Auto Publish'
+Start-ScheduledTask -TaskName 'TCM Website Auto Publish'
+```
+
+Stopping the task pauses local publishing. The registered sign-in trigger starts
+it again next time Windows signs in; disable the task to keep publishing paused.
+
 Ubuntu's `tcm-ubuntu-deploy.timer` checks GitHub every minute, independently of
 the Windows computer and VPN. It builds new revisions, checks for database
 schema differences, restarts only `web`, and verifies the homepage through

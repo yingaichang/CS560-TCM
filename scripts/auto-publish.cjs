@@ -11,7 +11,7 @@ function allowed(file) {
     && file !== 'prisma/schema.production.prisma'
 }
 function git(root, args) {
-  return execFileSync('git', args, { cwd: root, encoding: 'utf8', windowsHide: true, timeout: 120000, maxBuffer: 32 * 1024 * 1024 })
+  return execFileSync('git', args, { cwd: root, encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'], timeout: 120000, maxBuffer: 32 * 1024 * 1024 })
 }
 function changes(root) {
   const parts = git(root, ['status', '--porcelain=v1', '-z', '--untracked-files=all']).split('\0')
