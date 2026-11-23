@@ -2242,9 +2242,9 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "id": "checkin-encounter",
     "from": "kioskApi",
     "to": "clinicalWrite",
-    "status": "partly_connected",
+    "status": "connected",
     "data": "已明確連結病人的已報到預約、待指派醫師的看診及工作清單；未連結病人時不建立看診。",
-    "assessment": "成功報到會在同一交易更新預約、冪等建立看診及寫入稽核；尚需套用結構遷移並驗證真實操作資料。",
+    "assessment": "報到會在同一交易更新預約、建立唯一看診及寫入稽核；已通過實際畫面與隔離資料庫整合測試，Ubuntu 必要結構另由即時檢查驗證。",
     "evidence": [
       {
         "path": "src/app/api/kiosk/checkin/route.ts",
@@ -2268,9 +2268,9 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "line": 419
       }
     ],
-    "next": "在隔離資料庫驗證未連結預約、重複報到及看診唯一性。",
+    "next": "正式流程仍需驗證真實簡訊及人員事先連結病人的操作；不以隔離測試宣稱簡訊已投遞。",
     "description": "由報到結果建立後續看診工作。",
-    "missingRequirement": "資料庫結構尚未遷移；報到前需先由人員明確連結病人。",
+    "missingRequirement": "報到前需先由人員明確連結病人；真實簡訊及現場設備另行驗證。",
     "safeError": null
   },
   {

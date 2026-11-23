@@ -1,6 +1,7 @@
 import 'server-only'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { request as httpRequest } from 'node:http'
 import nodemailer from 'nodemailer'
 import { prisma } from '@/lib/prisma'
 import type { SystemCheck, SystemCheckId, SystemConnectionReport } from './systemConnectionTypes'
@@ -22,6 +23,26 @@ async function bounded<T>(operation: Promise<T>): Promise<T> {
 
 async function get(url: string, headers?: Record<string, string>) {
   return fetch(url, { headers, cache: 'no-store', signal: AbortSignal.timeout(timeoutMs), redirect: 'error' })
+}
+
+function readUbuntuHomepage(): Promise<string> {
+  // Preserve the public Host header when contacting Caddy over Docker DNS.
+  return new Promise((resolve, reject) => {
+    const request = httpRequest({ hostname: 'proxy', port: 80, path: '/', method: 'GET', headers: { Host: 'cse03.tcmusa.ai' } }, response => {
+      if (response.statusCode !== 200) { response.resume(); reject(new Error('Proxy homepage unhealthy')); return }
+      response.setEncoding('utf8')
+      let body = ''
+      response.on('data', chunk => {
+        body += chunk
+        if (body.length > 1_000_000) request.destroy(new Error('Proxy response too large'))
+      })
+      response.on('end', () => resolve(body))
+      response.on('error', reject)
+    })
+    request.setTimeout(timeoutMs, () => request.destroy(new Error('Proxy timeout')))
+    request.on('error', reject)
+    request.end()
+  })
 }
 
 async function verifySchema(): Promise<Outcome> {
@@ -56,11 +77,7 @@ async function inspect(): Promise<SystemConnectionReport> {
   }
   const isUbuntu = process.env.DEPLOYMENT_TARGET === 'ubuntu'
   let ubuntuHtml: Promise<string> | undefined
-  const localHomepage = () => ubuntuHtml ??= (async () => {
-    const response = await get('http://proxy/', { Host: 'cse03.tcmusa.ai' })
-    if (response.status !== 200) throw new Error('Homepage unhealthy')
-    return response.text()
-  })()
+  const localHomepage = () => ubuntuHtml ??= readUbuntuHomepage()
   const checks = await Promise.all([
     check('database', '資料庫連線', async () => {
       await prisma.$queryRaw`SELECT 1`

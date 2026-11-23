@@ -22,12 +22,14 @@ Windows task controls (PowerShell):
 
 ```powershell
 Get-ScheduledTask -TaskName 'TCM Website Auto Publish'
-Stop-ScheduledTask -TaskName 'TCM Website Auto Publish'
+& ./scripts/pause-auto-publish.ps1
+& ./scripts/pause-auto-publish.ps1 -Resume
 Start-ScheduledTask -TaskName 'TCM Website Auto Publish'
 ```
 
-Stopping the task pauses local publishing. The registered sign-in trigger starts
-it again next time Windows signs in; disable the task to keep publishing paused.
+Use the pause helper to stop publishing while editing a group of files. The pause
+persists across sign-ins until resumed. Stopping the Windows task alone may leave
+its detached Node process running; use the helper for reliable publishing control.
 
 Ubuntu's `tcm-ubuntu-deploy.timer` checks GitHub every minute, independently of
 the Windows computer and VPN. It builds new revisions, checks for database

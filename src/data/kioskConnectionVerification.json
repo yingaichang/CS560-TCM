@@ -1,8 +1,8 @@
 {
-  "at": "2026-11-23T01:50:24.135Z",
-  "result": "failed",
+  "at": "2026-11-23T05:39:39.525Z",
+  "result": "passed",
   "command": "node scripts/test-kiosk-connection.cjs",
-  "scope": "最近一次本機隔離報到測試未通過；診斷內容不公開。",
+  "scope": "以實際畫面、三個既有 POST 處理函式、暫存 SQLite 與本機簡訊替身通過成功報到、錯碼拒絕及簡訊拒收的瀏覽器整合測試，並核對儲存狀態與稽核；未驗證 Next 中介層、正式部署、真實簡訊或掃描設備。",
   "components": [
     "kiosk",
     "kioskApi",
@@ -16,5 +16,63 @@
     "kiosk-audit",
     "checkin-encounter"
   ],
-  "cases": []
+  "cases": [
+    {
+      "name": "成功報到",
+      "result": "passed",
+      "requests": [
+        {
+          "path": "/api/kiosk/lookup",
+          "method": "POST",
+          "status": 200
+        },
+        {
+          "path": "/api/kiosk/verify",
+          "method": "POST",
+          "status": 200
+        },
+        {
+          "path": "/api/kiosk/checkin",
+          "method": "POST",
+          "status": 200
+        }
+      ],
+      "screen": "顯示報到成功後返回首頁",
+      "savedCheckin": true,
+      "encounterCreatedOnce": true,
+      "auditVerified": true
+    },
+    {
+      "name": "錯誤驗證碼",
+      "result": "passed",
+      "requests": [
+        {
+          "path": "/api/kiosk/lookup",
+          "method": "POST",
+          "status": 200
+        },
+        {
+          "path": "/api/kiosk/verify",
+          "method": "POST",
+          "status": 401
+        }
+      ],
+      "screen": "顯示錯碼提示，未進入確認報到",
+      "savedCheckin": false,
+      "auditVerified": true
+    },
+    {
+      "name": "簡訊替身拒收",
+      "result": "passed",
+      "requests": [
+        {
+          "path": "/api/kiosk/lookup",
+          "method": "POST",
+          "status": 503
+        }
+      ],
+      "screen": "顯示安全錯誤，未宣稱已傳送",
+      "challengeInvalidated": true
+    }
+  ]
 }

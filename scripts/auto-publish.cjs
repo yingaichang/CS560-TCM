@@ -87,8 +87,12 @@ async function watch(root) {
   let last = '', changedAt = Date.now(), lastAttempt = 0
   const log = message => console.log(`${new Date().toISOString()} ${message}`)
   log('Watching saved website files; 45-second quiet period before commit/push to main.')
+  let paused = false
   while (true) {
     try {
+      const pauseRequested = fs.existsSync(path.join(state, 'paused'))
+      if (pauseRequested !== paused) { paused = pauseRequested; log(paused ? 'Publishing paused by local operator.' : 'Publishing resumed.') }
+      if (paused) { await new Promise(resolve => setTimeout(resolve, 5000)); continue }
       const next = snapshot(root)
       if (next !== last) { last = next; changedAt = Date.now() }
       if (Date.now() - changedAt >= 45000 && Date.now() - lastAttempt >= 60000) {

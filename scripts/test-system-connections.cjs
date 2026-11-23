@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict')
 const fs = require('node:fs')
 const ts = require('typescript')
+const { EventEmitter } = require('node:events')
 function load(file, overrides) {
   const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true, target: ts.ScriptTarget.ES2020 } }).outputText
   const target = { exports: {} }
@@ -27,6 +28,21 @@ async function fixture(options = {}) {
   try {
     const service = load('src/lib/systemConnections.ts', {
       'server-only': {},
+      'node:http': { request: (options, callback) => {
+        assert.equal(options.headers.Host, 'cse03.tcmusa.ai', 'Internal Caddy requests must preserve the public Host')
+        const request = new EventEmitter()
+        request.setTimeout = () => {}
+        request.destroy = error => request.emit('error', error)
+        request.end = () => queueMicrotask(() => {
+          const response = new EventEmitter()
+          response.statusCode = 200
+          response.setEncoding = () => {}
+          callback(response)
+          response.emit('data', '/_next/static/chunks/app/page-abc.js')
+          response.emit('end')
+        })
+        return request
+      } },
       'node:fs/promises': { readFile: async file => file.endsWith('deployment-status.json')
         ? JSON.stringify({ target: 'ubuntu', result: 'passed', revision: (options.staleRevision ? 'b' : 'a').repeat(40) })
         : 'model User {\n id String\n email String\n}' },
