@@ -2,7 +2,7 @@
 
 import { chineseText } from '@/lib/chinese'
 
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import Link from 'next/link'
 import AdminPageScaffold from '@/components/AdminPageScaffold'
 
@@ -10,6 +10,7 @@ const inputClassName = 'mt-1.5 w-full rounded-md border border-gray-300 bg-white
 const labelClassName = 'block text-sm font-medium text-gray-700'
 
 export default function NewPatientPage() {
+  const submissionKeys = useRef(new Map<string, string>())
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
@@ -89,10 +90,13 @@ export default function NewPatientPage() {
     }
 
     try {
+      const signature = JSON.stringify(payload)
+      const key = submissionKeys.current.get(signature) || crypto.randomUUID()
+      submissionKeys.current.set(signature, key)
       const response = await fetch('/api/ehr/patients', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key },
+        body: signature,
       })
       const result = await response.json()
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T05:41:53.817Z",
+  "generatedAt": "2026-11-23T07:20:39.313Z",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
@@ -7,7 +7,7 @@
     },
     "src/app/api/appointments/route.ts|POST": {
       "valid": true,
-      "line": 76
+      "line": 79
     },
     "src/app/layout.tsx|ClerkProvider": {
       "valid": true,
@@ -35,7 +35,7 @@
     },
     "src/app/admin/users/page.tsx|AdminUsersPage": {
       "valid": true,
-      "line": 4
+      "line": 9
     },
     "src/app/api/webhooks/clerk/route.ts|isUserAccessEvent / writeAuditLog": {
       "valid": true,
@@ -43,11 +43,11 @@
     },
     "src/app/admin/appointments/page.tsx|fetchAppointments / AppointmentUpdates": {
       "valid": true,
-      "line": 87
+      "line": 98
     },
     "src/app/api/appointments/[id]/route.ts|GET / PATCH / DELETE / authorizeEhrRequest": {
       "valid": true,
-      "line": 22
+      "line": 24
     },
     "src/app/admin/audit-logs/AuditLogViewer.tsx|fetch / verifyChain": {
       "valid": true,
@@ -61,29 +61,33 @@
       "valid": true,
       "line": 2
     },
+    "src/app/admin/users/page.tsx|administrator local account directory": {
+      "valid": true,
+      "line": 15
+    },
     "src/app/ehr/EhrScreens.tsx|PatientDirectoryScreen / NewPatientScreen / IntakeScreen": {
       "valid": true,
-      "line": 77
+      "line": 36
     },
     "src/app/api/ehr/patients/route.ts|NODE_ENV === production": {
       "valid": true,
-      "line": 114
+      "line": 116
     },
     "src/app/api/ehr/intakes/route.ts|NODE_ENV === production": {
       "valid": true,
-      "line": 50
+      "line": 51
     },
     "src/app/api/ehr/patients/[id]/route.ts|include / encounters / clinicalNote / documents": {
       "valid": true,
-      "line": 51
+      "line": 53
     },
     "src/app/ehr/EhrScreens.tsx|PatientRecordRoute / StoredProfileTabs": {
       "valid": true,
-      "line": 355
+      "line": 311
     },
     "src/app/ehr/EhrScreens.tsx|ModuleScreen / ModuleTable / 新增看診紀錄": {
       "valid": true,
-      "line": 330
+      "line": 297
     },
     "prisma/schema.prisma|Encounter / ClinicalNote / Treatment / BillingRecord / Document": {
       "valid": true,
@@ -95,11 +99,19 @@
     },
     "src/app/ehr/EhrScreens.tsx|尚未開始問診 / 智慧語音問診": {
       "valid": true,
-      "line": 180
+      "line": 140
     },
     "prisma/schema.prisma|AiVoiceInterview": {
       "valid": true,
       "line": 120
+    },
+    "src/app/api/ehr/workflow/route.ts|development workflow / runSoftwareCommand": {
+      "valid": true,
+      "line": 7
+    },
+    "src/app/ehr/WorkflowScreen.tsx|saved workflow records and explicit commands": {
+      "valid": true,
+      "line": 30
     },
     "src/app/kiosk/page.tsx|submitLookup / submitVerification / confirmCheckIn / UnavailableMethod": {
       "valid": true,
@@ -111,7 +123,7 @@
     },
     "src/app/payment/page.tsx|handleStripeCheckout / window.location.assign": {
       "valid": true,
-      "line": 43
+      "line": 44
     },
     "src/app/api/payment/checkout-session/route.ts|findHealthTopicById / sessionUrl": {
       "valid": true,
@@ -151,7 +163,7 @@
     },
     "src/app/api/ehr/patients/route.ts|providerAccess": {
       "valid": true,
-      "line": 74
+      "line": 75
     },
     "src/app/admin/layout.tsx|authorizeEhrRequest layout role check": {
       "valid": true,
@@ -159,7 +171,7 @@
     },
     "src/app/api/appointments/route.ts|prisma.$transaction / appointment.create": {
       "valid": true,
-      "line": 186
+      "line": 193
     },
     "prisma/schema.prisma|Appointment / Holiday / @@unique([doctorId, date, appointmentTime])": {
       "valid": true,
@@ -167,7 +179,7 @@
     },
     "src/lib/appointmentMail.ts|send / notifyNewAppointment / notifyAppointmentStatus": {
       "valid": true,
-      "line": 36
+      "line": 14
     },
     "src/app/api/appointments/route.ts|notifyNewAppointment": {
       "valid": true,
@@ -207,15 +219,15 @@
     },
     "src/app/api/ehr/patients/route.ts|patient.create / providerAccess": {
       "valid": true,
-      "line": 142
+      "line": 144
     },
     "src/app/api/ehr/intakes/route.ts|patientIntake.create / lifestyleEntry.upsert": {
       "valid": true,
-      "line": 79
+      "line": 83
     },
     "src/app/api/ehr/patients/[id]/route.ts|GET / PUT": {
       "valid": true,
-      "line": 39
+      "line": 41
     },
     "prisma/schema.prisma|Encounter / ClinicalNote / TcmAssessment / Treatment / BillingRecord / Document": {
       "valid": true,
@@ -223,7 +235,7 @@
     },
     "src/app/ehr/EhrScreens.tsx|ModuleScreen": {
       "valid": true,
-      "line": 330
+      "line": 297
     },
     "src/app/api/kiosk/checkin/route.ts|appointment.updateMany": {
       "valid": true,
@@ -263,11 +275,11 @@
     },
     "src/app/api/payment/checkout-session/route.ts|STRIPE_SECRET_KEY / NEXT_PUBLIC_APP_URL / checkout.sessions.create": {
       "valid": true,
-      "line": 8
+      "line": 10
     },
     "src/app/api/webhooks/stripe/route.ts|constructEvent / auditWebhookReceipt.create / event.type": {
       "valid": true,
-      "line": 20
+      "line": 21
     },
     "src/app/api/webhooks/stripe/route.ts|writeAuditLog": {
       "valid": true,
@@ -283,19 +295,19 @@
     },
     "src/app/api/webhooks/stripe/route.ts|auditWebhookReceipt / writeAuditLog": {
       "valid": true,
-      "line": 63
+      "line": 65
     },
     "src/app/api/webhooks/clerk/route.ts|verifyWebhook / auditWebhookReceipt / writeAuditLog": {
       "valid": true,
       "line": 1
     },
-    "src/app/api/contact/route.ts|getSmtpConfig / transporter.sendMail": {
+    "src/lib/contactDelivery.ts|deliverContact / bounded SMTP / delivery audit": {
       "valid": true,
-      "line": 44
+      "line": 14
     },
     "src/app/api/contact/route.ts|contact.create / savedToDatabase / GET": {
       "valid": true,
-      "line": 113
+      "line": 88
     },
     "src/lib/auditLog.ts|appendAuditLog / verifyAuditChain": {
       "valid": true,
@@ -311,7 +323,7 @@
     },
     "src/app/api/webhooks/stripe/route.ts|POST": {
       "valid": true,
-      "line": 8
+      "line": 9
     },
     "prisma/schema.prisma|HealthTopicRegistration / checkoutSessionId": {
       "valid": true,
@@ -319,7 +331,7 @@
     },
     "src/app/payment/page.tsx|api/payment/registration status lookup": {
       "valid": true,
-      "line": 30
+      "line": 31
     },
     "docs/architecture-final-project.md|## Ubuntu 主機": {
       "valid": true,
@@ -331,15 +343,19 @@
     },
     "src/app/api/ehr/encounters/[id]/notes/route.ts|clinicalNote.upsert / writeAuditLog": {
       "valid": true,
-      "line": 54
+      "line": 61
     },
     "src/app/api/ehr/encounters/[id]/route.ts|encounter.update / writeAuditLog": {
       "valid": true,
-      "line": 44
+      "line": 56
     },
     "src/app/api/webhooks/stripe/route.ts|healthTopicRegistration.upsert / writeAuditLog": {
       "valid": true,
-      "line": 80
+      "line": 84
+    },
+    "src/app/api/webhooks/stripe/route.ts|registration amount and currency match": {
+      "valid": true,
+      "line": 77
     },
     "src/app/admin/holidays/page.tsx|fetch /api/holidays": {
       "valid": true,
@@ -347,11 +363,19 @@
     },
     "src/app/api/holidays/route.ts|authorizeEhrRequest / holiday.create / writeAuditLog": {
       "valid": true,
-      "line": 115
+      "line": 117
     },
     "src/app/api/holidays/seed/route.ts|createMany / writeAuditLog": {
       "valid": true,
-      "line": 107
+      "line": 109
+    },
+    "src/lib/appointmentMail.ts|sendAppointmentNotification / persisted state and audit": {
+      "valid": true,
+      "line": 14
+    },
+    "src/app/api/appointments/[id]/notification/route.ts|authorized explicit appointment notification retry": {
+      "valid": true,
+      "line": 6
     },
     "prisma/schema.prisma|Appointment.patientId / Patient": {
       "valid": true,
@@ -363,11 +387,15 @@
     },
     "src/app/api/appointments/[id]/route.ts|patientId / writeAuditLog": {
       "valid": true,
-      "line": 19
+      "line": 21
+    },
+    "src/app/ehr/EhrScreens.tsx|stable patient and intake submission keys": {
+      "valid": true,
+      "line": 192
     },
     "src/app/ehr/EncounterQueueScreen.tsx|saveDraft / fetch /api/ehr/encounters": {
       "valid": true,
-      "line": 89
+      "line": 92
     },
     "src/app/api/kiosk/checkin/route.ts|appointment.updateMany / ensureCheckinEncounter": {
       "valid": true,
@@ -383,15 +411,15 @@
     },
     "src/app/api/webhooks/stripe/route.ts|constructEvent / healthTopicRegistration.upsert": {
       "valid": true,
-      "line": 80
+      "line": 84
     },
     "src/app/payment/page.tsx|/api/payment/registration status lookup": {
       "valid": true,
-      "line": 30
+      "line": 31
     },
     "src/app/api/contact/route.ts|contact.create / savedToDatabase / authorizeEhrRequest": {
       "valid": true,
-      "line": 113
+      "line": 88
     },
     "src/app/api/admin/contacts/[id]/route.ts|contact.update / writeAuditLog": {
       "valid": true,
@@ -416,6 +444,14 @@
       "status": "connected"
     },
     {
+      "path": "/api/admin/contacts/[id]/retry",
+      "file": "src/app/api/admin/contacts/[id]/retry/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "status": "unknown"
+    },
+    {
       "path": "/api/admin/contacts/[id]",
       "file": "src/app/api/admin/contacts/[id]/route.ts",
       "methods": [
@@ -430,6 +466,14 @@
         "GET"
       ],
       "status": "connected"
+    },
+    {
+      "path": "/api/appointments/[id]/notification",
+      "file": "src/app/api/appointments/[id]/notification/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "status": "unknown"
     },
     {
       "path": "/api/appointments/[id]",
@@ -503,6 +547,15 @@
     {
       "path": "/api/ehr/patients",
       "file": "src/app/api/ehr/patients/route.ts",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "status": "connected"
+    },
+    {
+      "path": "/api/ehr/workflow",
+      "file": "src/app/api/ehr/workflow/route.ts",
       "methods": [
         "GET",
         "POST"
@@ -587,7 +640,7 @@
   "connections": [
     {
       "caller": "src/app/admin/appointments/page.tsx",
-      "line": 131,
+      "line": 147,
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
@@ -603,7 +656,7 @@
     },
     {
       "caller": "src/app/admin/contacts/page.tsx",
-      "line": 36,
+      "line": 37,
       "path": "/api/contact",
       "method": "GET",
       "handler": "src/app/api/contact/route.ts",
@@ -619,7 +672,7 @@
     },
     {
       "caller": "src/app/admin/patients/new/page.tsx",
-      "line": 92,
+      "line": 96,
       "path": "/api/ehr/patients",
       "method": "POST",
       "handler": "src/app/api/ehr/patients/route.ts",
@@ -635,7 +688,7 @@
     },
     {
       "caller": "src/app/admin/registrations/page.tsx",
-      "line": 34,
+      "line": 35,
       "path": "/api/admin/registrations",
       "method": "GET",
       "handler": "src/app/api/admin/registrations/route.ts",
@@ -643,7 +696,7 @@
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 82,
+      "line": 42,
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
@@ -651,7 +704,7 @@
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 238,
+      "line": 200,
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
@@ -659,7 +712,7 @@
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 291,
+      "line": 257,
       "path": "/api/ehr/intakes",
       "method": "POST",
       "handler": "src/app/api/ehr/intakes/route.ts",
@@ -667,7 +720,7 @@
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 411,
+      "line": 371,
       "path": "/api/ehr/patients",
       "method": "POST",
       "handler": "src/app/api/ehr/patients/route.ts",
@@ -675,10 +728,42 @@
     },
     {
       "caller": "src/app/ehr/EncounterQueueScreen.tsx",
-      "line": 44,
+      "line": 47,
       "path": "/api/ehr/encounters",
       "method": "GET",
       "handler": "src/app/api/ehr/encounters/route.ts",
+      "status": "connected"
+    },
+    {
+      "caller": "src/app/ehr/EncounterQueueScreen.tsx",
+      "line": 115,
+      "path": "/api/ehr/workflow",
+      "method": "POST",
+      "handler": "src/app/api/ehr/workflow/route.ts",
+      "status": "connected"
+    },
+    {
+      "caller": "src/app/ehr/WorkflowScreen.tsx",
+      "line": 30,
+      "path": "/api/ehr/workflow",
+      "method": "GET",
+      "handler": "src/app/api/ehr/workflow/route.ts",
+      "status": "connected"
+    },
+    {
+      "caller": "src/app/ehr/WorkflowScreen.tsx",
+      "line": 35,
+      "path": "/api/ehr/encounters",
+      "method": "GET",
+      "handler": "src/app/api/ehr/encounters/route.ts",
+      "status": "connected"
+    },
+    {
+      "caller": "src/app/ehr/WorkflowScreen.tsx",
+      "line": 49,
+      "path": "/api/ehr/workflow",
+      "method": "POST",
+      "handler": "src/app/api/ehr/workflow/route.ts",
       "status": "connected"
     },
     {
@@ -707,7 +792,7 @@
     },
     {
       "caller": "src/app/payment/page.tsx",
-      "line": 48,
+      "line": 51,
       "path": "/api/payment/checkout-session",
       "method": "POST",
       "handler": "src/app/api/payment/checkout-session/route.ts",

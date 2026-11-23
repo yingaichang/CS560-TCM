@@ -46,6 +46,7 @@ try {
   const map = load('src/lib/architectureMap.ts', {
     '@/data/kioskConnectionVerification.json': original,
     '@/data/architectureStatusVerification.json': JSON.parse(fs.readFileSync('src/data/architectureStatusVerification.json', 'utf8')),
+    '@/data/softwareConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')),
     '@/data/architectureStatusSnapshot.json': JSON.parse(fs.readFileSync('src/data/architectureStatusSnapshot.json', 'utf8')),
   })
   const View = load('src/components/admin/ArchitectureMap.tsx', {

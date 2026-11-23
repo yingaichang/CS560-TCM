@@ -10,7 +10,7 @@ type Registration = {
   topicName: string
   amountTwd: number
   currency: string
-  status: 'pending' | 'paid' | 'failed' | 'expired'
+  status: 'pending' | 'paid' | 'failed' | 'expired' | 'requires_review'
   customerEmail: string | null
   createdAt: string
   updatedAt: string
@@ -21,6 +21,7 @@ const statusLabels: Record<Registration['status'], string> = {
   paid: '已由簽章事件確認付款',
   failed: '付款失敗',
   expired: '工作階段逾期',
+  requires_review: '付款資料不相符，需人工查證',
 }
 
 export default function AdminRegistrationsPage() {

@@ -6,13 +6,15 @@ import { writeAuditLog } from '@/lib/auditLog'
 import { notifyAppointmentStatus } from '@/lib/appointmentMail'
 import { prisma } from '@/lib/prisma'
 import { ensureEncounterForCheckedInAppointment } from '@/lib/checkinEncounter'
+import { lockSoftwareWrites } from '@/lib/softwareCommands'
 
 type AppointmentRouteContext = {
   params: Promise<{ id: string }>
 }
 
 const appointmentUpdate = z.object({
-  status: z.string().trim().min(1).max(40).optional(),
+  expectedUpdatedAt: z.iso.datetime().optional(),
+  status: z.enum(['pending', 'confirmed', 'cancelled', 'completed', 'waitlist', 'no_show']).optional(),
   date: z.iso.date().optional(),
   appointmentTime: z.string().regex(/^(09:00|09:30|10:00|11:00|12:00|13:00|14:00|15:00|15:30|16:00|17:00)$/).optional(),
   message: z.string().trim().max(3000).nullable().optional(),
@@ -52,11 +54,15 @@ export async function PATCH(request: NextRequest, { params }: AppointmentRouteCo
     const data = parsed.data
 
     const result = await prisma.$transaction(async (transaction) => {
+      await lockSoftwareWrites(transaction)
       const current = await transaction.appointment.findUnique({
         where: { id },
-        include: { encounter: { select: { id: true } } },
+        include: { encounter: { select: { id: true, status: true } } },
       })
       if (!current) return { error: 'Appointment not found', status: 404 as const }
+      if (data.expectedUpdatedAt && current.updatedAt.toISOString() !== data.expectedUpdatedAt) return { error: 'Appointment changed. Reload before saving.', status: 409 as const }
+      if (data.status === 'completed' && current.encounter?.status !== 'completed') return { error: 'Complete the linked clinical encounter first.', status: 409 as const }
+      if (data.status === 'no_show' && current.checkedIn) return { error: 'A checked-in patient cannot be marked absent.', status: 409 as const }
 
       if (data.patientId !== undefined && data.patientId !== current.patientId) {
         if (current.encounter && current.patientId !== data.patientId) {

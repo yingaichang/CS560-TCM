@@ -19,6 +19,8 @@ type Appointment = {
   checkedInAt?: string | null
   patientId: string | null
   patient: { id: string; patientId: string; firstName: string; lastName: string } | null
+  updatedAt: string
+  notifications?: Record<'admin' | 'patient', { state: string; attempts: number }>
 }
 
 type AppointmentUpdates = {
@@ -46,7 +48,7 @@ function toCsv(rows: Appointment[]) {
     '指定醫師',
     '電話',
     '電子郵件',
-    '問卷完成',
+    '預約備註',
     '預約狀態',
     '送出時間',
   ]
@@ -83,6 +85,20 @@ export default function AdminAppointmentsPage() {
   const [editDate, setEditDate] = useState('')
   const [editTime, setEditTime] = useState('')
   const pollInFlight = useRef(false)
+  const [sendingNotification, setSendingNotification] = useState(false)
+
+  async function retryNotification(appointment: Appointment, kind: 'admin' | 'patient') {
+    if (!window.confirm('確認寄送目前版本的預約通知？請先查證先前結果，避免重複郵件。')) return
+    setSendingNotification(true); setActionError('')
+    try {
+      const response = await fetch(`/api/appointments/${encodeURIComponent(appointment.id)}/notification`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind, expectedUpdatedAt: appointment.updatedAt, expectedAttempts: appointment.notifications?.[kind]?.attempts ?? 0, acknowledgePossibleDuplicate: true }) })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || '無法確認通知結果。')
+      setSelected(null)
+      await fetchAppointments(filter, page, pageSize)
+    } catch (reason) { setActionError(reason instanceof Error ? reason.message : '無法確認通知結果。') }
+    finally { setSendingNotification(false) }
+  }
 
   const fetchAppointments = async (status = 'pending', pageArg = 1, size = 10) => {
     setLoading(true)
@@ -168,7 +184,7 @@ export default function AdminAppointmentsPage() {
       const res = await fetch(`/api/appointments/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates),
+        body: JSON.stringify({ ...updates, expectedUpdatedAt: selected?.id === id ? selected.updatedAt : appointments.find(a => a.id === id)?.updatedAt }),
       })
       const result = await res.json()
       if (!res.ok) {
@@ -343,8 +359,8 @@ export default function AdminAppointmentsPage() {
                 <p className="font-medium">{selected.service}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">問卷狀態</p>
-                <p className="font-medium">{selected.message ? '已填寫' : '未填寫'}</p>
+                <p className="text-sm text-gray-500">預約備註</p>
+                <p className="font-medium">{selected.message ? '有備註（不代表已完成問卷）' : '無備註'}</p>
               </div>
               <div className="md:col-span-2">
                 <label htmlFor="appointment-patient-link" className="text-sm text-gray-500">關聯既有病人</label>
@@ -372,8 +388,13 @@ export default function AdminAppointmentsPage() {
                 <input type="time" value={editTime} onChange={(e) => setEditTime(e.target.value)} className="mt-1 rounded border px-3 py-2 w-full" />
               </div>
               <div className="md:col-span-2">
-                <p className="text-sm text-gray-500">看診原因 / 問卷內容</p>
+                <p className="text-sm text-gray-500">看診原因 / 預約備註</p>
                 <textarea value={selected.message || ''} readOnly className="mt-1 h-28 w-full rounded border px-3 py-2" />
+                <div className="mt-3 space-y-2">{(['admin', 'patient'] as const).map(kind => {
+                  const delivery = selected.notifications?.[kind] || { state: 'not_attempted', attempts: 0 }
+                  const labels: Record<string, string> = { not_attempted: '此版本未嘗試', not_configured: '郵件未設定', sending: '處理中／待查證', sent: '郵件服務已接受', failed: '服務拒絕／連線失敗', unknown: '結果不明，請先查證', missing_recipient: '缺少收件人' }
+                  return <div key={kind} className="text-sm">{kind === 'admin' ? '診所通知' : '病人通知'}：{labels[delivery.state] || '未知'}（{delivery.attempts} 次）{['not_attempted', 'failed', 'not_configured'].includes(delivery.state) && <button disabled={sendingNotification} className="ml-2 underline" onClick={() => void retryNotification(selected, kind)}>查證後寄送／重試</button>}</div>
+                })}</div>
               </div>
             </div>
 
@@ -381,7 +402,7 @@ export default function AdminAppointmentsPage() {
               <button onClick={() => { updateAppointment(selected.id, { status: 'confirmed' }); setSelected(null) }} className="rounded bg-green-600 px-4 py-2 text-white">確認預約</button>
               <button onClick={() => { updateAppointment(selected.id, { date: editDate, appointmentTime: editTime }); setSelected(null) }} className="rounded bg-yellow-500 px-4 py-2 text-white">儲存日期/時間</button>
               <button onClick={() => { updateAppointment(selected.id, { status: 'cancelled' }); setSelected(null) }} className="rounded bg-red-600 px-4 py-2 text-white">取消預約</button>
-              <button onClick={() => { updateAppointment(selected.id, { status: 'ai_sent' }); setSelected(null) }} className="rounded bg-indigo-600 px-4 py-2 text-white">發送智慧問卷</button>
+              <button disabled title="尚未設定問卷與發送服務" className="rounded bg-gray-200 px-4 py-2 text-gray-600">智慧問卷尚未連接</button>
               <button onClick={() => { updateAppointment(selected.id, { status: 'waitlist' }); setSelected(null) }} className="rounded bg-slate-500 px-4 py-2 text-white">加入候補</button>
               <button onClick={() => { updateAppointment(selected.id, { status: 'completed' }); setSelected(null) }} className="rounded bg-teal-600 px-4 py-2 text-white">標記已完成</button>
               <button onClick={() => { updateAppointment(selected.id, { status: 'no_show' }); setSelected(null) }} className="rounded bg-gray-700 px-4 py-2 text-white">標記未到診</button>

@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
+import { CommandError, lockSoftwareWrites } from '@/lib/softwareCommands'
 
 const isValidPhoneNumber = (value: string) => {
   const digits = value.replace(/\D/g, '')
@@ -15,6 +16,7 @@ const optionalPhone = z.string()
   .refine((value) => value === '' || isValidPhoneNumber(value), 'Enter a valid phone number.')
 
 const patientUpdateInput = z.object({
+  expectedUpdatedAt: z.iso.datetime(),
   firstName: z.string().trim().min(1).max(80),
   lastName: z.string().trim().min(1).max(80),
   dateOfBirth: z.iso.date(),
@@ -123,6 +125,7 @@ export async function PUT(request: NextRequest, { params }: PatientRouteContext)
 
   try {
     const patient = await prisma.$transaction(async (transaction) => {
+      await lockSoftwareWrites(transaction)
       const existing = await transaction.patient.findFirst({
         where: {
           id,
@@ -130,9 +133,10 @@ export async function PUT(request: NextRequest, { params }: PatientRouteContext)
             ? { providerAccess: { some: { providerId: actor.userId ?? '', revokedAt: null } } }
             : {}),
         },
-        select: { id: true },
+        select: { id: true, updatedAt: true },
       })
       if (!existing) return null
+      if (existing.updatedAt.toISOString() !== data.expectedUpdatedAt) throw new CommandError('Patient record changed. Reload before saving.')
 
       const updated = await transaction.patient.update({
         where: { id },
@@ -191,6 +195,7 @@ export async function PUT(request: NextRequest, { params }: PatientRouteContext)
     if (!patient) return NextResponse.json({ error: 'Patient not found' }, { status: 404 })
     return NextResponse.json({ patient })
   } catch (error) {
+    if (error instanceof CommandError) return NextResponse.json({ error: error.message }, { status: error.status })
     console.error('Error updating patient:', error)
     return NextResponse.json({ error: 'Unable to update patient. Please try again.' }, { status: 500 })
   }

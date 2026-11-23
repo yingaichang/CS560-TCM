@@ -1,6 +1,7 @@
 import kioskVerification from '@/data/kioskConnectionVerification.json'
 import snapshot from '@/data/architectureStatusSnapshot.json'
 import verification from '@/data/architectureStatusVerification.json'
+import softwareVerification from '@/data/softwareConnectionVerification.json'
 
 export type ConnectionStatus = 'connected' | 'partly_connected' | 'planned' | 'unknown' | 'failed'
 export type Evidence = { kind: 'code' | 'plan'; path: string; symbol: string; anchor: string; line: number }
@@ -26,7 +27,7 @@ export const systemStatuses: Record<ConnectionStatus, { label: string; style: st
 
 function lastTest(kind: 'component' | 'connection', id: string): TestRecord | null {
   let latest: TestRecord | null = null
-  for (const report of [verification, kioskVerification]) {
+  for (const report of [verification, kioskVerification, softwareVerification]) {
     const targets: string[] = kind === 'component' ? report.components : report.connections
     if (!report.at || report.result !== 'passed' || !targets.includes(id)) continue
     if (!latest || Date.parse(report.at) > Date.parse(latest.at)) latest = { at: report.at, command: report.command, scope: report.scope, result: 'passed' }
@@ -56,7 +57,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "POST",
         "kind": "code",
         "anchor": "POST",
-        "line": 76
+        "line": 79
       }
     ]
   },
@@ -65,8 +66,8 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
     "layer": "操作介面",
     "purpose": "預約管理、使用者管理與系統狀態",
     "status": "partly_connected",
-    "assessment": "預約管理與受保護狀態頁已有實作，使用者管理仍為示範。",
-    "missingRequirement": "補齊帳號異動與所有後台頁面的角色保護。",
+    "assessment": "預約、收件匣、實際本機帳號對應清單及受保護狀態頁已有實作；外部帳號異動尚未開放。",
+    "missingRequirement": "外部帳號建立、停用及角色異動需要跨服務身分對應與同步復原規格。",
     "safeError": null,
     "evidence": [
       {
@@ -102,7 +103,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "showDevelopment",
         "kind": "code",
         "anchor": "showDevelopment",
-        "line": 11
+        "line": 14
       },
       {
         "path": "src/middleware.ts",
@@ -116,7 +117,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "AdminUsersPage",
         "kind": "code",
         "anchor": "AdminUsersPage",
-        "line": 4
+        "line": 9
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",
@@ -130,14 +131,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "fetchAppointments / AppointmentUpdates",
         "kind": "code",
         "anchor": "fetchAppointments",
-        "line": 75
+        "line": 98
       },
       {
         "path": "src/app/api/appointments/[id]/route.ts",
         "symbol": "GET / PATCH / DELETE / authorizeEhrRequest",
         "kind": "code",
         "anchor": "GET",
-        "line": 12
+        "line": 23
       },
       {
         "path": "src/app/admin/audit-logs/AuditLogViewer.tsx",
@@ -159,6 +160,13 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "kind": "code",
         "anchor": "authorizeAuditLogAccess",
         "line": 2
+      },
+      {
+        "path": "src/app/admin/users/page.tsx",
+        "symbol": "administrator local account directory",
+        "kind": "code",
+        "anchor": "prisma.user.findMany",
+        "line": 15
       }
     ]
   },
@@ -167,8 +175,8 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
     "layer": "操作介面",
     "purpose": "病人建檔、初診問卷及病歷檢視",
     "status": "partly_connected",
-    "assessment": "病人與問卷有開發環境資料流程，臨床模組仍含示範資料。",
-    "missingRequirement": "完成正式寫入、看診、簽核、治療及帳務。",
+    "assessment": "開發環境已接上看診、簽核、治療、帳務草稿、用藥與受授權接收畫面，隔離 PostgreSQL 測試通過；正式環境仍禁止臨床寫入。",
+    "missingRequirement": "正式臨床寫入政策與實際使用者工作流程尚待驗證；不宣稱完成真實診療或收費。",
     "safeError": null,
     "evidence": [
       {
@@ -176,21 +184,21 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "PatientDirectoryScreen / NewPatientScreen / IntakeScreen",
         "kind": "code",
         "anchor": "PatientDirectoryScreen",
-        "line": 76
+        "line": 36
       },
       {
         "path": "src/app/api/ehr/patients/route.ts",
         "symbol": "NODE_ENV === production",
         "kind": "code",
         "anchor": "NODE_ENV === 'production'",
-        "line": 114
+        "line": 116
       },
       {
         "path": "src/app/api/ehr/intakes/route.ts",
         "symbol": "NODE_ENV === production",
         "kind": "code",
         "anchor": "NODE_ENV === 'production'",
-        "line": 50
+        "line": 51
       },
       {
         "path": "src/app/api/ehr/patients/[id]/route.ts",
@@ -204,21 +212,21 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "PatientRecordRoute / StoredProfileTabs",
         "kind": "code",
         "anchor": "PatientRecordRoute",
-        "line": 354
+        "line": 308
       },
       {
         "path": "src/app/ehr/EhrScreens.tsx",
         "symbol": "ModuleScreen / ModuleTable / 新增看診紀錄",
         "kind": "code",
         "anchor": "ModuleScreen",
-        "line": 329
+        "line": 294
       },
       {
         "path": "prisma/schema.prisma",
         "symbol": "Encounter / ClinicalNote / Treatment / BillingRecord / Document",
         "kind": "code",
         "anchor": "Encounter",
-        "line": 108
+        "line": 41
       },
       {
         "path": "src/app/ai-health-analysis/page.tsx",
@@ -232,14 +240,28 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "尚未開始問診 / 智慧語音問診",
         "kind": "code",
         "anchor": "尚未開始問診",
-        "line": 179
+        "line": 140
       },
       {
         "path": "prisma/schema.prisma",
         "symbol": "AiVoiceInterview",
         "kind": "code",
         "anchor": "AiVoiceInterview",
-        "line": 111
+        "line": 120
+      },
+      {
+        "path": "src/app/api/ehr/workflow/route.ts",
+        "symbol": "development workflow / runSoftwareCommand",
+        "kind": "code",
+        "anchor": "runSoftwareCommand",
+        "line": 7
+      },
+      {
+        "path": "src/app/ehr/WorkflowScreen.tsx",
+        "symbol": "saved workflow records and explicit commands",
+        "kind": "code",
+        "anchor": "fetch('/api/ehr/workflow'",
+        "line": 30
       }
     ]
   },
@@ -249,7 +271,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
     "purpose": "查詢、驗證及確認報到",
     "status": "partly_connected",
     "assessment": "手機查詢、驗證及報到有程式碼；掃描設備與簡訊投遞未完成驗證。",
-    "missingRequirement": "完成簡訊投遞、掃描設備與報到後看診串接。",
+    "missingRequirement": "已有報到後看診串接；仍需真實簡訊供應商與掃描設備驗證。",
     "safeError": null,
     "evidence": [
       {
@@ -282,7 +304,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "handleStripeCheckout / window.location.assign",
         "kind": "code",
         "anchor": "handleStripeCheckout",
-        "line": 19
+        "line": 44
       },
       {
         "path": "src/app/api/payment/checkout-session/route.ts",
@@ -307,7 +329,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "fetch /api/contact",
         "kind": "code",
         "anchor": "fetch('/api/contact'",
-        "line": 34
+        "line": 37
       },
       {
         "path": "src/app/api/contact/route.ts",
@@ -392,7 +414,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "AdminUsersPage",
         "kind": "code",
         "anchor": "AdminUsersPage",
-        "line": 4
+        "line": 9
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",
@@ -431,7 +453,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "providerAccess",
         "kind": "code",
         "anchor": "providerAccess",
-        "line": 74
+        "line": 75
       },
       {
         "path": "src/lib/architectureStatusAccess.ts",
@@ -459,7 +481,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "showDevelopment",
         "kind": "code",
         "anchor": "showDevelopment",
-        "line": 11
+        "line": 14
       },
       {
         "path": "src/middleware.ts",
@@ -473,7 +495,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "path": "src/app/admin/layout.tsx",
         "symbol": "authorizeEhrRequest layout role check",
         "anchor": "authorizeEhrRequest(['admin', 'clinic_staff'])",
-        "line": 1
+        "line": 13
       }
     ]
   },
@@ -498,14 +520,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "POST",
         "kind": "code",
         "anchor": "POST",
-        "line": 76
+        "line": 79
       },
       {
         "path": "src/app/api/appointments/route.ts",
         "symbol": "prisma.$transaction / appointment.create",
         "kind": "code",
         "anchor": "prisma.$transaction",
-        "line": 186
+        "line": 193
       },
       {
         "path": "prisma/schema.prisma",
@@ -519,21 +541,21 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "fetchAppointments / AppointmentUpdates",
         "kind": "code",
         "anchor": "fetchAppointments",
-        "line": 75
+        "line": 98
       },
       {
         "path": "src/app/api/appointments/[id]/route.ts",
         "symbol": "GET / PATCH / DELETE / authorizeEhrRequest",
         "kind": "code",
         "anchor": "GET",
-        "line": 12
+        "line": 23
       },
       {
         "path": "src/lib/appointmentMail.ts",
         "symbol": "send / notifyNewAppointment / notifyAppointmentStatus",
         "kind": "code",
         "anchor": "send",
-        "line": 36
+        "line": 14
       },
       {
         "path": "src/app/api/appointments/route.ts",
@@ -598,8 +620,8 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
     "layer": "伺服器",
     "purpose": "病人新增、讀取、修改與初診問卷儲存",
     "status": "partly_connected",
-    "assessment": "病人、個人資料及初診問卷有儲存程式碼，正式環境禁止寫入。",
-    "missingRequirement": "完成正式寫入策略及未授權存取測試。",
+    "assessment": "已接上病人與問卷的受授權持久化、送出識別碼、重試防重複與稽核；開發資料庫整合已驗證。",
+    "missingRequirement": "正式環境仍依既有政策禁止病人與問卷寫入；需另行確認正式啟用策略。",
     "safeError": null,
     "evidence": [
       {
@@ -642,35 +664,35 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "PatientDirectoryScreen / NewPatientScreen / IntakeScreen",
         "kind": "code",
         "anchor": "PatientDirectoryScreen",
-        "line": 76
+        "line": 36
       },
       {
         "path": "src/app/api/ehr/patients/route.ts",
         "symbol": "NODE_ENV === production",
         "kind": "code",
         "anchor": "NODE_ENV === 'production'",
-        "line": 114
+        "line": 116
       },
       {
         "path": "src/app/api/ehr/intakes/route.ts",
         "symbol": "NODE_ENV === production",
         "kind": "code",
         "anchor": "NODE_ENV === 'production'",
-        "line": 50
+        "line": 51
       },
       {
         "path": "src/app/api/ehr/patients/route.ts",
         "symbol": "patient.create / providerAccess",
         "kind": "code",
         "anchor": "patient.create",
-        "line": 142
+        "line": 144
       },
       {
         "path": "src/app/api/ehr/intakes/route.ts",
         "symbol": "patientIntake.create / lifestyleEntry.upsert",
         "kind": "code",
         "anchor": "patientIntake.create",
-        "line": 79
+        "line": 83
       },
       {
         "path": "src/app/api/ehr/patients/[id]/route.ts",
@@ -686,8 +708,8 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
     "layer": "待完成服務",
     "purpose": "建立看診、簽核病歷、治療、用藥及帳務",
     "status": "partly_connected",
-    "assessment": "報到看診、工作清單、醫師指派及未簽核病歷草稿已有開發環境寫入路徑；簽核、治療、用藥及帳務仍未完成。",
-    "missingRequirement": "完成簽核、治療、用藥與帳務流程，並套用及驗證開發資料庫結構。",
+    "assessment": "開發環境已接上看診、簽核、治療、帳務草稿、用藥與受授權接收畫面，隔離 PostgreSQL 測試通過；正式環境仍禁止臨床寫入。",
+    "missingRequirement": "正式臨床寫入政策與實際使用者工作流程尚待驗證；不宣稱完成真實診療或收費。",
     "safeError": null,
     "evidence": [
       {
@@ -695,35 +717,35 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "Encounter / ClinicalNote / TcmAssessment / Treatment / BillingRecord / Document",
         "kind": "code",
         "anchor": "Encounter",
-        "line": 108
+        "line": 41
       },
       {
         "path": "src/app/ehr/EhrScreens.tsx",
         "symbol": "ModuleScreen",
         "kind": "code",
         "anchor": "ModuleScreen",
-        "line": 329
+        "line": 294
       },
       {
         "path": "src/app/ehr/EhrScreens.tsx",
         "symbol": "ModuleScreen / ModuleTable / 新增看診紀錄",
         "kind": "code",
         "anchor": "ModuleScreen",
-        "line": 329
+        "line": 294
       },
       {
         "path": "prisma/schema.prisma",
         "symbol": "Encounter / ClinicalNote / Treatment / BillingRecord / Document",
         "kind": "code",
         "anchor": "Encounter",
-        "line": 108
+        "line": 41
       },
       {
         "path": "src/app/api/kiosk/checkin/route.ts",
         "symbol": "appointment.updateMany",
         "kind": "code",
         "anchor": "appointment.updateMany",
-        "line": 59
+        "line": 60
       },
       {
         "path": "src/app/api/kiosk/verify/route.ts",
@@ -738,6 +760,20 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "kind": "code",
         "anchor": "Appointment",
         "line": 16
+      },
+      {
+        "path": "src/app/api/ehr/workflow/route.ts",
+        "symbol": "development workflow / runSoftwareCommand",
+        "kind": "code",
+        "anchor": "runSoftwareCommand",
+        "line": 7
+      },
+      {
+        "path": "src/app/ehr/WorkflowScreen.tsx",
+        "symbol": "saved workflow records and explicit commands",
+        "kind": "code",
+        "anchor": "fetch('/api/ehr/workflow'",
+        "line": 30
       }
     ]
   },
@@ -783,7 +819,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "sendVerificationCode / SMS_PROVIDER_WEBHOOK_URL",
         "kind": "code",
         "anchor": "sendVerificationCode",
-        "line": 35
+        "line": 40
       },
       {
         "path": "src/app/api/kiosk/lookup/route.ts",
@@ -797,7 +833,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "verificationCodeExpiresAt",
         "kind": "code",
         "anchor": "verificationCodeExpiresAt",
-        "line": 77
+        "line": 78
       },
       {
         "path": "src/app/api/kiosk/verify/route.ts",
@@ -818,7 +854,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "appointment.updateMany",
         "kind": "code",
         "anchor": "appointment.updateMany",
-        "line": 59
+        "line": 60
       },
       {
         "path": "src/app/api/kiosk/verify/route.ts",
@@ -864,7 +900,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "handleStripeCheckout / window.location.assign",
         "kind": "code",
         "anchor": "handleStripeCheckout",
-        "line": 19
+        "line": 44
       },
       {
         "path": "src/app/api/payment/checkout-session/route.ts",
@@ -878,7 +914,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "STRIPE_SECRET_KEY / NEXT_PUBLIC_APP_URL / checkout.sessions.create",
         "kind": "code",
         "anchor": "STRIPE_SECRET_KEY",
-        "line": 7
+        "line": 10
       }
     ]
   },
@@ -896,14 +932,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "constructEvent / auditWebhookReceipt.create / event.type",
         "kind": "code",
         "anchor": "constructEvent",
-        "line": 19
+        "line": 21
       },
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
         "symbol": "writeAuditLog",
         "kind": "code",
         "anchor": "writeAuditLog",
-        "line": 5
+        "line": 6
       },
       {
         "path": "src/app/payment/page.tsx",
@@ -917,14 +953,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "AuditWebhookReceipt / BillingRecord",
         "kind": "code",
         "anchor": "AuditWebhookReceipt",
-        "line": 642
+        "line": 654
       },
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
         "symbol": "auditWebhookReceipt / writeAuditLog",
         "kind": "code",
         "anchor": "auditWebhookReceipt",
-        "line": 58
+        "line": 65
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",
@@ -939,9 +975,9 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
     "name": "聯絡訊息服務",
     "layer": "伺服器",
     "purpose": "驗證訊息、寄信及嘗試存檔",
-    "status": "partly_connected",
-    "assessment": "可寄信與嘗試存檔，但存檔可失敗且清單讀取尚缺角色授權。",
-    "missingRequirement": "補上收件匣授權、可靠存檔與投遞重試。",
+    "status": "connected",
+    "assessment": "訊息先保存，再追蹤郵件結果；管理員可處理狀態並以嘗試次數防止重複重試，結果不明時不盲目重寄。",
+    "missingRequirement": "程式與隔離資料庫測試通過；SMTP 真實認證及投遞結果仍以即時檢查與供應商紀錄為準。",
     "safeError": null,
     "evidence": [
       {
@@ -963,7 +999,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "fetch /api/contact",
         "kind": "code",
         "anchor": "fetch('/api/contact'",
-        "line": 34
+        "line": 37
       },
       {
         "path": "src/app/api/contact/route.ts",
@@ -973,18 +1009,18 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "line": 15
       },
       {
-        "path": "src/app/api/contact/route.ts",
-        "symbol": "getSmtpConfig / transporter.sendMail",
+        "path": "src/lib/contactDelivery.ts",
+        "symbol": "deliverContact / bounded SMTP / delivery audit",
         "kind": "code",
-        "anchor": "getSmtpConfig",
-        "line": 44
+        "anchor": "deliverContact",
+        "line": 14
       },
       {
         "path": "src/app/api/contact/route.ts",
         "symbol": "contact.create / savedToDatabase / GET",
         "kind": "code",
         "anchor": "contact.create",
-        "line": 131
+        "line": 85
       },
       {
         "path": "src/middleware.ts",
@@ -992,6 +1028,13 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "kind": "code",
         "anchor": "protectedRoots",
         "line": 5
+      },
+      {
+        "path": "src/lib/contactDelivery.ts",
+        "symbol": "deliverContact / bounded SMTP / delivery audit",
+        "kind": "code",
+        "anchor": "deliverContact",
+        "line": 14
       }
     ]
   },
@@ -1051,7 +1094,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "auditWebhookReceipt / writeAuditLog",
         "kind": "code",
         "anchor": "auditWebhookReceipt",
-        "line": 58
+        "line": 65
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",
@@ -1072,7 +1115,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "AuditLog / AuditLogChain / AuditWebhookReceipt",
         "kind": "code",
         "anchor": "AuditLog",
-        "line": 104
+        "line": 113
       },
       {
         "path": "src/app/admin/audit-logs/AuditLogViewer.tsx",
@@ -1125,42 +1168,42 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "providerAccess",
         "kind": "code",
         "anchor": "providerAccess",
-        "line": 74
+        "line": 75
       },
       {
         "path": "prisma/schema.prisma",
         "symbol": "Encounter / ClinicalNote / TcmAssessment / Treatment / BillingRecord / Document",
         "kind": "code",
         "anchor": "Encounter",
-        "line": 108
+        "line": 41
       },
       {
         "path": "src/app/ehr/EhrScreens.tsx",
         "symbol": "ModuleScreen",
         "kind": "code",
         "anchor": "ModuleScreen",
-        "line": 329
+        "line": 294
       },
       {
         "path": "prisma/schema.prisma",
         "symbol": "BillingRecord / AuditWebhookReceipt；未見課程報名模型",
         "kind": "code",
         "anchor": "BillingRecord",
-        "line": 146
+        "line": 156
       },
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
         "symbol": "POST",
         "kind": "code",
         "anchor": "POST",
-        "line": 7
+        "line": 9
       },
       {
         "path": "src/app/api/appointments/route.ts",
         "symbol": "prisma.$transaction / appointment.create",
         "kind": "code",
         "anchor": "prisma.$transaction",
-        "line": 186
+        "line": 193
       },
       {
         "path": "prisma/schema.prisma",
@@ -1174,14 +1217,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "patient.create / providerAccess",
         "kind": "code",
         "anchor": "patient.create",
-        "line": 142
+        "line": 144
       },
       {
         "path": "src/app/api/ehr/intakes/route.ts",
         "symbol": "patientIntake.create / lifestyleEntry.upsert",
         "kind": "code",
         "anchor": "patientIntake.create",
-        "line": 79
+        "line": 83
       },
       {
         "path": "src/app/api/ehr/patients/[id]/route.ts",
@@ -1202,14 +1245,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "PatientRecordRoute / StoredProfileTabs",
         "kind": "code",
         "anchor": "PatientRecordRoute",
-        "line": 354
+        "line": 308
       },
       {
         "path": "src/app/api/kiosk/lookup/route.ts",
         "symbol": "verificationCodeExpiresAt",
         "kind": "code",
         "anchor": "verificationCodeExpiresAt",
-        "line": 77
+        "line": 78
       },
       {
         "path": "src/app/api/kiosk/verify/route.ts",
@@ -1230,7 +1273,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "contact.create / savedToDatabase / GET",
         "kind": "code",
         "anchor": "contact.create",
-        "line": 131
+        "line": 85
       },
       {
         "path": "src/middleware.ts",
@@ -1251,7 +1294,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "AuditLog / AuditLogChain / AuditWebhookReceipt",
         "kind": "code",
         "anchor": "AuditLog",
-        "line": 104
+        "line": 113
       }
     ]
   },
@@ -1269,7 +1312,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "send / notifyNewAppointment / notifyAppointmentStatus",
         "kind": "code",
         "anchor": "send",
-        "line": 36
+        "line": 14
       },
       {
         "path": "src/app/api/appointments/route.ts",
@@ -1279,11 +1322,11 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "line": 5
       },
       {
-        "path": "src/app/api/contact/route.ts",
-        "symbol": "getSmtpConfig / transporter.sendMail",
+        "path": "src/lib/contactDelivery.ts",
+        "symbol": "deliverContact / bounded SMTP / delivery audit",
         "kind": "code",
-        "anchor": "getSmtpConfig",
-        "line": 44
+        "anchor": "deliverContact",
+        "line": 14
       }
     ]
   },
@@ -1301,7 +1344,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "sendVerificationCode / SMS_PROVIDER_WEBHOOK_URL",
         "kind": "code",
         "anchor": "sendVerificationCode",
-        "line": 35
+        "line": 40
       },
       {
         "path": "src/app/api/kiosk/lookup/route.ts",
@@ -1326,14 +1369,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "STRIPE_SECRET_KEY / NEXT_PUBLIC_APP_URL / checkout.sessions.create",
         "kind": "code",
         "anchor": "STRIPE_SECRET_KEY",
-        "line": 7
+        "line": 10
       },
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
         "symbol": "constructEvent / auditWebhookReceipt.create / event.type",
         "kind": "code",
         "anchor": "constructEvent",
-        "line": 19
+        "line": 21
       }
     ]
   },
@@ -1358,28 +1401,28 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "POST",
         "kind": "code",
         "anchor": "POST",
-        "line": 7
+        "line": 9
       },
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
         "symbol": "writeAuditLog",
         "kind": "code",
         "anchor": "writeAuditLog",
-        "line": 5
+        "line": 6
       },
       {
         "path": "src/app/payment/page.tsx",
         "symbol": "api/payment/registration status lookup",
         "kind": "code",
         "anchor": "/api/payment/registration?sessionId=",
-        "line": 23
+        "line": 31
       },
       {
         "path": "prisma/schema.prisma",
         "symbol": "AuditWebhookReceipt / BillingRecord",
         "kind": "code",
         "anchor": "AuditWebhookReceipt",
-        "line": 642
+        "line": 654
       },
       {
         "path": "src/app/courses-events/page.tsx",
@@ -1418,14 +1461,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "尚未開始問診 / 智慧語音問診",
         "kind": "code",
         "anchor": "尚未開始問診",
-        "line": 179
+        "line": 140
       },
       {
         "path": "prisma/schema.prisma",
         "symbol": "AiVoiceInterview",
         "kind": "code",
         "anchor": "AiVoiceInterview",
-        "line": 111
+        "line": 120
       }
     ]
   },
@@ -1495,7 +1538,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "providerAccess",
         "kind": "code",
         "anchor": "providerAccess",
-        "line": 74
+        "line": 75
       }
     ],
     "next": "驗證本機帳號對應、角色優先順序及醫師授權撤銷。",
@@ -1507,37 +1550,44 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "id": "clinical-persist",
     "from": "clinicalWrite",
     "to": "db",
-    "status": "partly_connected",
-    "data": "報到後看診、醫師指派、未簽核病歷草稿與辨證草稿；簽核、治療、用藥及帳務仍未寫入。",
-    "assessment": "報到、看診清單、指派及草稿儲存均有受授權資料庫交易與稽核；完整臨床簽核與後續帳務未建置。",
+    "status": "connected",
+    "data": "開發環境的病歷簽核、治療與帳務草稿、用藥均在具防重複保護的交易中保存並寫入稽核；隔離 PostgreSQL 驗證通過。",
+    "assessment": "開發環境的病歷簽核、治療與帳務草稿、用藥均在具防重複保護的交易中保存並寫入稽核；隔離 PostgreSQL 驗證通過。",
     "evidence": [
       {
         "path": "src/app/api/ehr/encounters/[id]/notes/route.ts",
         "symbol": "clinicalNote.upsert / writeAuditLog",
         "kind": "code",
         "anchor": "clinicalNote.upsert",
-        "line": 39
+        "line": 61
       },
       {
         "path": "src/app/api/ehr/encounters/[id]/route.ts",
         "symbol": "encounter.update / writeAuditLog",
         "kind": "code",
         "anchor": "encounter.update",
-        "line": 35
+        "line": 56
+      },
+      {
+        "path": "src/app/api/ehr/workflow/route.ts",
+        "symbol": "development workflow / runSoftwareCommand",
+        "kind": "code",
+        "anchor": "runSoftwareCommand",
+        "line": 7
       }
     ],
-    "next": "補齊簽核、治療、用藥及帳務，並在隔離開發資料庫驗證交易與權限。",
+    "next": "持續驗證角色、重送與資料衝突；外部服務與正式啟用狀態需獨立證據。",
     "description": "儲存完整看診、臨床簽核與治療帳務。",
-    "missingRequirement": "補齊簽核、治療、用藥及帳務，並在隔離開發資料庫驗證交易與權限。",
+    "missingRequirement": "已驗證的範圍為開發軟體與隔離 PostgreSQL；不包含正式臨床寫入、真實身分、實際投遞或收款。",
     "safeError": null
   },
   {
     "id": "registration-persist",
     "from": "registration",
     "to": "db",
-    "status": "partly_connected",
-    "data": "講座、唯一付款工作階段、待確認／已確認／失敗／逾期狀態及付款人電子郵件；課程權益未包含。",
-    "assessment": "專用報名模型可儲存 pending 紀錄，且簽章事件與狀態及稽核在交易中更新；資料庫遷移及外部事件尚未驗證。",
+    "status": "connected",
+    "data": "已以隔離資料庫及本機簽章事件驗證報名持久化、金額幣別核對、防重送、亂序狀態與稽核；不代表外部付款成功。",
+    "assessment": "已以隔離資料庫及本機簽章事件驗證報名持久化、金額幣別核對、防重送、亂序狀態與稽核；不代表外部付款成功。",
     "evidence": [
       {
         "path": "prisma/schema.prisma",
@@ -1551,12 +1601,19 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "healthTopicRegistration.upsert / writeAuditLog",
         "kind": "code",
         "anchor": "healthTopicRegistration.upsert",
-        "line": 67
+        "line": 84
+      },
+      {
+        "path": "src/app/api/webhooks/stripe/route.ts",
+        "symbol": "registration amount and currency match",
+        "kind": "code",
+        "anchor": "const matches",
+        "line": 77
       }
     ],
-    "next": "以隔離資料庫驗證重複事件、付款狀態轉換及遷移。",
+    "next": "持續驗證角色、重送與資料衝突；外部服務與正式啟用狀態需獨立證據。",
     "description": "保存正式報名與已驗證付款的對應。",
-    "missingRequirement": "以隔離資料庫驗證重複事件、付款狀態轉換及遷移。",
+    "missingRequirement": "已驗證的範圍為開發軟體與隔離 PostgreSQL；不包含正式臨床寫入、真實身分、實際投遞或收款。",
     "safeError": null
   },
   {
@@ -1754,7 +1811,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "showDevelopment",
         "kind": "code",
         "anchor": "showDevelopment",
-        "line": 11
+        "line": 14
       },
       {
         "path": "src/middleware.ts",
@@ -1768,7 +1825,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "path": "src/app/admin/layout.tsx",
         "symbol": "authorizeEhrRequest layout role check",
         "anchor": "authorizeEhrRequest(['admin', 'clinic_staff'])",
-        "line": 1
+        "line": 13
       }
     ],
     "next": "持續維護角色邊界回歸測試；帳號管理功能另需完成實作。",
@@ -1789,7 +1846,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "AdminUsersPage",
         "kind": "code",
         "anchor": "AdminUsersPage",
-        "line": 4
+        "line": 9
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",
@@ -1824,7 +1881,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "POST",
         "kind": "code",
         "anchor": "POST",
-        "line": 76
+        "line": 79
       }
     ],
     "next": "以合法輸入、休診日及重複時段執行實際資料庫整合測試。",
@@ -1845,7 +1902,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "prisma.$transaction / appointment.create",
         "kind": "code",
         "anchor": "prisma.$transaction",
-        "line": 186
+        "line": 193
       },
       {
         "path": "prisma/schema.prisma",
@@ -1873,14 +1930,14 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "fetchAppointments / AppointmentUpdates",
         "kind": "code",
         "anchor": "fetchAppointments",
-        "line": 75
+        "line": 98
       },
       {
         "path": "src/app/api/appointments/[id]/route.ts",
         "symbol": "GET / PATCH / DELETE / authorizeEhrRequest",
         "kind": "code",
         "anchor": "GET",
-        "line": 12
+        "line": 23
       }
     ],
     "next": "驗證狀態更新、刪除及異動後畫面重新整理。",
@@ -1901,14 +1958,14 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "fetch /api/holidays",
         "kind": "code",
         "anchor": "fetch('/api/holidays",
-        "line": 23
+        "line": 40
       },
       {
         "path": "src/app/api/holidays/route.ts",
         "symbol": "authorizeEhrRequest / holiday.create / writeAuditLog",
         "kind": "code",
         "anchor": "transaction.holiday.create",
-        "line": 105
+        "line": 117
       },
       {
         "path": "src/app/api/holidays/seed/route.ts",
@@ -1929,26 +1986,26 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "to": "mail",
     "status": "partly_connected",
     "data": "管理員新預約通知、病人收件通知及預約狀態更新。",
-    "assessment": "已有寄信呼叫；缺少郵件設定時略過寄信，投遞失敗不會使預約失敗，因此預約儲存成功不等於通知送達。",
+    "assessment": "預約通知已有持久化結果、嘗試次數、受授權重試入口及稽核；不明結果不會自動重寄。",
     "evidence": [
       {
         "path": "src/lib/appointmentMail.ts",
-        "symbol": "send / notifyNewAppointment / notifyAppointmentStatus",
+        "symbol": "sendAppointmentNotification / persisted state and audit",
         "kind": "code",
-        "anchor": "send",
-        "line": 36
+        "anchor": "sendAppointmentNotification",
+        "line": 14
       },
       {
-        "path": "src/app/api/appointments/route.ts",
-        "symbol": "notifyNewAppointment",
+        "path": "src/app/api/appointments/[id]/notification/route.ts",
+        "symbol": "authorized explicit appointment notification retry",
         "kind": "code",
-        "anchor": "notifyNewAppointment",
-        "line": 5
+        "anchor": "sendAppointmentNotification",
+        "line": 6
       }
     ],
-    "next": "設定並驗證郵件投遞，補上投遞狀態與失敗重試。",
+    "next": "由使用者更新 Ubuntu 私有 SMTP 設定後，獨立確認實際投遞。",
     "description": "將預約收件及狀態更新通知寄給相關人員。",
-    "missingRequirement": "設定並驗證郵件投遞，補上投遞狀態與失敗重試。",
+    "missingRequirement": "軟體流程已用虛構 SMTP 回應驗證；正式 SMTP 設定與實際投遞仍需驗證。",
     "safeError": null
   },
   {
@@ -1971,14 +2028,14 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "patientId / updateAppointment",
         "kind": "code",
         "anchor": "patientId",
-        "line": 25
+        "line": 20
       },
       {
         "path": "src/app/api/appointments/[id]/route.ts",
         "symbol": "patientId / writeAuditLog",
         "kind": "code",
         "anchor": "patientId",
-        "line": 109
+        "line": 20
       }
     ],
     "next": "驗證明確連結、錯誤病人修正及 kiosk 僅處理已連結預約。",
@@ -1990,35 +2047,42 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "id": "patient-entry",
     "from": "clinical",
     "to": "patientApi",
-    "status": "partly_connected",
-    "data": "病人基本資料、病歷編號、初診問卷、症狀選項、病史與生活習慣；回傳儲存結果或病人詳情。",
-    "assessment": "介面已有讀取、新增與問卷送出；正式環境禁止病人新增／修改及問卷寫入。清單在無資料或失敗時可能顯示模擬病人，不能以畫面有資料判定連線成功。",
+    "status": "connected",
+    "data": "病人與問卷畫面讀取已儲存紀錄並以固定送出識別碼提交；空清單及連線失敗不再以模擬病人替代。",
+    "assessment": "病人與問卷畫面讀取已儲存紀錄並以固定送出識別碼提交；空清單及連線失敗不再以模擬病人替代。",
     "evidence": [
       {
         "path": "src/app/ehr/EhrScreens.tsx",
         "symbol": "PatientDirectoryScreen / NewPatientScreen / IntakeScreen",
         "kind": "code",
         "anchor": "PatientDirectoryScreen",
-        "line": 76
+        "line": 36
       },
       {
         "path": "src/app/api/ehr/patients/route.ts",
         "symbol": "NODE_ENV === production",
         "kind": "code",
         "anchor": "NODE_ENV === 'production'",
-        "line": 114
+        "line": 116
       },
       {
         "path": "src/app/api/ehr/intakes/route.ts",
         "symbol": "NODE_ENV === production",
         "kind": "code",
         "anchor": "NODE_ENV === 'production'",
-        "line": 50
+        "line": 51
+      },
+      {
+        "path": "src/app/ehr/EhrScreens.tsx",
+        "symbol": "stable patient and intake submission keys",
+        "kind": "code",
+        "anchor": "submissionKeys",
+        "line": 192
       }
     ],
-    "next": "完成正式寫入策略與驗證；清楚區分模擬資料、空資料及連線失敗。",
+    "next": "持續驗證角色、重送與資料衝突；外部服務與正式啟用狀態需獨立證據。",
     "description": "從臨床工作區讀取或提交病人與問卷資料。",
-    "missingRequirement": "完成正式寫入策略與驗證；清楚區分模擬資料、空資料及連線失敗。",
+    "missingRequirement": "已驗證的範圍為開發軟體與隔離 PostgreSQL；不包含正式臨床寫入、真實身分、實際投遞或收款。",
     "safeError": null
   },
   {
@@ -2034,14 +2098,14 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "patient.create / providerAccess",
         "kind": "code",
         "anchor": "patient.create",
-        "line": 142
+        "line": 144
       },
       {
         "path": "src/app/api/ehr/intakes/route.ts",
         "symbol": "patientIntake.create / lifestyleEntry.upsert",
         "kind": "code",
         "anchor": "patientIntake.create",
-        "line": 79
+        "line": 83
       },
       {
         "path": "src/app/api/ehr/patients/[id]/route.ts",
@@ -2076,7 +2140,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "PatientRecordRoute / StoredProfileTabs",
         "kind": "code",
         "anchor": "PatientRecordRoute",
-        "line": 354
+        "line": 308
       }
     ],
     "next": "驗證已存病歷的呈現與不同角色可見範圍。",
@@ -2088,28 +2152,42 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "id": "clinical-write",
     "from": "clinical",
     "to": "clinicalWrite",
-    "status": "partly_connected",
-    "data": "報到建立的看診、醫師指派及未簽核臨床草稿；簽核、治療、藥物與帳務未包含。",
-    "assessment": "看診工作清單及草稿表單已連到受授權寫入路由；只儲存未簽核草稿，不宣稱診斷或治療已完成。",
+    "status": "connected",
+    "data": "看診、治療、用藥與帳務畫面已連到開發環境授權服務及實際紀錄；正式寫入仍停用。",
+    "assessment": "看診、治療、用藥與帳務畫面已連到開發環境授權服務及實際紀錄；正式寫入仍停用。",
     "evidence": [
       {
         "path": "src/app/ehr/EncounterQueueScreen.tsx",
         "symbol": "saveDraft / fetch /api/ehr/encounters",
         "kind": "code",
         "anchor": "/api/ehr/encounters/${encodeURIComponent(encounter.id)}/notes",
-        "line": 85
+        "line": 92
       },
       {
         "path": "src/app/api/ehr/encounters/[id]/notes/route.ts",
         "symbol": "clinicalNote.upsert / writeAuditLog",
         "kind": "code",
         "anchor": "clinicalNote.upsert",
-        "line": 39
+        "line": 61
+      },
+      {
+        "path": "src/app/api/ehr/workflow/route.ts",
+        "symbol": "development workflow / runSoftwareCommand",
+        "kind": "code",
+        "anchor": "runSoftwareCommand",
+        "line": 7
+      },
+      {
+        "path": "src/app/ehr/WorkflowScreen.tsx",
+        "symbol": "saved workflow records and explicit commands",
+        "kind": "code",
+        "anchor": "fetch('/api/ehr/workflow'",
+        "line": 30
       }
     ],
-    "next": "在開發資料庫驗證草稿存取與稽核，另行實作簽核、治療、用藥和帳務。",
+    "next": "持續驗證角色、重送與資料衝突；外部服務與正式啟用狀態需獨立證據。",
     "description": "由畫面建立看診、病歷及臨床簽核。",
-    "missingRequirement": "簽核、治療、用藥及帳務仍屬未完成的未來工作。",
+    "missingRequirement": "已驗證的範圍為開發軟體與隔離 PostgreSQL；不包含正式臨床寫入、真實身分、實際投遞或收款。",
     "safeError": null
   },
   {
@@ -2132,14 +2210,14 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "尚未開始問診 / 智慧語音問診",
         "kind": "code",
         "anchor": "尚未開始問診",
-        "line": 179
+        "line": 140
       },
       {
         "path": "prisma/schema.prisma",
         "symbol": "AiVoiceInterview",
         "kind": "code",
         "anchor": "AiVoiceInterview",
-        "line": 111
+        "line": 120
       }
     ],
     "next": "先完成問診收集、資料用途與審核流程，再整合分析服務。",
@@ -2188,7 +2266,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "sendVerificationCode / SMS_PROVIDER_WEBHOOK_URL",
         "kind": "code",
         "anchor": "sendVerificationCode",
-        "line": 35
+        "line": 40
       },
       {
         "path": "src/app/api/kiosk/lookup/route.ts",
@@ -2216,7 +2294,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "verificationCodeExpiresAt",
         "kind": "code",
         "anchor": "verificationCodeExpiresAt",
-        "line": 77
+        "line": 78
       },
       {
         "path": "src/app/api/kiosk/verify/route.ts",
@@ -2251,14 +2329,14 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "appointment.updateMany / ensureCheckinEncounter",
         "kind": "code",
         "anchor": "ensureEncounterForCheckedInAppointment",
-        "line": 7
+        "line": 5
       },
       {
         "path": "src/lib/checkinEncounter.ts",
         "symbol": "encounter.upsert / appointmentId",
         "kind": "code",
         "anchor": "appointmentId",
-        "line": 28
+        "line": 20
       },
       {
         "path": "prisma/schema.prisma",
@@ -2286,7 +2364,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "handleStripeCheckout / window.location.assign",
         "kind": "code",
         "anchor": "handleStripeCheckout",
-        "line": 19
+        "line": 44
       },
       {
         "path": "src/app/api/payment/checkout-session/route.ts",
@@ -2314,7 +2392,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "STRIPE_SECRET_KEY / NEXT_PUBLIC_APP_URL / checkout.sessions.create",
         "kind": "code",
         "anchor": "STRIPE_SECRET_KEY",
-        "line": 7
+        "line": 10
       }
     ],
     "next": "完成測試金鑰與回跳網址設定，驗證付款成功及取消。",
@@ -2335,7 +2413,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "constructEvent / auditWebhookReceipt.create / event.type",
         "kind": "code",
         "anchor": "constructEvent",
-        "line": 19
+        "line": 21
       }
     ],
     "next": "用付款平台測試事件驗證簽章、重送及非同步結果。",
@@ -2347,23 +2425,23 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "id": "payment-registration",
     "from": "webhook",
     "to": "registration",
-    "status": "partly_connected",
-    "data": "已簽章事件所對應的唯一付款工作階段、講座、付款狀態及付款平台回傳的電子郵件。",
-    "assessment": "結帳建立 pending 報名，簽章事件以唯一事件收據去重並更新狀態；回跳頁向伺服器查詢，不信任成功網址參數。",
+    "status": "connected",
+    "data": "可信簽章事件須對應既有報名、課程、金額、幣別及付款模式，才更新付款狀態；本機事件隔離測試通過。",
+    "assessment": "可信簽章事件須對應既有報名、課程、金額、幣別及付款模式，才更新付款狀態；本機事件隔離測試通過。",
     "evidence": [
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
         "symbol": "constructEvent / healthTopicRegistration.upsert",
         "kind": "code",
         "anchor": "healthTopicRegistration.upsert",
-        "line": 67
+        "line": 84
       },
       {
         "path": "src/app/payment/page.tsx",
         "symbol": "/api/payment/registration status lookup",
         "kind": "code",
         "anchor": "/api/payment/registration?sessionId=",
-        "line": 23
+        "line": 31
       },
       {
         "path": "prisma/schema.prisma",
@@ -2371,11 +2449,18 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "kind": "code",
         "anchor": "model HealthTopicRegistration",
         "line": 662
+      },
+      {
+        "path": "src/app/api/webhooks/stripe/route.ts",
+        "symbol": "registration amount and currency match",
+        "kind": "code",
+        "anchor": "const matches",
+        "line": 77
       }
     ],
-    "next": "驗證測試模式簽章事件、狀態轉換與資料庫遷移；課程權益需另行建置。",
+    "next": "持續驗證角色、重送與資料衝突；外部服務與正式啟用狀態需獨立證據。",
     "description": "根據可信付款事件建立正式報名。",
-    "missingRequirement": "外部付款事件及新資料庫結構尚未在本機驗證。",
+    "missingRequirement": "已驗證的範圍為開發軟體與隔離 PostgreSQL；不包含正式臨床寫入、真實身分、實際投遞或收款。",
     "safeError": null
   },
   {
@@ -2419,7 +2504,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "fetch /api/contact",
         "kind": "code",
         "anchor": "fetch('/api/contact'",
-        "line": 34
+        "line": 37
       },
       {
         "path": "src/app/api/contact/route.ts",
@@ -2440,19 +2525,19 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "to": "mail",
     "status": "partly_connected",
     "data": "收件者、回覆地址、主旨與已跳脫內容的郵件本文。",
-    "assessment": "訊息先保存並記錄稽核，再嘗試郵件投遞；未設定或投遞不確定時保留訊息並回報狀態，不自動重寄。",
+    "assessment": "郵件服務接受、明確拒絕與結果不明分開保存；安全重試與管理畫面已完成隔離測試。",
     "evidence": [
       {
-        "path": "src/app/api/contact/route.ts",
-        "symbol": "getSmtpConfig / transporter.sendMail",
+        "path": "src/lib/contactDelivery.ts",
+        "symbol": "deliverContact / bounded SMTP / delivery audit",
         "kind": "code",
-        "anchor": "getSmtpConfig",
-        "line": 44
+        "anchor": "deliverContact",
+        "line": 14
       }
     ],
-    "next": "設定並驗證郵件服務；針對不確定的投遞結果設計人工確認後的安全重試。",
+    "next": "使用者更新 Ubuntu SMTP 設定後再確認實際投遞。",
     "description": "向診所投遞聯絡訊息郵件。",
-    "missingRequirement": "郵件設定與實際投遞仍未驗證。",
+    "missingRequirement": "正式 SMTP 認證與實際投遞仍需供應商證據。",
     "safeError": null
   },
   {
@@ -2461,26 +2546,26 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "to": "db",
     "status": "connected",
     "data": "先保存的聯絡訊息、郵件投遞狀態、管理處理狀態與稽核事件。",
-    "assessment": "提交先保存訊息並提供受授權的管理收件匣；SMTP 未設定或失敗不會丟失訊息，管理狀態異動寫入稽核。",
+    "assessment": "聯絡訊息保存、重複送出、接收清單與郵件狀態均已在隔離資料庫驗證。",
     "evidence": [
       {
         "path": "src/app/api/contact/route.ts",
         "symbol": "contact.create / savedToDatabase / authorizeEhrRequest",
         "kind": "code",
         "anchor": "transaction.contact.create",
-        "line": 83
+        "line": 85
       },
       {
         "path": "src/app/api/admin/contacts/[id]/route.ts",
         "symbol": "contact.update / writeAuditLog",
         "kind": "code",
         "anchor": "transaction.contact.update",
-        "line": 29
+        "line": 31
       }
     ],
     "next": "以隔離資料庫驗證冪等重試、保存優先、收件匣授權與狀態稽核。",
     "description": "保存訊息並供受保護的收件匣處理。",
-    "missingRequirement": "尚未在隔離資料庫驗證持久化與管理操作。",
+    "missingRequirement": "正式郵件投遞另行驗證；保存成功不代表收件匣已送達。",
     "safeError": null
   },
   {
@@ -2538,7 +2623,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "auditWebhookReceipt / writeAuditLog",
         "kind": "code",
         "anchor": "auditWebhookReceipt",
-        "line": 58
+        "line": 65
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",
@@ -2573,7 +2658,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "AuditLog / AuditLogChain / AuditWebhookReceipt",
         "kind": "code",
         "anchor": "AuditLog",
-        "line": 104
+        "line": 113
       }
     ],
     "next": "驗證新增、回滾、竄改偵測及併發寫入。",

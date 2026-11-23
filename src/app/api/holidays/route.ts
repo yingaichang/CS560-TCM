@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client'
 import { writeAuditLog } from '@/lib/auditLog'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 import { prisma } from '@/lib/prisma'
+import { lockSoftwareWrites } from '@/lib/softwareCommands'
 
 type CreateHolidayPayload = {
   date?: string
@@ -112,6 +113,7 @@ export async function POST(request: NextRequest) {
     }
 
     const holiday = await prisma.$transaction(async (transaction) => {
+      await lockSoftwareWrites(transaction)
       const created = await transaction.holiday.create({
         data: { holidayDate, name, isClosed },
       })

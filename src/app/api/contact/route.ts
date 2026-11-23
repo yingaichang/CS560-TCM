@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Prisma } from '@prisma/client'
-import nodemailer from 'nodemailer'
+import { contactSmtpConfig, deliverContact } from '@/lib/contactDelivery'
 import { writeAuditLog } from '@/lib/auditLog'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 import { prisma } from '@/lib/prisma'
@@ -41,37 +41,12 @@ function validateContactPayload(payload: Partial<ContactPayload>) {
   }
 }
 
-function getSmtpConfig() {
-  const host = process.env.SMTP_HOST
-  const port = Number(process.env.SMTP_PORT || 465)
-  const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS
-  const from = process.env.SMTP_FROM || user
-  const to = process.env.CONTACT_RECEIVER_EMAIL || user
-  const secure = process.env.SMTP_SECURE
-    ? process.env.SMTP_SECURE === 'true'
-    : port === 465
-
-  if (!host || !user || !pass || !from || !to || Number.isNaN(port)) {
-    return null
-  }
-
-  return { host, port, user, pass, from, to, secure }
-}
-
-function escapeHtml(input: string) {
-  return input
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/\n/g, '<br/>')
-}
-
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as Partial<ContactPayload>
+    let raw: unknown
+    try { raw = await request.json() } catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 }) }
+    if (!raw || typeof raw !== 'object' || !['name', 'email', 'subject', 'message'].every(key => typeof (raw as Record<string, unknown>)[key] === 'string')) return NextResponse.json({ error: 'Invalid contact fields.' }, { status: 400 })
+    const body = raw as Partial<ContactPayload>
     const validation = validateContactPayload(body)
 
     if (!validation.valid || !validation.value) {
@@ -81,7 +56,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const smtpConfig = getSmtpConfig()
+    const smtpConfig = contactSmtpConfig()
     const { name, email, subject, message } = validation.value
     const submissionId = request.headers.get('idempotency-key')
     if (submissionId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId)) {
@@ -158,78 +133,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (smtpConfig) {
-      try {
-        const transporter = nodemailer.createTransport({
-          host: smtpConfig.host,
-          port: smtpConfig.port,
-          secure: smtpConfig.secure,
-          auth: { user: smtpConfig.user, pass: smtpConfig.pass },
-        })
-        await transporter.sendMail({
-          from: smtpConfig.from,
-          to: smtpConfig.to,
-          replyTo: email,
-          subject: `網站聯絡表單: ${subject}`,
-          text: [
-            '收到新的聯絡訊息',
-            '',
-            `姓名: ${name}`,
-            `Email: ${email}`,
-            `主旨: ${subject}`,
-            '',
-            '內容:',
-            message,
-          ].join('\n'),
-          html: `
-            <h2>收到新的聯絡訊息</h2>
-            <p><strong>姓名:</strong> ${escapeHtml(name)}</p>
-            <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-            <p><strong>主旨:</strong> ${escapeHtml(subject)}</p>
-            <p><strong>內容:</strong><br/>${escapeHtml(message)}</p>
-          `,
-        })
-        await prisma.$transaction(async (transaction) => {
-          await transaction.contact.update({
-            where: { id: contact.id },
-            data: { emailDeliveryStatus: 'sent' },
-          })
-          await writeAuditLog({
-            serviceId: 'contact-form',
-            action: 'notification_sent',
-            resource: 'contact_message',
-            resourceId: contact.id,
-            actorRole: 'system',
-            source: 'system.contact-mail',
-            module: 'contact',
-            outcome: 'success',
-            summary: 'Contact notification sent',
-          }, transaction)
-        })
-      } catch (error) {
-        console.error('Contact message saved but email delivery could not be confirmed:', error)
-        await prisma.$transaction(async (transaction) => {
-          await transaction.contact.update({
-            where: { id: contact.id },
-            data: { emailDeliveryStatus: 'failed' },
-          })
-          await writeAuditLog({
-            serviceId: 'contact-form',
-            action: 'notification_failed',
-            resource: 'contact_message',
-            resourceId: contact.id,
-            actorRole: 'system',
-            source: 'system.contact-mail',
-            module: 'contact',
-            outcome: 'failed',
-            summary: 'Contact notification delivery failed',
-          }, transaction)
-        })
-        return NextResponse.json({
-          message: '訊息已保存，但郵件通知未能確認送達；診所可從管理清單追蹤。',
-          savedToDatabase: true,
-          emailDeliveryStatus: 'failed',
-        }, { status: 201 })
-      }
+      const delivery = await deliverContact(contact.id)
+      return NextResponse.json({ message: delivery === 'sent' ? '訊息已保存，郵件服務已接受通知。' : '訊息已保存；郵件結果尚未確認，診所可從管理清單追蹤。', savedToDatabase: true, emailDeliveryStatus: delivery }, { status: 201 })
     }
 
     return NextResponse.json(

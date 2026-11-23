@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { findHealthTopicById, healthTopics } from '@/lib/healthTopics'
 
@@ -16,7 +16,8 @@ function PaymentContent() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [registrationStatus, setRegistrationStatus] = useState<'loading' | 'pending' | 'paid' | 'failed' | 'expired' | 'unknown'>('unknown')
+  const checkoutKeys = useRef(new Map<string, string>())
+  const [registrationStatus, setRegistrationStatus] = useState<'loading' | 'pending' | 'paid' | 'failed' | 'expired' | 'requires_review' | 'unknown'>('unknown')
 
   useEffect(() => {
     if (status !== 'success') return
@@ -45,10 +46,13 @@ function PaymentContent() {
     setIsSubmitting(true)
 
     try {
+      const key = checkoutKeys.current.get(selectedTopic.id) || crypto.randomUUID()
+      checkoutKeys.current.set(selectedTopic.id, key)
       const response = await fetch('/api/payment/checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Idempotency-Key': key,
         },
         body: JSON.stringify({ topicId: selectedTopic.id }),
       })

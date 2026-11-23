@@ -4,6 +4,7 @@ import Stripe from 'stripe'
 import { findHealthTopicById } from '@/lib/healthTopics'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
+import { CommandError, lockSoftwareWrites } from '@/lib/softwareCommands'
 
 export async function POST(request: NextRequest) {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -60,18 +61,21 @@ export async function POST(request: NextRequest) {
 
   try {
     await prisma.$transaction(async (transaction) => {
+      await lockSoftwareWrites(transaction)
       await transaction.auditWebhookReceipt.create({
         data: { id: `stripe:${event.id}`, provider: 'stripe' },
       })
       const current = await transaction.healthTopicRegistration.findUnique({
         where: { checkoutSessionId: session.id },
       })
+      if (!current) throw new CommandError('Registration is not available yet; retry this event.', 503)
       const metadataTopicId = session.metadata?.topicId
       const topicId = current && metadataTopicId && current.topicId !== metadataTopicId
         ? ''
         : metadataTopicId || current?.topicId || ''
       const topic = findHealthTopicById(topicId)
-      if (topic) {
+      const matches = topic && session.mode === 'payment' && session.currency === current.currency && session.amount_total === current.amountTwd * 100
+      if (matches) {
         const status = current?.status === 'paid'
           ? 'paid'
           : current && current.status !== 'pending' && registrationStatus !== 'paid'
@@ -95,7 +99,8 @@ export async function POST(request: NextRequest) {
         })
       } else {
         action = 'payment_event_unmatched'
-        outcome = 'unknown_topic'
+        outcome = 'record_or_amount_mismatch'
+        if (current.status !== 'paid') await transaction.healthTopicRegistration.update({ where: { id: current.id }, data: { status: 'requires_review' } })
       }
       await writeAuditLog({
         serviceId: 'stripe',
@@ -107,15 +112,17 @@ export async function POST(request: NextRequest) {
         module: 'payment',
         outcome,
         summary: action === 'payment_event_unmatched'
-          ? 'Verified payment event did not match a known topic'
+          ? 'Verified event did not match registration topic, amount, currency or payment mode; manual review required'
           : action.replace(/_/g, ' '),
       }, transaction)
     })
   } catch (error) {
+    if (error instanceof CommandError) return NextResponse.json({ error: error.message }, { status: error.status })
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-      return NextResponse.json({ received: true, duplicate: true })
+      const receipt = await prisma.auditWebhookReceipt.findUnique({ where: { id: `stripe:${event.id}` } })
+      if (receipt) return NextResponse.json({ received: true, duplicate: true })
     }
-    throw error
+    return NextResponse.json({ error: 'Event could not be committed; retry delivery.' }, { status: 503 })
   }
 
   return NextResponse.json({ received: true })

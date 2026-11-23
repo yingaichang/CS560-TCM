@@ -1,43 +1,22 @@
-import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import AdminPageScaffold from '@/components/AdminPageScaffold'
+import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
+import { prisma } from '@/lib/prisma'
+import { writeAuditLog } from '@/lib/auditLog'
 
-export default function AdminUsersPage() {
-  return (
-    <AdminPageScaffold
-      title="使用者管理"
-      description="管理後台使用者、指定角色與停用帳號。資料串接與角色權限尚未實作。"
-      backHref="/admin"
-      backLabel="返回後台首頁"
-    >
-      <div className="mb-4 flex justify-end">
-        <Link href="/admin/users/new" className="rounded bg-[#355C46] px-3 py-2 text-sm font-medium text-white">
-          新增使用者
-        </Link>
-      </div>
-      <div className="overflow-x-auto rounded-lg border bg-white p-4 shadow-sm">
-        <table className="w-full min-w-[600px] text-left text-sm">
-          <thead className="text-xs text-gray-500">
-            <tr>
-              <th className="py-2">使用者</th>
-              <th>角色</th>
-              <th>狀態</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-t">
-              <td className="py-3">示範使用者（靜態範例）</td>
-              <td>尚未指定</td>
-              <td>待設定</td>
-              <td className="space-x-3">
-                <Link href="/admin/users/sample-user/role" className="font-medium text-[#355C46] underline">指定角色</Link>
-                <Link href="/admin/users/sample-user/deactivate" className="font-medium text-red-700 underline">停用</Link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p className="mt-3 text-xs text-gray-500">此列僅供介面導覽示範，不代表實際帳號，也不會變更資料。</p>
-      </div>
-    </AdminPageScaffold>
-  )
+export const dynamic = 'force-dynamic'
+
+export default async function AdminUsersPage() {
+  const actor = await authorizeEhrRequest(['admin'])
+  if (!actor) notFound()
+  let users: { id: string; name: string | null; email: string; role: string }[] = []
+  let error = false
+  try {
+    users = await prisma.user.findMany({ select: { id: true, name: true, email: true, role: true }, orderBy: { email: 'asc' }, take: 100 })
+    await writeAuditLog({ ...actor, actorRole: actor.role, action: 'read_list', resource: 'local_user_mapping', source: 'admin.users', module: 'user_access', summary: 'Local account mappings read; external identity state is not inferred' })
+  } catch { error = true }
+  return <AdminPageScaffold title="使用者對應清單" description="顯示已儲存的本機帳號對應。外部身分服務提供角色時，會優先使用外部角色。" backHref="/admin" backLabel="返回後台首頁">
+    {error ? <p role="alert">無法確認清單，請重新整理後重試。</p> : <div className="overflow-x-auto rounded border bg-white p-4"><table className="w-full text-left text-sm"><thead><tr><th>姓名</th><th>電子郵件</th><th>本機角色</th></tr></thead><tbody>{users.map(user => <tr key={user.id}><td className="py-3">{user.name || '未提供'}</td><td>{user.email}</td><td>{user.role}</td></tr>)}</tbody></table>{!users.length && <p>尚無本機帳號對應。</p>}</div>}
+    <p className="mt-4 text-sm text-gray-600">此清單不代表外部帳號已啟用或登入成功。建立、停用及角色異動需完成身分服務與本機資料的同步及復原流程，目前尚未開放。</p>
+  </AdminPageScaffold>
 }

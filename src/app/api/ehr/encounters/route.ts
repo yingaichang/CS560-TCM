@@ -10,7 +10,7 @@ export async function GET() {
   try {
     const encounters = await prisma.encounter.findMany({
       where: actor.role === 'provider'
-        ? { providerId: actor.userId ?? '__unmapped_provider__' }
+        ? { providerId: actor.userId ?? '__unmapped_provider__', patient: { providerAccess: { some: { providerId: actor.userId ?? '__unmapped_provider__', revokedAt: null } } } }
         : undefined,
       orderBy: [{ encounterDate: 'desc' }, { createdAt: 'desc' }],
       take: 100,
@@ -23,6 +23,7 @@ export async function GET() {
             id: true,
             status: true,
             signedAt: true,
+            updatedAt: true,
             observationTongue: true,
             inquirySymptoms: true,
             palpationPulse: true,
@@ -53,7 +54,7 @@ export async function GET() {
     return NextResponse.json({
       encounters,
       providers,
-      canWriteNotes: actor.role === 'provider' && Boolean(actor.userId),
+      canWriteNotes: process.env.NODE_ENV !== 'production' && actor.role === 'provider' && Boolean(actor.userId),
       canManageQueue: actor.role === 'admin' || actor.role === 'clinic_staff',
     })
   } catch (error) {

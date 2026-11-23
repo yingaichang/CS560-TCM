@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 type Encounter = {
@@ -12,6 +12,7 @@ type Encounter = {
   visitType: string
   chiefComplaint: string | null
   status: string
+  updatedAt: string
   patient: { id: string; patientId: string; firstName: string; lastName: string }
   provider: { id: string; name: string | null } | null
   appointment: { appointmentTime: string; doctorId: string; checkedInAt: string | null } | null
@@ -19,6 +20,7 @@ type Encounter = {
     id: string
     status: string
     signedAt: string | null
+    updatedAt: string
     observationTongue: string | null
     inquirySymptoms: string | null
     palpationPulse: string | null
@@ -37,6 +39,7 @@ export default function EncounterQueueScreen() {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [savingId, setSavingId] = useState('')
+  const signKeys = useRef(new Map<string, string>())
 
   const loadQueue = async () => {
     setError('')
@@ -65,7 +68,7 @@ export default function EncounterQueueScreen() {
       const response = await fetch(`/api/ehr/encounters/${encodeURIComponent(id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, expectedUpdatedAt: encounters.find(x => x.id === id)?.updatedAt }),
       })
       const result = await response.json()
       if (!response.ok) throw new Error(result.error || '無法更新看診紀錄。')
@@ -84,7 +87,7 @@ export default function EncounterQueueScreen() {
     setError('')
     setMessage('')
     const form = new FormData(event.currentTarget)
-    const payload = Object.fromEntries(form.entries())
+    const payload = { ...Object.fromEntries(form.entries()), expectedUpdatedAt: encounter.clinicalNote?.updatedAt ?? null }
     try {
       const response = await fetch(`/api/ehr/encounters/${encodeURIComponent(encounter.id)}/notes`, {
         method: 'POST',
@@ -100,6 +103,22 @@ export default function EncounterQueueScreen() {
     } finally {
       setSavingId('')
     }
+  }
+
+  const signNote = async (encounter: Encounter) => {
+    if (!encounter.clinicalNote || !window.confirm('確認簽核這筆開發用病歷？簽核後將無法修改。')) return
+    const signature = encounter.clinicalNote.id + ':' + encounter.clinicalNote.updatedAt
+    const key = signKeys.current.get(signature) || crypto.randomUUID()
+    signKeys.current.set(signature, key)
+    setSavingId(encounter.id); setError(''); setMessage('')
+    try {
+      const response = await fetch('/api/ehr/workflow', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify({ action: 'sign_note', encounterId: encounter.id, expectedUpdatedAt: encounter.clinicalNote.updatedAt }) })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || '無法確認簽核結果，請重試。')
+      setMessage('病歷簽核已記錄，可到治療管理登錄後續紀錄。')
+      await loadQueue()
+    } catch (reason) { setError(reason instanceof Error ? reason.message : '無法確認簽核結果。') }
+    finally { setSavingId('') }
   }
 
   return (
@@ -118,7 +137,7 @@ export default function EncounterQueueScreen() {
           <div className="ehr-table-wrap"><table className="ehr-table min-w-[980px]">
             <thead><tr><th>病歷／病人</th><th>日期與時間</th><th>看診項目／主訴</th><th>醫師指派</th><th>狀態</th><th>臨床草稿</th></tr></thead>
             <tbody>{encounters.map((encounter) => (
-              <tr key={encounter.id}>
+              <tr key={encounter.id} id={encounter.id}>
                 <td><Link className="font-semibold text-[#355C46] underline" href={`/ehr/patients/${encodeURIComponent(encounter.patient.id)}`}>{encounter.patient.patientId} · {encounter.patient.firstName} {encounter.patient.lastName}</Link><div className="ehr-table-sub">{encounter.encounterId}</div></td>
                 <td>{new Date(encounter.encounterDate).toLocaleDateString('zh-TW')}<div className="ehr-table-sub">{encounter.appointment?.appointmentTime || '時間待安排'}</div></td>
                 <td>{encounter.visitType}<div className="ehr-table-sub">{encounter.chiefComplaint || '未提供主訴'}</div></td>
@@ -133,7 +152,7 @@ export default function EncounterQueueScreen() {
       {canWriteNotes ? <section className="space-y-4">
         <h2 className="ehr-section-title">醫師病歷草稿</h2>
         {encounters.filter((encounter) => encounter.providerId && encounter.clinicalNote?.status !== 'signed').map((encounter) => (
-          <details key={encounter.id} className="ehr-panel p-4">
+          <details key={`${encounter.id}:${encounter.clinicalNote?.updatedAt || encounter.updatedAt}`} className="ehr-panel p-4">
             <summary className="cursor-pointer font-semibold text-[#355C46]">{encounter.encounterId} · {encounter.patient.firstName} {encounter.patient.lastName} · 草稿（未簽核）</summary>
             <form className="mt-4 grid gap-3 md:grid-cols-2" onSubmit={(event) => void saveDraft(event, encounter)}>
               <label className="ehr-field">望診・舌象<textarea name="observationTongue" maxLength={1000} defaultValue={encounter.clinicalNote?.observationTongue || ''} /></label>
@@ -142,7 +161,7 @@ export default function EncounterQueueScreen() {
               <label className="ehr-field">辨證<textarea name="patternAssessment" maxLength={2000} defaultValue={encounter.clinicalNote?.assessment?.patternAssessment || ''} /></label>
               <label className="ehr-field">治則<textarea name="treatmentPrinciple" maxLength={2000} defaultValue={encounter.clinicalNote?.assessment?.treatmentPrinciple || ''} /></label>
               <label className="ehr-field">追蹤計畫<textarea name="followUpPlan" maxLength={2000} defaultValue={encounter.clinicalNote?.assessment?.followUpPlan || ''} /></label>
-              <div className="md:col-span-2"><button className="ehr-button" type="submit" disabled={savingId === encounter.id}>{savingId === encounter.id ? '儲存中…' : '儲存病歷草稿'}</button><span className="ml-3 text-sm text-gray-600">草稿不會簽核，也不會自動產生診斷或帳務。</span></div>
+              <div className="md:col-span-2"><button className="ehr-button" type="submit" disabled={savingId === encounter.id}>{savingId === encounter.id ? '儲存中…' : '儲存病歷草稿'}</button>{encounter.clinicalNote && <button className="ehr-button ehr-button-light ml-3" type="button" disabled={savingId === encounter.id} onClick={() => void signNote(encounter)}>簽核已儲存版本</button>}<span className="ml-3 text-sm text-gray-600">簽核只針對已儲存版本；請先保存修改。草稿不會自動簽核或產生帳務。</span></div>
             </form>
           </details>
         ))}

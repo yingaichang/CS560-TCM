@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
+import { CommandError, runSoftwareCommand } from '@/lib/softwareCommands'
 
 const intakeInput = z.object({
   patientId: z.string().cuid(),
@@ -75,7 +76,10 @@ export async function POST(request: NextRequest) {
   })
   if (!patientExists) return NextResponse.json({ error: 'Patient not found' }, { status: 404 })
 
-  const intake = await prisma.$transaction(async (transaction) => {
+  try {
+  const result = await runSoftwareCommand(`intake-create:${actor.userId || actor.externalUserId}`, request.headers.get('idempotency-key'), data, async (transaction) => {
+    const allowed = await transaction.patient.findFirst({ where: { id: data.patientId, ...(actor.role === 'provider' ? { providerAccess: { some: { providerId: actor.userId ?? '', revokedAt: null } } } : {}) }, select: { id: true } })
+    if (!allowed) throw new CommandError('Patient not found or access revoked.', 404)
     const record = await transaction.patientIntake.create({
       data: {
         patientId: data.patientId,
@@ -95,8 +99,8 @@ export async function POST(request: NextRequest) {
         signatureDate: data.signatureDate ? new Date(`${data.signatureDate}T00:00:00.000Z`) : null,
         selections: {
           create: [
-            ...data.locations.map((value) => ({ kind: 'pain_location', value })),
-            ...data.symptomNature.map((value) => ({ kind: 'symptom_nature', value })),
+            ...Array.from(new Set(data.locations)).map((value) => ({ kind: 'pain_location', value })),
+            ...Array.from(new Set(data.symptomNature)).map((value) => ({ kind: 'symptom_nature', value })),
           ],
         },
         diagnosticTests: {
@@ -159,8 +163,11 @@ export async function POST(request: NextRequest) {
         source: 'ehr.patient-intake',
       }, transaction)
 
-    return record
+    return { resourceId: record.id }
   })
-
-  return NextResponse.json({ intake }, { status: 201 })
+  const intake = await prisma.patientIntake.findUnique({ where: { id: result.result.resourceId }, select: { id: true, patientId: true, createdAt: true } })
+  return NextResponse.json({ intake, duplicate: result.duplicate }, { status: result.duplicate ? 200 : 201 })
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof CommandError ? error.message : 'Intake could not be confirmed. Retry with the same submission key.' }, { status: error instanceof CommandError ? error.status : 503 })
+  }
 }

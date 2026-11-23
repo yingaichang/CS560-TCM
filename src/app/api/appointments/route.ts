@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Prisma } from '@prisma/client'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 import { writeAuditLog } from '@/lib/auditLog'
-import { notifyNewAppointment } from '@/lib/appointmentMail'
+import { notifyNewAppointment, appointmentNotificationKey } from '@/lib/appointmentMail'
+import { CommandError, lockSoftwareWrites } from '@/lib/softwareCommands'
+import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 
 const services = [
@@ -59,6 +61,7 @@ const parseAppointmentDate = (dateValue: string) => {
   if (Number.isNaN(date.getTime())) {
     return null
   }
+  if (toDateString(date) !== dateValue) return null
 
   return date
 }
@@ -75,7 +78,11 @@ const isBusinessDate = (date: Date) => {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    let raw: unknown
+    try { raw = await request.json() } catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 }) }
+    const parsed = z.object({ firstName: z.string().trim().min(1).max(80), middleName: z.string().trim().max(80).optional(), lastName: z.string().trim().min(1).max(80), phone: z.string().max(40), email: z.email().max(254), service: z.string().max(100), date: z.iso.date(), doctor: z.string().max(100), time: z.string().max(10), message: z.string().max(3000).optional() }).safeParse(raw)
+    if (!parsed.success) return NextResponse.json({ error: 'Invalid appointment fields.' }, { status: 400 })
+    const body = parsed.data
     const firstName = (body.firstName || '').trim()
     const middleName = (body.middleName || '').trim()
     const lastName = (body.lastName || '').trim()
@@ -184,6 +191,9 @@ export async function POST(request: NextRequest) {
     ].filter(Boolean)
 
     const appointment = await prisma.$transaction(async (transaction) => {
+      await lockSoftwareWrites(transaction)
+      const closed = await transaction.holiday.findFirst({ where: { isClosed: true, holidayDate: { gte: dayStart, lte: dayEnd } }, select: { id: true } })
+      if (closed) throw new CommandError('The selected date is closed.')
       const created = await transaction.appointment.create({
         data: {
           name: fullName,
@@ -213,6 +223,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(appointment, { status: 201 })
   } catch (error) {
+    if (error instanceof CommandError) return NextResponse.json({ error: error.message }, { status: error.status })
     console.error('Error creating appointment:', error)
 
     if (
@@ -255,7 +266,7 @@ export async function GET(request: NextRequest) {
     const appointments = await prisma.appointment.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      take: Number.isFinite(takeParam) && takeParam > 0 ? takeParam : 10,
+      take: Number.isInteger(takeParam) && takeParam > 0 ? Math.min(takeParam, 100) : 10,
       skip: Number.isFinite(skipParam) && skipParam > 0 ? skipParam : 0,
       include: {
         patient: { select: { id: true, patientId: true, firstName: true, lastName: true } },
@@ -272,7 +283,14 @@ export async function GET(request: NextRequest) {
       source: 'admin.appointments',
     })
 
-    return NextResponse.json(appointments)
+    const receipts = await prisma.auditWebhookReceipt.findMany({ where: { id: { in: appointments.flatMap(a => ['admin', 'patient'].map(kind => appointmentNotificationKey(a, kind as 'admin' | 'patient'))) } } })
+    const byId = new Map(receipts.map(r => [r.id, r.provider]))
+    return NextResponse.json(appointments.map(a => ({ ...a, notifications: Object.fromEntries(['admin', 'patient'].map(kind => {
+      const saved = byId.get(appointmentNotificationKey(a, kind as 'admin' | 'patient'))
+      let delivery = { state: 'not_attempted', attempts: 0 }
+      try { if (saved) delivery = JSON.parse(saved) } catch { delivery = { state: 'unknown', attempts: 0 } }
+      return [kind, delivery]
+    })) })))
   } catch (error) {
     console.error('Error fetching appointments:', error)
     const details = process.env.NODE_ENV === 'development'

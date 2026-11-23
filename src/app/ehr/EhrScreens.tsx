@@ -4,7 +4,7 @@ import { chineseText } from '@/lib/chinese'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import {
   ArrowRight, AudioLines, CalendarClock, Check, ClipboardCheck, Clock3,
   FilePlus2, Plus, Search, ShieldCheck, UsersRound,
@@ -12,6 +12,7 @@ import {
 import { cptCodes, medicalConditions, symptomGroups } from '@/lib/ehr/catalog'
 import { demoPatients, type DemoPatient } from '@/lib/ehr/demoPatients'
 import EncounterQueueScreen from './EncounterQueueScreen'
+import WorkflowScreen from './WorkflowScreen'
 
 function DemoBanner({ children = 'Synthetic development records only. Do not enter real patient information.' }: { children?: string }) {
   return <div className="ehr-demo-banner"><ShieldCheck aria-hidden="true" />{chineseText(children)}</div>
@@ -26,49 +27,7 @@ function PageHeading({ eyebrow, title, description, action }: { eyebrow: string;
   )
 }
 
-export function DashboardScreen() {
-  return (
-    <>
-      <PageHeading eyebrow="2026 年 9 月 28 日・星期一" title="診所總覽" description="查看今日看診安排及待追蹤事項。" action={<Link className="ehr-button" href="/ehr/intake"><Plus /> 新增初診問卷</Link>} />
-      <DemoBanner />
-      <section className="ehr-stats" aria-label="診所摘要">
-        {[
-          { label: 'Active patients', value: '128', detail: 'Across the clinic', icon: UsersRound },
-          { label: 'Today’s encounters', value: '12', detail: '4 remaining', icon: CalendarClock },
-          { label: 'Intakes to review', value: '03', detail: 'Provider review required', icon: ClipboardCheck },
-          { label: 'Open notes', value: '02', detail: 'Draft documentation', icon: FilePlus2 },
-        ].map(({ label, value, detail, icon: Icon }) => <div className="ehr-stat" key={label}><div className="ehr-stat-label">{chineseText(label)}<span className="ehr-stat-icon"><Icon /></span></div><div className="ehr-stat-value">{chineseText(value)}</div><div className="ehr-stat-detail">{chineseText(detail)}</div></div>)}
-      </section>
-      <div className="ehr-dashboard-grid">
-        <section className="ehr-panel">
-          <div className="ehr-panel-head"><h2>今日排程</h2><Link href="/ehr/encounters">全部看診紀錄 <ArrowRight size={13} /></Link></div>
-          <div className="ehr-panel-body">
-            {[
-              ['09:00', 'Avery Chen', 'Follow-up · Neck and shoulder tension', 'Checked in'],
-              ['10:15', 'Jordan Lee', 'Initial evaluation · Intake due', 'Arriving'],
-              ['11:30', 'Riley Wong', 'Treatment only · Low back discomfort', 'Confirmed'],
-              ['13:00', 'Sam Patel', 'Follow-up · Digestive wellness', 'Confirmed'],
-            ].map(([time, name, detail, status]) => <div className="ehr-visit-row" key={time}><div className="ehr-time">{chineseText(time)}</div><div><div className="ehr-visit-name">{chineseText(name)}</div><div className="ehr-visit-detail">{chineseText(detail)}</div></div><span className={`ehr-status${status === 'Arriving' ? ' ehr-status-warning' : ''}`}>{chineseText(status)}</span></div>)}
-          </div>
-        </section>
-        <section className="ehr-panel">
-          <div className="ehr-panel-head"><h2>待處理事項</h2><span className="ehr-eyebrow" style={{ margin: 0 }}>3 件事項</span></div>
-          <div className="ehr-queue">
-            <Link className="ehr-queue-item" href="/ehr/intake"><span className="ehr-queue-icon"><ClipboardCheck /></span><span><span className="ehr-queue-title">待審核初診問卷</span><span className="ehr-queue-sub">需醫療人員簽核</span></span><span className="ehr-queue-count">03</span></Link>
-            <Link className="ehr-queue-item" href="/ehr/notes"><span className="ehr-queue-icon"><NotebookPenIcon /></span><span><span className="ehr-queue-title">病歷草稿</span><span className="ehr-queue-sub">完成臨床病歷記錄</span></span><span className="ehr-queue-count">02</span></Link>
-            <Link className="ehr-queue-item" href="/ehr/billing"><span className="ehr-queue-icon"><Clock3 /></span><span><span className="ehr-queue-title">待審核帳務</span><span className="ehr-queue-sub">關聯看診紀錄</span></span><span className="ehr-queue-count">04</span></Link>
-          </div>
-        </section>
-      </div>
-      <nav className="ehr-workflow" aria-label="病人照護流程">
-        {[
-          ['Patients', '/ehr/patients'], ['Intake', '/ehr/intake'], ['Encounter', '/ehr/encounters'],
-          ['TCM note', '/ehr/notes'], ['Treatment', '/ehr/treatments'], ['Billing', '/ehr/billing'],
-        ].map(([label, href], index) => <Link key={href} href={href}><span>{index + 1}</span>{chineseText(label)}</Link>)}
-      </nav>
-    </>
-  )
-}
+export function DashboardScreen() { return <WorkflowScreen module="dashboard" /> }
 
 function NotebookPenIcon() {
   return <FilePlus2 aria-hidden="true" />
@@ -76,11 +35,12 @@ function NotebookPenIcon() {
 
 export function PatientDirectoryScreen() {
   const [search, setSearch] = useState('')
-  const [records, setRecords] = useState<DemoPatient[]>(demoPatients)
+  const [records, setRecords] = useState<DemoPatient[]>([])
+  const [loadError, setLoadError] = useState('')
 
   useEffect(() => {
     fetch('/api/ehr/patients').then(async (response) => response.ok ? response.json() : null).then((payload) => {
-      if (!payload?.patients?.length) return
+      if (!payload?.patients) throw new Error('Patient list unavailable')
       setRecords(payload.patients.map((item: Record<string, unknown>) => {
         const profile = item.profile as Record<string, string | null> | null
         const birthDate = typeof item.dateOfBirth === 'string' ? new Date(item.dateOfBirth) : null
@@ -108,7 +68,7 @@ export function PatientDirectoryScreen() {
           createdAt: item.createdAt ? new Date(item.createdAt as string).toLocaleDateString('zh-TW') : 'Not recorded',
         }
       }))
-    }).catch(() => setRecords(demoPatients))
+    }).catch(() => { setRecords([]); setLoadError('無法載入病人清單，請重新整理後重試。') })
   }, [])
 
   const filtered = records.filter((patient) => `${patient.firstName} ${patient.lastName} ${patient.patientId} ${patient.complaint}`.toLowerCase().includes(search.toLowerCase()))
@@ -229,15 +189,18 @@ function Field({ label, name, type = 'text', wide = false, options }: { label: s
 }
 
 export function IntakeScreen() {
+  const submissionKeys = useRef(new Map<string, string>())
   const [patients, setPatients] = useState<{ id: string; patientId: string; firstName: string; lastName: string }[]>([])
   const [testRows, setTestRows] = useState([0])
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
+  const [patientLoadError, setPatientLoadError] = useState('')
 
   useEffect(() => {
     fetch('/api/ehr/patients').then(async (response) => response.ok ? response.json() : null).then((payload) => {
-      if (payload?.patients) setPatients(payload.patients)
-    }).catch(() => setPatients([]))
+      if (!payload?.patients) throw new Error('Patient list unavailable')
+      setPatients(payload.patients)
+    }).catch(() => { setPatients([]); setPatientLoadError('無法載入病人清單，請重新整理後重試。') })
   }, [])
 
   async function submitIntake(event: FormEvent<HTMLFormElement>) {
@@ -288,7 +251,10 @@ export function IntakeScreen() {
       }),
     }
     try {
-      const response = await fetch('/api/ehr/intakes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const signature = JSON.stringify(payload)
+      const key = submissionKeys.current.get(signature) || crypto.randomUUID()
+      submissionKeys.current.set(signature, key)
+      const response = await fetch('/api/ehr/intakes', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: signature })
       const result = await response.json()
       setMessage(response.ok ? 'Intake draft created. Provider review is still required.' : result.error ?? 'Unable to save intake.')
     } catch {
@@ -302,6 +268,7 @@ export function IntakeScreen() {
     <>
       <PageHeading eyebrow="病人自述資料" title="初診問卷" description="分別記錄病人自述資料及醫療人員評估。" action={<span className="ehr-demo-chip">草稿・尚非診斷</span>} />
       <DemoBanner />
+      {patientLoadError && <p role="alert">{patientLoadError}</p>}
       <form onSubmit={submitIntake}>
         <section className="ehr-form-section"><h2>病人資料</h2><div className="ehr-form-grid"><div className="ehr-field"><label htmlFor="patientId">病人病歷</label><select id="patientId" name="patientId" required defaultValue=""><option value="">請選擇已建檔病人</option>{patients.map((patient) => <option key={patient.id} value={patient.id}>{chineseText(patient.patientId)} · {chineseText(patient.firstName)} {chineseText(patient.lastName)}</option>)}</select><small className="ehr-table-sub">請先建立模擬病人資料，再儲存問卷。</small></div><Field label="問卷日期" name="intakeDate" type="date" /><Field label="主要不適" name="majorComplaints" type="textarea" wide /><Field label="發病日期" name="onsetDate" type="date" /><div className="ehr-field"><label htmlFor="frequency">症狀頻率</label><select id="frequency" name="frequency"><option value="">請選擇頻率</option><option value="constant">持續・每日約 76–100% 的時間</option><option value="frequent">經常・51–75%</option><option value="occasional">偶爾・26–50%</option><option value="intermittent">間歇・0–25%</option></select></div><div className="ehr-field ehr-field-full"><label>症狀性質</label><div className="ehr-choice-row">{['Sharp', 'Shooting', 'Dull ache', 'Burning', 'Numb', 'Tingling'].map((item) => <label className="ehr-option" key={item}><input name="symptomNature" type="checkbox" value={item.toLowerCase().replace(' ', '_')} />{chineseText(item)}</label>)}</div></div><div className="ehr-field"><label htmlFor="symptomChange">症狀變化情形</label><select id="symptomChange" name="symptomChange"><option value="">請選擇</option><option value="improving">改善中</option><option value="no_change">沒有變化</option><option value="worsening">惡化中</option></select></div><div className="ehr-field"><label htmlFor="painIntensity">疼痛程度・0–10</label><input id="painIntensity" name="painIntensity" type="number" min="0" max="10" /></div><div className="ehr-field ehr-field-full"><label>疼痛部位</label><div className="ehr-choice-row">{['Front', 'Back', 'Left', 'Right'].map((item) => <label className="ehr-option" key={item}><input name="locations" type="checkbox" value={item.toLowerCase()} />{chineseText(item)}</label>)}</div></div><Field label="對日常工作的影響" name="workImpact" type="textarea" /><Field label="對社交生活的影響" name="socialImpact" type="textarea" /><Field label="整體健康狀況" name="overallHealth" options={['Excellent', 'Very good', 'Good', 'Fair', 'Poor']} /><Field label="曾就診的醫療人員" name="previousProviders" type="textarea" /></div></section>
         <section className="ehr-form-section"><h2>過去診斷檢查</h2>{testRows.map((index) => <div className="ehr-form-grid" key={index} style={{ marginBottom: 12 }}><Field label="檢查類型" name={`diagnosticTest_${index}`} options={['X-Ray', 'MRI', 'CT Scan', 'Other']} /><Field label="檢查日期" name={`testDate_${index}`} type="date" /><div className="ehr-field ehr-field-full"><Field label="地點" name={`testLocation_${index}`} /></div></div>)}<button type="button" className="ehr-button ehr-button-light" onClick={() => setTestRows((rows) => [...rows, Math.max(...rows) + 1])}><Plus /> 新增檢查</button></section>
@@ -328,24 +295,13 @@ const moduleDetails: Record<ModuleKey, { eyebrow: string; title: string; descrip
 }
 
 export function ModuleScreen({ module }: { module: ModuleKey }) {
-  if (module === 'encounters') return <EncounterQueueScreen />
+  if (module === 'encounters' || module === 'notes') return <EncounterQueueScreen />
+  if (module === 'treatments' || module === 'billing' || module === 'medications' || module === 'documents') return <WorkflowScreen module={module} />
   const details = moduleDetails[module]
   return (
     <>
       <PageHeading {...details} />
       <DemoBanner />
-      {module === 'notes' && <><div className="ehr-module-grid">{[
-        ['Look / Observation', 'Tongue · complexion · body appearance · other observations'],
-        ['Listen / Smell', 'Voice · breathing · cough · odor · other findings'],
-        ['Inquiry', 'Symptoms · sleep · appetite · digestion · bowel · urination · thirst · temperature · sweating · menstruation · emotional status · pain'],
-        ['Palpation', 'Pulse · tenderness · abdomen · other findings'],
-        ['Provider assessment', 'TCM pattern / assessment · treatment principle'],
-        ['Plan', 'Acupuncture points · electro-acupuncture · manual therapy · herbs · lifestyle · follow-up'],
-      ].map(([title, text]) => <div className="ehr-module-item" key={title}><h3>{chineseText(title)}</h3><p>{chineseText(text)}</p></div>)}</div><ModuleTable headings={['Encounter', 'Patient', 'Date', 'Provider', 'Note status']} rows={[["ENC-DEMO-260928-01", 'Avery Chen', 'Sep 28, 2026', 'Clinic provider', 'Draft · review required'], ["ENC-DEMO-260927-01", 'Riley Wong', 'Sep 27, 2026', 'Clinic provider', 'Signed']]} /></>}
-      {module === 'treatments' && <><div className="ehr-module-grid">{['Acupuncture', 'Electro-Acupuncture', 'Manual Therapy', 'Herbal Medicine', 'Other'].map((kind) => <div className="ehr-module-item" key={kind}><h3>{chineseText(kind)}</h3><p>關聯看診紀錄・時間・時長・單位數・醫療人員・備註</p></div>)}</div><ModuleTable headings={['Treatment ID', 'Encounter', 'Patient', 'Treatment type', 'Duration', 'Units', 'Provider']} rows={[["TRT-DEMO-1001", "ENC-DEMO-260928-01", 'Avery Chen', 'Acupuncture', '30 min', '1', 'Clinic provider'], ["TRT-DEMO-1002", "ENC-DEMO-260927-01", 'Riley Wong', 'Manual Therapy', '15 min', '1', 'Clinic provider']]} /></>}
-      {module === 'medications' && <><div className="ehr-module-grid">{['Pharmaceutical medications', 'Vitamin / mineral supplements', 'Traditional herbs & medicines'].map((category) => <div className="ehr-module-item" key={category}><h3>{chineseText(category)}</h3><p>分別記錄每位病人目前使用及已停用的藥物。</p></div>)}</div><ModuleTable headings={['Patient', 'Medication', 'Category', 'Dosage', 'Frequency', 'Route', 'Status']} rows={[["Avery Chen", 'Demo supplement', 'Vitamin / mineral', '1 capsule', 'Daily', 'Oral', 'Active'], ['Jordan Lee', 'No records', '—', '—', '—', '—', '—']]} /></>}
-      {module === 'billing' && <><div className="ehr-form-section"><h2>診療代碼主檔</h2><p className="ehr-table-sub">以下代碼依專案提供內容保留，不會自動修改或移除。</p></div><ModuleTable headings={['CPT code', 'Service name', 'Service type', 'Initial / subsequent', 'Duration', 'Unit', 'Active']} rows={cptCodes.map((item) => [item.code, item.service, item.type, item.sequence, 'Not specified', 'Unit', 'Yes'])} /><div className="ehr-module-grid" style={{ marginTop: 15 }}><div className="ehr-module-item"><h3>帳務紀錄</h3><p>關聯病人、看診、治療、診療代碼、單位數及服務日期。</p></div><div className="ehr-module-item"><h3>計算狀態</h3><p>第一階段尚未啟用帳務或保險計算。</p></div><div className="ehr-module-item"><h3>待審核清單</h3><p>範例紀錄保留為草稿，供工作人員審核。</p></div></div></>}
-      {module === 'documents' && <><div className="ehr-module-grid"><div className="ehr-module-item"><h3>病人文件</h3><p>同意書・初診問卷・上傳文件。</p></div><div className="ehr-module-item"><h3>看診文件</h3><p>與看診紀錄關聯的病歷附件。</p></div><div className="ehr-module-item"><h3>儲存方式</h3><p>病歷中僅儲存受保護的檔案索引，文件內容另行安全儲存。</p></div></div><ModuleTable headings={['Name', 'Document type', 'Patient', 'Date added', 'Status']} rows={[["Synthetic intake form", 'Patient intake', 'Avery Chen', 'Sep 24, 2026', 'Indexed'], ['Synthetic consent form', 'Consent', 'Riley Wong', 'Sep 18, 2026', 'Indexed']]} /></>}
       {module === 'settings' && <><div className="ehr-module-grid">{[['Patient', 'Own records only · patient portal not enabled'], ['Provider', 'Authorized patient records · clinical documentation'], ['Admin', 'System configuration · user management foundation'], ['Billing staff', 'Billing records only · clinical access blocked']].map(([role, description]) => <div className="ehr-module-item" key={role}><h3>{chineseText(role)}</h3><p>{chineseText(description)}</p></div>)}</div><div className="ehr-form-section"><h2>安全狀態</h2><div className="ehr-detail-grid"><Detail label="身分驗證" value="Clerk-managed sessions and identity" /><Detail label="開發環境寫入" value="Enabled only outside production" /><Detail label="智慧分析服務" value="Not connected; no patient information is sent externally" /><Detail label="稽核功能" value="Patient access and modification event model added" /><Detail label="病人資料儲存" value="Normalized relational Prisma schema" /><Detail label="臨床簽核" value="Provider review required for clinical documentation" /></div></div></>}
       <div className="ehr-workflow"><Link href="/ehr/patients"><span>1</span>病人管理</Link><Link href="/ehr/intake"><span>2</span>初診問卷</Link><Link href="/ehr/encounters"><span>3</span>看診紀錄</Link><Link href="/ehr/notes"><span>4</span>中醫病歷</Link></div>
     </>
@@ -353,7 +309,7 @@ export function ModuleScreen({ module }: { module: ModuleKey }) {
 }
 
 export function PatientRecordRoute({ id }: { id: string }) {
-  const demoPatient = demoPatients.find((patient) => patient.id === id)
+  const demoPatient = undefined
   const [patient, setPatient] = useState<DemoPatient | null>(demoPatient ?? null)
   const [record, setRecord] = useState<StoredPatientRecord | undefined>()
   const [loading, setLoading] = useState(!demoPatient)
@@ -397,6 +353,7 @@ export function PatientRecordRoute({ id }: { id: string }) {
 }
 
 export function NewPatientScreen() {
+  const submissionKeys = useRef(new Map<string, string>())
   const router = useRouter()
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
@@ -408,7 +365,10 @@ export function NewPatientScreen() {
     const raw = Object.fromEntries(new FormData(event.currentTarget).entries())
     const payload = Object.fromEntries(Object.entries(raw).map(([key, value]) => [key, value === '' ? undefined : value]))
     try {
-      const response = await fetch('/api/ehr/patients', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const signature = JSON.stringify(payload)
+      const key = submissionKeys.current.get(signature) || crypto.randomUUID()
+      submissionKeys.current.set(signature, key)
+      const response = await fetch('/api/ehr/patients', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: signature })
       const result = await response.json()
       if (!response.ok) {
         setMessage(result.error ?? 'Unable to create patient.')

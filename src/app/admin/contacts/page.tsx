@@ -10,7 +10,7 @@ type ContactRecord = {
   subject: string
   message: string
   status: 'new' | 'in_progress' | 'closed'
-  emailDeliveryStatus: 'not_attempted' | 'not_configured' | 'sending' | 'sent' | 'failed'
+  emailDeliveryStatus: 'not_attempted' | 'not_configured' | 'sending' | 'sent' | 'failed' | 'unknown'
   emailDeliveryAttempts: number
   emailDeliveryAttemptedAt: string | null
   createdAt: string
@@ -22,6 +22,7 @@ const deliveryLabels: Record<ContactRecord['emailDeliveryStatus'], string> = {
   sending: '投遞處理中／結果待確認',
   sent: '郵件服務已接受',
   failed: '投遞失敗，請人工追蹤',
+  unknown: '結果不明，請先向郵件服務查證，避免重複寄送',
 }
 
 export default function AdminContactsPage() {
@@ -45,6 +46,18 @@ export default function AdminContactsPage() {
   }
 
   useEffect(() => { void loadContacts() }, [])
+
+  const retryNotification = async (contact: ContactRecord) => {
+    if (!window.confirm('確認重新寄送通知？請先查證先前結果，重試可能產生重複郵件。')) return
+    setSavingId(contact.id); setError('')
+    try {
+      const response = await fetch(`/api/admin/contacts/${encodeURIComponent(contact.id)}/retry`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ expectedAttempts: contact.emailDeliveryAttempts, acknowledgePossibleDuplicate: true }) })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || '無法確認寄送結果。')
+      await loadContacts()
+    } catch (reason) { setError(reason instanceof Error ? reason.message : '無法確認寄送結果。') }
+    finally { setSavingId('') }
+  }
 
   const updateStatus = async (contact: ContactRecord, status: ContactRecord['status']) => {
     setSavingId(contact.id)
@@ -89,6 +102,7 @@ export default function AdminContactsPage() {
                 通知狀態：{deliveryLabels[contact.emailDeliveryStatus] || '未知'}・嘗試次數：{contact.emailDeliveryAttempts}
                 {contact.emailDeliveryAttemptedAt ? `・最近嘗試：${new Date(contact.emailDeliveryAttemptedAt).toLocaleString('zh-TW')}` : ''}
               </p>
+              {['failed', 'not_configured'].includes(contact.emailDeliveryStatus) && <button className="mt-2 text-sm underline" disabled={savingId === contact.id} onClick={() => void retryNotification(contact)}>查證後重試通知</button>}
             </article>
           ))}
         </div>

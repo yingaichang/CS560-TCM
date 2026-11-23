@@ -75,6 +75,7 @@ function update(root = path.resolve(__dirname, '..')) {
     const files = {
       '@/data/kioskConnectionVerification.json': 'src/data/kioskConnectionVerification.json',
       '@/data/architectureStatusVerification.json': 'src/data/architectureStatusVerification.json',
+      '@/data/softwareConnectionVerification.json': 'src/data/softwareConnectionVerification.json',
       '@/data/architectureStatusSnapshot.json': 'src/data/architectureStatusSnapshot.json',
     }
     if (!files[name]) throw new Error('Unsupported architecture dependency')

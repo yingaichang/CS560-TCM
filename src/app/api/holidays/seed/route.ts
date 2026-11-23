@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
+import { lockSoftwareWrites } from '@/lib/softwareCommands'
 
 type HolidaySeedItem = {
   date: string
@@ -87,7 +88,9 @@ export async function POST(request: NextRequest) {
     const start = new Date(`${year}-01-01T00:00:00`)
     const end = new Date(`${year + 1}-01-01T00:00:00`)
 
-    const existing = await prisma.holiday.findMany({
+    const createdCount = await prisma.$transaction(async (transaction) => {
+    await lockSoftwareWrites(transaction)
+    const existing = await transaction.holiday.findMany({
       where: {
         holidayDate: {
           gte: start,
@@ -102,7 +105,6 @@ export async function POST(request: NextRequest) {
     const existingSet = new Set(existing.map((item) => toDateString(item.holidayDate)))
     const toCreate = holidayItems.filter((item) => !existingSet.has(item.date))
 
-    await prisma.$transaction(async (transaction) => {
       if (toCreate.length > 0) {
         await transaction.holiday.createMany({
           data: toCreate.map((item) => ({
@@ -125,14 +127,15 @@ export async function POST(request: NextRequest) {
         outcome: toCreate.length ? 'success' : 'no_change',
         summary: `Holiday catalog seeded; ${toCreate.length} records created`,
       }, transaction)
+      return toCreate.length
     })
 
     return NextResponse.json(
       {
         year,
         totalGenerated: holidayItems.length,
-        created: toCreate.length,
-        skipped: holidayItems.length - toCreate.length,
+        created: createdCount,
+        skipped: holidayItems.length - createdCount,
         holidays: holidayItems,
       },
       { status: 201 }

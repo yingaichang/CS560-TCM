@@ -59,6 +59,7 @@ export default function EditPatientPage() {
   const { id } = useParams<{ id: string }>()
   const [patient, setPatient] = useState<PatientForm>(emptyPatient)
   const [patientId, setPatientId] = useState('')
+  const [expectedUpdatedAt, setExpectedUpdatedAt] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState('')
@@ -80,6 +81,7 @@ export default function EditPatientPage() {
         const record = result.patient
         if (isCurrent) {
           setPatientId(record.patientId)
+          setExpectedUpdatedAt(record.updatedAt)
           setPatient({
             firstName: record.firstName || '',
             lastName: record.lastName || '',
@@ -139,7 +141,7 @@ export default function EditPatientPage() {
       const response = await fetch(`/api/ehr/patients/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(patient),
+        body: JSON.stringify({ ...patient, expectedUpdatedAt }),
       })
       const result = await response.json()
 
@@ -150,6 +152,7 @@ export default function EditPatientPage() {
       }
 
       setSaved(true)
+      setExpectedUpdatedAt(result.patient.updatedAt)
     } catch (saveError) {
       console.error('Error updating patient:', saveError)
       setError('無法更新病人資料，請檢查網路連線後重試。')

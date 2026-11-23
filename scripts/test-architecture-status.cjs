@@ -30,6 +30,7 @@ async function main() {
   const verification = JSON.parse(fs.readFileSync(verificationFile, 'utf8'))
   const map = load('src/lib/architectureMap.ts', {
     '@/data/architectureStatusVerification.json': verification,
+    '@/data/softwareConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')),
     '@/data/kioskConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8')),
     '@/data/architectureStatusSnapshot.json': JSON.parse(fs.readFileSync('src/data/architectureStatusSnapshot.json', 'utf8')),
   })
@@ -57,7 +58,7 @@ async function main() {
     if (item.status === 'failed') assert.ok(item.safeError, 'Failures must provide a safe error message')
     if (item.lastTest) {
       assert.ok(!Number.isNaN(Date.parse(item.lastTest.at)))
-      assert.ok([verification.at, JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8')).at].includes(item.lastTest.at))
+      assert.ok([verification.at, JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8')).at, JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')).at].includes(item.lastTest.at))
       assert.ok(item.lastTest.command && item.lastTest.scope)
     }
   }
@@ -65,6 +66,7 @@ async function main() {
   assert.equal(map.architectureComponents.ubuntuHost.status, 'planned')
   assert.equal(map.architectureComponents.databaseServer.status, 'planned')
   const withoutEvidence = load('src/lib/architectureMap.ts', {
+    '@/data/softwareConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')),
     '@/data/kioskConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8')),
     '@/data/architectureStatusVerification.json': verification,
     '@/data/architectureStatusSnapshot.json': { generatedAt: null, evidence: {}, routes: [], connections: [] },

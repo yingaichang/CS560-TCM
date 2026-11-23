@@ -3,8 +3,10 @@ import { z } from 'zod'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
+import { lockSoftwareWrites } from '@/lib/softwareCommands'
 
 const draftInput = z.object({
+  expectedUpdatedAt: z.iso.datetime().nullable(),
   observationTongue: z.string().trim().max(1000).optional(),
   inquirySymptoms: z.string().trim().max(3000).optional(),
   palpationPulse: z.string().trim().max(1000).optional(),
@@ -34,6 +36,7 @@ export async function POST(request: NextRequest, { params }: NoteRouteContext) {
   try {
     const { id } = await params
     const result = await prisma.$transaction(async (transaction) => {
+      await lockSoftwareWrites(transaction)
       const encounter = await transaction.encounter.findFirst({
         where: {
           id,
@@ -43,10 +46,14 @@ export async function POST(request: NextRequest, { params }: NoteRouteContext) {
         select: {
           id: true,
           patientId: true,
-          clinicalNote: { select: { id: true, status: true } },
+          status: true,
+          clinicalNote: { select: { id: true, status: true, authorId: true, updatedAt: true } },
         },
       })
       if (!encounter) return { error: 'Encounter not found or not assigned to this provider.', status: 404 as const }
+      if (['completed', 'cancelled'].includes(encounter.status)) return { error: 'Closed encounters are read-only.', status: 409 as const }
+      if (encounter.clinicalNote && encounter.clinicalNote.authorId !== actor.userId) return { error: 'Only the draft author may edit this note.', status: 403 as const }
+      if (parsed.data.expectedUpdatedAt !== undefined && (encounter.clinicalNote?.updatedAt.toISOString() ?? null) !== parsed.data.expectedUpdatedAt) return { error: 'The draft changed. Reload before saving.', status: 409 as const }
       if (encounter.clinicalNote?.status === 'signed') {
         return { error: 'Signed notes are read-only.', status: 409 as const }
       }

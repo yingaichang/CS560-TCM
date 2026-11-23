@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
+import { CommandError, runSoftwareCommand } from '@/lib/softwareCommands'
 
 const isValidPhoneNumber = (value: string) => {
   const digits = value.replace(/\D/g, '')
@@ -111,6 +112,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const actor = await authorizeEhrRequest()
   if (!actor) return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+  if (actor.role === 'provider' && !actor.userId) return NextResponse.json({ error: 'A mapped provider account is required.' }, { status: 403 })
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json({ error: 'EHR writes are disabled in this development phase' }, { status: 403 })
   }
@@ -138,7 +140,7 @@ export async function POST(request: NextRequest) {
 
   const data = parsed.data
   try {
-    const patient = await prisma.$transaction(async (transaction) => {
+    const result = await runSoftwareCommand(`patient-create:${actor.userId || actor.externalUserId}`, request.headers.get('idempotency-key'), data, async (transaction) => {
       const created = await transaction.patient.create({
         data: {
           patientId: `YAI-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
@@ -182,11 +184,13 @@ export async function POST(request: NextRequest) {
         source: 'ehr.patient-create',
       }, transaction)
 
-      return created
+      return { resourceId: created.id }
     })
-
-    return NextResponse.json({ patient }, { status: 201 })
+    const patient = await prisma.patient.findFirst({ where: { id: result.result.resourceId, ...(actor.role === 'provider' ? { providerAccess: { some: { providerId: actor.userId!, revokedAt: null } } } : {}) }, select: { id: true, patientId: true, firstName: true, lastName: true, status: true } })
+    if (!patient) return NextResponse.json({ error: 'Patient is no longer available to this account.' }, { status: 404 })
+    return NextResponse.json({ patient, duplicate: result.duplicate }, { status: result.duplicate ? 200 : 201 })
   } catch (error) {
+    if (error instanceof CommandError) return NextResponse.json({ error: error.message }, { status: error.status })
     console.error('Error creating patient:', error)
     return NextResponse.json({ error: 'Unable to save patient. Please try again.' }, { status: 500 })
   }

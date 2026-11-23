@@ -3,6 +3,8 @@ import Stripe from 'stripe'
 import { findHealthTopicById } from '@/lib/healthTopics'
 import { writeAuditLog } from '@/lib/auditLog'
 import { prisma } from '@/lib/prisma'
+import { createHash } from 'node:crypto'
+import { lockSoftwareWrites } from '@/lib/softwareCommands'
 
 function getStripeClient() {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -27,6 +29,8 @@ export async function POST(request: NextRequest) {
     if (!topic) {
       return NextResponse.json({ error: '找不到講座主題' }, { status: 404 })
     }
+    const submissionKey = request.headers.get('idempotency-key')
+    if (!submissionKey || !/^[0-9a-f-]{36}$/i.test(submissionKey)) return NextResponse.json({ error: 'A submission identifier is required.' }, { status: 400 })
 
     const stripe = getStripeClient()
     if (!stripe) {
@@ -46,7 +50,7 @@ export async function POST(request: NextRequest) {
           quantity: 1,
           price_data: {
             currency: 'twd',
-            unit_amount: topic.feeTwd,
+            unit_amount: topic.feeTwd * 100,
             product_data: {
               name: `健康學院報名 - ${topic.topic}`,
               description: topic.summary,
@@ -60,7 +64,7 @@ export async function POST(request: NextRequest) {
         topicId: topic.id,
         topic: topic.topic,
       },
-    })
+    }, { idempotencyKey: 'topic-checkout-' + createHash('sha256').update(submissionKey).digest('hex') })
 
     if (!session.url) {
       return NextResponse.json(
@@ -70,6 +74,8 @@ export async function POST(request: NextRequest) {
     }
 
     await prisma.$transaction(async (transaction) => {
+      await lockSoftwareWrites(transaction)
+      const previous = await transaction.healthTopicRegistration.findUnique({ where: { checkoutSessionId: session.id } })
       await transaction.healthTopicRegistration.upsert({
         where: { checkoutSessionId: session.id },
         create: {
@@ -82,7 +88,7 @@ export async function POST(request: NextRequest) {
         },
         update: {},
       })
-      await writeAuditLog({
+      if (!previous) await writeAuditLog({
         action: 'checkout_session_created',
         resource: 'health_topic_checkout',
         resourceId: session.id,
