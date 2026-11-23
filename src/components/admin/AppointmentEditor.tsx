@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 type Appointment = { id: string; name: string; date: string; appointmentTime: string; status: string; message: string | null; updatedAt: string }
@@ -9,16 +9,18 @@ export default function AppointmentEditor({ id }: { id: string }) {
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
   const [busy, setBusy] = useState(false)
-  async function load() {
+  const loadSequence = useRef({ value: 0 })
+  const load = useCallback(async () => {
+    const sequence = ++loadSequence.current.value
     setError('')
     try {
       const response = await fetch(`/api/appointments/${encodeURIComponent(id)}`, { cache: 'no-store' })
       const payload = await response.json()
       if (!response.ok) throw new Error(payload.error || '無法載入預約。')
-      setRecord(payload)
-    } catch (reason) { setError(reason instanceof Error ? reason.message : '無法載入預約。') }
-  }
-  useEffect(() => { setRecord(null); void load() }, [id])
+      if (sequence === loadSequence.current.value) setRecord(payload)
+    } catch (reason) { if (sequence === loadSequence.current.value) setError(reason instanceof Error ? reason.message : '無法載入預約。') }
+  }, [id])
+  useEffect(() => { const state = loadSequence.current; setRecord(null); void load(); return () => { state.value++ } }, [load])
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!record) return

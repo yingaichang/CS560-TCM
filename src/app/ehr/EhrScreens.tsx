@@ -6,11 +6,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import {
-  ArrowRight, AudioLines, CalendarClock, Check, ClipboardCheck, Clock3,
-  FilePlus2, Plus, Search, ShieldCheck, UsersRound,
+  AudioLines, CalendarClock, Check, FilePlus2, Plus, Search, ShieldCheck,
 } from 'lucide-react'
-import { cptCodes, medicalConditions, symptomGroups } from '@/lib/ehr/catalog'
-import { demoPatients, type DemoPatient } from '@/lib/ehr/demoPatients'
+import { medicalConditions, symptomGroups } from '@/lib/ehr/catalog'
+import type { DemoPatient } from '@/lib/ehr/demoPatients'
 import EncounterQueueScreen from './EncounterQueueScreen'
 import WorkflowScreen from './WorkflowScreen'
 
@@ -29,14 +28,11 @@ function PageHeading({ eyebrow, title, description, action }: { eyebrow: string;
 
 export function DashboardScreen() { return <WorkflowScreen module="dashboard" /> }
 
-function NotebookPenIcon() {
-  return <FilePlus2 aria-hidden="true" />
-}
-
 export function PatientDirectoryScreen() {
   const [search, setSearch] = useState('')
   const [records, setRecords] = useState<DemoPatient[]>([])
   const [loadError, setLoadError] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/ehr/patients').then(async (response) => response.ok ? response.json() : null).then((payload) => {
@@ -68,7 +64,7 @@ export function PatientDirectoryScreen() {
           createdAt: item.createdAt ? new Date(item.createdAt as string).toLocaleDateString('zh-TW') : 'Not recorded',
         }
       }))
-    }).catch(() => { setRecords([]); setLoadError('無法載入病人清單，請重新整理後重試。') })
+    }).catch(() => { setRecords([]); setLoadError('無法載入病人清單，請重新整理後重試。') }).finally(() => setLoading(false))
   }, [])
 
   const filtered = records.filter((patient) => `${patient.firstName} ${patient.lastName} ${patient.patientId} ${patient.complaint}`.toLowerCase().includes(search.toLowerCase()))
@@ -76,10 +72,11 @@ export function PatientDirectoryScreen() {
     <>
       <PageHeading eyebrow="病人病歷" title="病人管理" description="查詢並檢視病人的照護資料。" action={<Link className="ehr-button" href="/ehr/patients/new"><Plus /> 新增病人</Link>} />
       <DemoBanner />
-      <div className="ehr-search-row"><label className="ehr-search"><Search aria-hidden="true" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="搜尋模擬病人資料" aria-label="搜尋病人" /></label><span className="ehr-table-sub">{filtered.length} 筆模擬資料</span></div>
+      {loadError && <p role="alert">{loadError}</p>}
+      <div className="ehr-search-row"><label className="ehr-search"><Search aria-hidden="true" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="搜尋已儲存病人資料" aria-label="搜尋病人" /></label><span className="ehr-table-sub">{loading ? '載入中…' : loadError ? '清單尚未確認' : `${filtered.length} 筆紀錄`}</span></div>
       <section className="ehr-panel"><div className="ehr-table-wrap"><table className="ehr-table"><thead><tr><th>病人</th><th>病歷編號</th><th>主要健康問題</th><th>上次看診</th><th>下次看診</th><th>狀態</th></tr></thead><tbody>
         {filtered.map((patient) => <tr key={patient.id}><td><div className="ehr-patient-cell"><span className="ehr-patient-initials">{chineseText(patient.firstName[0])}{chineseText(patient.lastName[0])}</span><span><Link href={`/ehr/patients/${patient.id}`}>{chineseText(patient.firstName)} {chineseText(patient.lastName)}</Link><div className="ehr-table-sub">{chineseText(patient.age)} 歲・ {chineseText(patient.gender)}</div></span></div></td><td>{chineseText(patient.patientId)}</td><td>{chineseText(patient.complaint)}</td><td>{chineseText(patient.lastVisit)}</td><td>{chineseText(patient.nextVisit)}</td><td><span className={`ehr-status${patient.status === 'Intake due' ? ' ehr-status-warning' : ''}`}>{chineseText(patient.status)}</span></td></tr>)}
-        {filtered.length === 0 && <tr><td colSpan={6} className="ehr-empty">沒有符合條件的模擬資料。</td></tr>}
+        {!loading && !loadError && filtered.length === 0 && <tr><td colSpan={6} className="ehr-empty">沒有符合條件的已儲存紀錄。</td></tr>}
       </tbody></table></div></section>
     </>
   )

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T07:20:39.313Z",
+  "generatedAt": "2026-11-23T07:27:54.586Z",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
@@ -67,7 +67,7 @@
     },
     "src/app/ehr/EhrScreens.tsx|PatientDirectoryScreen / NewPatientScreen / IntakeScreen": {
       "valid": true,
-      "line": 36
+      "line": 31
     },
     "src/app/api/ehr/patients/route.ts|NODE_ENV === production": {
       "valid": true,
@@ -83,11 +83,11 @@
     },
     "src/app/ehr/EhrScreens.tsx|PatientRecordRoute / StoredProfileTabs": {
       "valid": true,
-      "line": 311
+      "line": 308
     },
     "src/app/ehr/EhrScreens.tsx|ModuleScreen / ModuleTable / 新增看診紀錄": {
       "valid": true,
-      "line": 297
+      "line": 294
     },
     "prisma/schema.prisma|Encounter / ClinicalNote / Treatment / BillingRecord / Document": {
       "valid": true,
@@ -99,7 +99,7 @@
     },
     "src/app/ehr/EhrScreens.tsx|尚未開始問診 / 智慧語音問診": {
       "valid": true,
-      "line": 140
+      "line": 137
     },
     "prisma/schema.prisma|AiVoiceInterview": {
       "valid": true,
@@ -235,7 +235,7 @@
     },
     "src/app/ehr/EhrScreens.tsx|ModuleScreen": {
       "valid": true,
-      "line": 297
+      "line": 294
     },
     "src/app/api/kiosk/checkin/route.ts|appointment.updateMany": {
       "valid": true,
@@ -391,7 +391,7 @@
     },
     "src/app/ehr/EhrScreens.tsx|stable patient and intake submission keys": {
       "valid": true,
-      "line": 192
+      "line": 189
     },
     "src/app/ehr/EncounterQueueScreen.tsx|saveDraft / fetch /api/ehr/encounters": {
       "valid": true,
@@ -696,7 +696,7 @@
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 42,
+      "line": 38,
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
@@ -704,7 +704,7 @@
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 200,
+      "line": 197,
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
@@ -712,7 +712,7 @@
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 257,
+      "line": 254,
       "path": "/api/ehr/intakes",
       "method": "POST",
       "handler": "src/app/api/ehr/intakes/route.ts",
@@ -720,7 +720,7 @@
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 371,
+      "line": 368,
       "path": "/api/ehr/patients",
       "method": "POST",
       "handler": "src/app/api/ehr/patients/route.ts",
