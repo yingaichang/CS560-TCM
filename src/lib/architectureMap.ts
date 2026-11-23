@@ -407,9 +407,9 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
     "name": "伺服器權限驗證",
     "layer": "伺服器",
     "purpose": "檢查登入、角色及醫師的病歷存取範圍",
-    "status": "partly_connected",
-    "assessment": "角色檢查已有程式碼與隔離測試範圍；全站角色規則尚未統一。",
-    "missingRequirement": "逐頁補齊授權，並以真實登入服務完成整合測試。",
+    "status": "connected",
+    "assessment": "Admin and EHR server layouts enforce role checks before rendering; APIs independently enforce authorization. Layout boundaries pass 16 access scenarios.",
+    "missingRequirement": "Real-user sign-in and provider-specific workflows still require end-to-end verification.",
     "safeError": null,
     "evidence": [
       {
@@ -467,6 +467,13 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "kind": "code",
         "anchor": "protectedRoots",
         "line": 5
+      },
+      {
+        "kind": "code",
+        "path": "src/app/admin/layout.tsx",
+        "symbol": "authorizeEhrRequest layout role check",
+        "anchor": "authorizeEhrRequest(['admin', 'clinic_staff'])",
+        "line": 1
       }
     ]
   },
@@ -1731,9 +1738,9 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "id": "admin-guard",
     "from": "guard",
     "to": "admin",
-    "status": "partly_connected",
+    "status": "connected",
     "data": "管理員判定結果、選單顯示權限及直接網址請求的拒絕結果。",
-    "assessment": "架構狀態頁有伺服器端管理員檢查；一般後台版型主要要求登入，不能據此推論所有後台頁面均有相同角色保護。",
+    "assessment": "All admin pages inherit a server-side admin/clinic_staff role boundary; architecture status remains admin-only.",
     "evidence": [
       {
         "path": "src/app/admin/development/architecture-status/page.tsx",
@@ -1755,11 +1762,18 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "kind": "code",
         "anchor": "protectedRoots",
         "line": 5
+      },
+      {
+        "kind": "code",
+        "path": "src/app/admin/layout.tsx",
+        "symbol": "authorizeEhrRequest layout role check",
+        "anchor": "authorizeEhrRequest(['admin', 'clinic_staff'])",
+        "line": 1
       }
     ],
-    "next": "逐頁統一後台角色邊界；本架構圖維持管理員專用。",
+    "next": "Maintain role-boundary regression tests; account management remains a separate unfinished feature.",
     "description": "控制架構頁的直接存取及管理選單。",
-    "missingRequirement": "逐頁統一後台角色邊界；本架構圖維持管理員專用。",
+    "missingRequirement": "Maintain role-boundary regression tests; account management remains a separate unfinished feature.",
     "safeError": null
   },
   {

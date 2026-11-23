@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T02:22:15.462Z",
+  "generatedAt": "2026-11-23T05:32:17.269Z",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
@@ -27,7 +27,7 @@
     },
     "src/app/admin/layout.tsx|showDevelopment": {
       "valid": true,
-      "line": 11
+      "line": 14
     },
     "src/middleware.ts|protectedRoots": {
       "valid": true,
@@ -152,6 +152,10 @@
     "src/app/api/ehr/patients/route.ts|providerAccess": {
       "valid": true,
       "line": 74
+    },
+    "src/app/admin/layout.tsx|authorizeEhrRequest layout role check": {
+      "valid": true,
+      "line": 13
     },
     "src/app/api/appointments/route.ts|prisma.$transaction / appointment.create": {
       "valid": true,

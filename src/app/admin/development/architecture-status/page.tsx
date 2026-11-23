@@ -31,8 +31,6 @@ export default async function ArchitectureStatusPage() {
         <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm font-medium text-amber-900">臨時開發工具</span>
       </div>
 
-      <ArchitectureMap kioskTest={readKioskTestReport()} liveReport={liveReport} />
-
       <section className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6" aria-labelledby="config-title">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="config-title" className="text-xl font-semibold text-gray-900">目前部署的實際連線檢查</h2>
@@ -49,6 +47,8 @@ export default async function ArchitectureStatusPage() {
           ))}
         </dl>
       </section>
+
+      <ArchitectureMap kioskTest={readKioskTestReport()} liveReport={liveReport} />
 
       <div className="flex flex-wrap gap-4 text-sm font-medium text-[#355C46]">
         <Link href="/admin" className="underline underline-offset-4">返回後台首頁</Link>
