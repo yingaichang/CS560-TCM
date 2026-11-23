@@ -41,7 +41,7 @@ export const MAIN_NAV_ITEMS: MainNavItem[] = [
     href: homeAnchor('#services'),
     children: [
       { label: '診療服務', href: homeAnchor('#services') },
-      { label: 'AI 健康分析', href: '/ai-health-analysis' },
+      { label: '智慧健康分析', href: '/ai-health-analysis' },
       { label: '健康評估', href: '/ai-health-analysis' },
     ],
   },
@@ -51,7 +51,7 @@ export const MAIN_NAV_ITEMS: MainNavItem[] = [
     href: homeAnchor('#articles'),
     children: [
       { label: '健康學院', href: homeAnchor('#articles') },
-      { label: 'CEU 繼續教育與報名', href: '/courses-events' },
+      { label: '繼續教育與報名', href: '/courses-events' },
       { label: '健康商城', href: '/payment' },
     ],
   },

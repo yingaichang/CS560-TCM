@@ -137,11 +137,11 @@ export default function AppointmentForm() {
     const nextErrors: FormErrors = {}
 
     if (!data.firstName.trim()) {
-      nextErrors.firstName = 'First Name 為必填'
+      nextErrors.firstName = '請填寫名字'
     }
 
     if (!data.lastName.trim()) {
-      nextErrors.lastName = 'Last Name 為必填'
+      nextErrors.lastName = '請填寫姓氏'
     }
 
     if (!/^\d{10}$/.test(data.phone)) {
@@ -149,7 +149,7 @@ export default function AppointmentForm() {
     }
 
     if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      nextErrors.email = '請輸入有效 Email'
+      nextErrors.email = '請輸入有效電子郵件'
     }
 
     if (!services.includes(data.service)) {
@@ -283,7 +283,7 @@ export default function AppointmentForm() {
                   htmlFor="firstName"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  First Name <span className="text-red-500">*</span>
+                  名字 <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -293,7 +293,7 @@ export default function AppointmentForm() {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-tcm-green focus:border-transparent outline-none transition"
-                  placeholder="First Name"
+                  placeholder="名字"
                 />
                 {errors.firstName && (
                   <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
@@ -305,7 +305,7 @@ export default function AppointmentForm() {
                   htmlFor="middleName"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Middle Name
+                  中間名
                 </label>
                 <input
                   type="text"
@@ -314,7 +314,7 @@ export default function AppointmentForm() {
                   value={formData.middleName}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-tcm-green focus:border-transparent outline-none transition"
-                  placeholder="Middle Name"
+                  placeholder="中間名"
                 />
               </div>
 
@@ -323,7 +323,7 @@ export default function AppointmentForm() {
                   htmlFor="lastName"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Last Name <span className="text-red-500">*</span>
+                  姓氏 <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -333,7 +333,7 @@ export default function AppointmentForm() {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-tcm-green focus:border-transparent outline-none transition"
-                  placeholder="Last Name"
+                  placeholder="姓氏"
                 />
                 {errors.lastName && (
                   <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
@@ -373,7 +373,7 @@ export default function AppointmentForm() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Email（選填）
+                  電子郵件（選填）
                 </label>
                 <input
                   type="email"

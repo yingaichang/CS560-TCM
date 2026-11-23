@@ -19,13 +19,13 @@ const featureLabels: Record<string, string> = {
   'sleep-support': '睡眠調理',
   'womens-health': '女性健康',
   'chronic-health-management': '慢性病健康管理',
-  'ai-health-analysis': 'AI 健康分析',
-  'ai-body-constitution': 'AI 體質分析',
-  'ai-health-assessment': 'AI 健康評估',
-  'ai-wellness-advice': 'AI 養生建議',
-  'ai-diet-advice': 'AI 飲食建議',
-  'ai-acupoint-advice': 'AI 穴位建議',
-  'ai-health-report': 'AI 健康報告',
+  'ai-health-analysis': '智慧健康分析',
+  'ai-body-constitution': '智慧體質分析',
+  'ai-health-assessment': '智慧健康評估',
+  'ai-wellness-advice': '智慧養生建議',
+  'ai-diet-advice': '智慧飲食建議',
+  'ai-acupoint-advice': '智慧穴位建議',
+  'ai-health-report': '智慧健康報告',
   'seasonal-wellness': '四季養生',
   baduanjin: '八段錦',
   'academy-womens-health': '女性健康',
@@ -68,10 +68,10 @@ function ComingSoonContent() {
   return (
     <main className="min-h-screen bg-[linear-gradient(160deg,#f8f4ec_0%,#f2ecdf_100%)] px-4 py-16">
       <div className="mx-auto max-w-2xl rounded-3xl border border-primary/15 bg-white/85 p-8 text-center shadow-[0_18px_45px_rgba(63,101,72,0.14)] backdrop-blur-sm md:p-10">
-        <p className="text-xs font-semibold tracking-[0.2em] text-wood">COMING SOON</p>
+        <p className="text-xs font-semibold tracking-[0.2em] text-wood">即將推出</p>
         <h1 className="mt-4 font-display text-3xl text-primary md:text-4xl">{featureLabel}</h1>
         <p className="mt-4 text-base leading-8 text-ink/80">
-          我們正在建置此頁面，將提供完整的 AI 全人健康管理內容與服務體驗。
+          我們正在建置此頁面，將提供完整的智慧全人健康管理內容與服務體驗。
         </p>
 
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">

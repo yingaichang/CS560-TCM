@@ -30,18 +30,18 @@ function AuthenticatedClerkAuthControls({ className = '' }: { className?: string
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       {!isSignedIn ? <>
-        <Link href="/sign-in" className="rounded-full border border-primary/20 bg-white px-3 py-2 text-xs font-semibold text-primary">Sign in</Link>
-        <Link href="/sign-up" className="hidden rounded-full bg-primary px-3 py-2 text-xs font-semibold text-white sm:inline-flex">Sign up</Link>
+        <Link href="/sign-in" className="rounded-full border border-primary/20 bg-white px-3 py-2 text-xs font-semibold text-primary">登入</Link>
+        <Link href="/sign-up" className="hidden rounded-full bg-primary px-3 py-2 text-xs font-semibold text-white sm:inline-flex">註冊</Link>
       </> : <>
         {isAdmin && (
           <Link href={isOnAdminPortal ? '/' : '/admin'} className="rounded-full bg-primary px-3 py-2 text-xs font-semibold text-white">
-            {isOnAdminPortal ? 'Back to Home' : 'Admin Portal'}
+            {isOnAdminPortal ? '返回首頁' : '管理後台'}
           </Link>
         )}
         <UserButton />
         <span className="hidden text-xs text-ink/70 md:inline">{user?.fullName}</span>
         <SignOutButton redirectUrl="/">
-          <button type="button" className="rounded-full border border-primary/20 bg-white px-3 py-2 text-xs font-semibold text-primary">Sign out</button>
+          <button type="button" className="rounded-full border border-primary/20 bg-white px-3 py-2 text-xs font-semibold text-primary">登出</button>
         </SignOutButton>
       </>}
     </div>

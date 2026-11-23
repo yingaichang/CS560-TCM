@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 const centerFeatures = [
   '就診紀錄與用藥紀錄',
-  'AI 健康趨勢圖',
+  '智慧健康趨勢圖',
   '血壓與血糖追蹤',
   '睡眠與體重管理',
   '回診提醒與健康日誌',

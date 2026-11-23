@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-22T01:40:39.048Z",
+  "result": "passed",
+  "command": "node scripts/test-architecture-status.cjs --record",
+  "scope": "以模擬身分與資料庫執行角色判定、架構頁直接存取拒絕及伺服器端畫面渲染；不驗證真實登入、資料庫、簡訊、郵件或付款服務。",
+  "components": [
+    "admin",
+    "guard"
+  ],
+  "connections": [
+    "admin-guard",
+    "identity-role"
+  ]
+}

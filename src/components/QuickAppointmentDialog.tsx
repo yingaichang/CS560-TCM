@@ -126,7 +126,7 @@ export default function QuickAppointmentDialog({ isOpen, onClose }: QuickAppoint
     }
 
     if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      nextErrors.email = '請輸入有效 Email'
+      nextErrors.email = '請輸入有效電子郵件'
     }
 
     if (!services.includes(data.service)) {
@@ -297,7 +297,7 @@ export default function QuickAppointmentDialog({ isOpen, onClose }: QuickAppoint
 
               {/* Email */}
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Email (選填)</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1">電子郵件（選填）</label>
                 <input
                   type="email"
                   name="email"

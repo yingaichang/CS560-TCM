@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
-
-const prisma = new PrismaClient()
+import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 
 type HolidaySeedItem = {
   date: string
@@ -69,6 +68,9 @@ const getUsFederalHolidays = (year: number): HolidaySeedItem[] => {
 }
 
 export async function POST(request: NextRequest) {
+  const actor = await authorizeEhrRequest(['admin', 'clinic_staff'])
+  if (!actor) return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+
   try {
     const yearParam = request.nextUrl.searchParams.get('year')
     const year = Number(yearParam)
@@ -111,11 +113,14 @@ export async function POST(request: NextRequest) {
         })
       }
       await writeAuditLog({
+        userId: actor.userId,
+        externalUserId: actor.externalUserId,
+        sessionId: actor.sessionId,
         serviceId: 'holiday-api',
         action: 'seed',
         resource: 'holiday_catalog',
-        actorRole: 'system',
-        source: 'system.holiday-seed',
+        actorRole: actor.role,
+        source: 'admin.holiday-seed',
         module: 'holidays',
         outcome: toCreate.length ? 'success' : 'no_change',
         summary: `Holiday catalog seeded; ${toCreate.length} records created`,

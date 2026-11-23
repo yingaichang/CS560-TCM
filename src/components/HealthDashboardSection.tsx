@@ -4,7 +4,7 @@ export default function HealthDashboardSection() {
       <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
         <div className="rounded-[2.5rem] border border-[#D9E3CF] bg-white p-8 shadow-[0_18px_35px_rgba(53,92,70,0.08)] md:p-12">
           <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#6F8A72]">HEALTH PULSE</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#6F8A72]">健康動態</p>
             <h2 className="mt-4 text-3xl font-semibold text-[#355C46] sm:text-4xl">個人健康儀表板</h2>
             <p className="mt-4 text-base leading-7 text-[#343A36]/90">
               首次完成問卷後，系統會整合睡眠、壓力、慢性風險等資訊，提供您更具體的健康洞察與追蹤建議。

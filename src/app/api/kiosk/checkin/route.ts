@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import { CHECKIN_GRANT_TTL_MS, getTodayRange } from '@/lib/kioskVerification'
 import { writeAuditLog } from '@/lib/auditLog'
+import { ensureEncounterForCheckedInAppointment } from '@/lib/checkinEncounter'
 
 const prisma = new PrismaClient()
 
@@ -63,7 +64,19 @@ export async function POST(request: NextRequest) {
 
       if (result.count === 0) return { count: 0, checkedInAt: null }
 
-      const updated = await transaction.appointment.findUnique({ where: { id: appointment.id }, select: { checkedInAt: true } })
+      const updated = await transaction.appointment.findUnique({
+        where: { id: appointment.id },
+        select: { checkedInAt: true, patientId: true, date: true, service: true, message: true },
+      })
+      if (updated?.patientId) {
+        await ensureEncounterForCheckedInAppointment(transaction, {
+          id: appointment.id,
+          patientId: updated.patientId,
+          date: updated.date,
+          service: updated.service,
+          message: updated.message,
+        })
+      }
       await writeAuditLog({
           action: 'check_in',
           resource: 'appointment_checkin',

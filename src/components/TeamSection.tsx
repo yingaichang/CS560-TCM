@@ -12,7 +12,7 @@ const tracks: CareTrack[] = [
     title: '壓力與睡眠優化計畫',
     focus: '睡眠不足、焦慮與自律神經失衡',
     cadence: '每週追蹤',
-    detail: '結合 AI 量表與中醫調理方案，並搭配呼吸訓練與作息校正。',
+    detail: '結合智慧量表與中醫調理方案，並搭配呼吸訓練與作息校正。',
   },
   {
     id: '2',
@@ -42,7 +42,7 @@ export default function TeamSection() {
     <section id="team" className="bg-white py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <span className="text-sm font-medium tracking-[0.18em] text-primary">CARE JOURNEY</span>
+          <span className="text-sm font-medium tracking-[0.18em] text-primary">健康照護流程</span>
           <h2 className="section-title mt-4">從評估到追蹤的照護旅程</h2>
           <p className="section-subtitle mx-auto mb-12 max-w-3xl">
             平台將使用者需求轉為可執行路徑，讓中醫照護、健康教育與日常習慣維持在同一節奏。
@@ -70,18 +70,18 @@ export default function TeamSection() {
 
         <div className="mt-12 grid gap-6 rounded-3xl border border-primary/10 bg-surface p-8 md:grid-cols-3">
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-wood">STEP 1</p>
+            <p className="text-xs font-semibold tracking-[0.2em] text-wood">步驟一</p>
             <h3 className="mt-2 text-xl font-semibold text-primary">初始評估</h3>
             <p className="mt-2 text-sm leading-7 text-ink/80">完成問卷、症狀登錄與生活型態盤點。</p>
           </div>
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-wood">STEP 2</p>
+            <p className="text-xs font-semibold tracking-[0.2em] text-wood">步驟二</p>
             <h3 className="mt-2 text-xl font-semibold text-primary">門診計畫</h3>
             <p className="mt-2 text-sm leading-7 text-ink/80">中醫師制定階段性照護與療程安排。</p>
           </div>
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-wood">STEP 3</p>
-            <h3 className="mt-2 text-xl font-semibold text-primary">AI 追蹤優化</h3>
+            <p className="text-xs font-semibold tracking-[0.2em] text-wood">步驟三</p>
+            <h3 className="mt-2 text-xl font-semibold text-primary">智慧追蹤優化</h3>
             <p className="mt-2 text-sm leading-7 text-ink/80">依據追蹤結果動態調整日常任務與療程。</p>
           </div>
         </div>

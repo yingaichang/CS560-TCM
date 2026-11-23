@@ -22,7 +22,7 @@ export default function FinalCtaSection() {
           </h2>
 
           <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[#4f6056] md:text-lg">
-            完成簡單的 AI 體質分析，或預約專業中醫健康評估，開始建立適合自己的長期健康計畫。
+            完成簡單的智慧體質分析，或預約專業中醫健康評估，開始建立適合自己的長期健康計畫。
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
@@ -30,7 +30,7 @@ export default function FinalCtaSection() {
               href="/ai-health-analysis"
               className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#3c6346] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(60,99,70,0.24)] transition hover:-translate-y-0.5 hover:bg-[#33563c]"
             >
-              免費 AI 體質分析
+              免費智慧體質分析
             </a>
 
             <a

@@ -11,7 +11,7 @@ export default function RoutePlaceholderPage({ title, description, featureKey }:
     <main className="bg-[#faf8f2] px-6 py-20">
       <section className="mx-auto max-w-3xl rounded-3xl border border-primary/15 bg-white p-8 shadow-[0_12px_28px_rgba(53,92,70,0.1)] md:p-10">
         <span className="inline-flex rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold tracking-[0.08em] text-primary">
-          Coming Soon
+          即將推出
         </span>
         <h1 className="mt-4 font-display text-3xl font-semibold text-primary md:text-4xl">{title}</h1>
         <p className="mt-4 text-base leading-8 text-ink/85">{description}</p>

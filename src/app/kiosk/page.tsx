@@ -139,17 +139,17 @@ export default function KioskPage() {
       <div className="w-full max-w-2xl rounded-[40px] border border-[#D9D5CC] bg-white p-8 shadow-sm sm:p-12">
         <div className="mb-8 text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#6F8A72]">
-            AI TCM HEALTH MANAGEMENT CENTER
+            愛中醫健康管理中心
           </p>
           <h1 className="mt-4 text-3xl font-semibold text-[#355C46] sm:text-4xl">病患自助報到</h1>
         </div>
 
         {step === 'home' && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <KioskChoiceButton label="掃描駕照" sub="Scan Driver's License" onClick={() => chooseMethod('license')} />
-            <KioskChoiceButton label="輸入手機號碼" sub="Enter Phone Number" onClick={() => chooseMethod('phone')} />
-            <KioskChoiceButton label="輸入社會安全碼末四碼" sub="Enter Last 4 of SSN" onClick={() => chooseMethod('ssn')} />
-            <KioskChoiceButton label="掃描會員卡" sub="Scan Membership ID" onClick={() => chooseMethod('membership')} />
+            <KioskChoiceButton label="掃描駕照" sub="使用駕照查詢報到" onClick={() => chooseMethod('license')} />
+            <KioskChoiceButton label="輸入手機號碼" sub="使用手機號碼查詢" onClick={() => chooseMethod('phone')} />
+            <KioskChoiceButton label="輸入社會安全碼末四碼" sub="使用社會安全碼末四碼查詢" onClick={() => chooseMethod('ssn')} />
+            <KioskChoiceButton label="掃描會員卡" sub="使用會員卡查詢報到" onClick={() => chooseMethod('membership')} />
           </div>
         )}
 
@@ -196,10 +196,10 @@ export default function KioskPage() {
         {step === 'confirm' && appointment && (
           <div className="text-center">
             <div className="mb-8 space-y-3 rounded-3xl bg-[#F4F1E8] p-6 text-left text-lg">
-              <SummaryRow label="姓名 Name" value={appointment.name} />
-              <SummaryRow label="病歷編號 Patient ID" value={appointment.patientId} />
-              <SummaryRow label="預約時間 Appointment Time" value={appointment.appointmentTime} />
-              <SummaryRow label="看診醫師 Practitioner" value={appointment.doctorName} />
+              <SummaryRow label="姓名" value={appointment.name} />
+              <SummaryRow label="預約編號" value={appointment.patientId} />
+              <SummaryRow label="預約時間" value={appointment.appointmentTime} />
+              <SummaryRow label="看診醫師" value={appointment.doctorName} />
             </div>
             {error && <p className="mb-4 text-base font-medium text-red-600">{error}</p>}
             <div className="flex flex-col gap-4 sm:flex-row">
@@ -209,7 +209,7 @@ export default function KioskPage() {
                 onClick={confirmCheckIn}
                 className="flex-1 rounded-2xl bg-[#355C46] py-5 text-xl font-semibold text-white shadow-sm transition active:scale-95 disabled:opacity-60"
               >
-                {loading ? '處理中…' : '確認報到 Confirm Check-In'}
+                {loading ? '處理中…' : '確認報到'}
               </button>
               <button
                 type="button"
@@ -217,7 +217,7 @@ export default function KioskPage() {
                 onClick={resetToHome}
                 className="flex-1 rounded-2xl border border-[#D9D5CC] bg-white py-5 text-xl font-semibold text-[#343A36] shadow-sm transition active:scale-95"
               >
-                取消 Cancel
+                取消
               </button>
             </div>
           </div>
@@ -226,7 +226,7 @@ export default function KioskPage() {
         {step === 'success' && (
           <div className="py-12 text-center">
             <p className="text-3xl font-semibold text-[#355C46]">報到成功</p>
-            <p className="mt-2 text-xl text-[#343A36]">Check-in successful</p>
+            <p className="mt-2 text-xl text-[#343A36]">請依櫃檯指示等候看診</p>
           </div>
         )}
       </div>
@@ -257,14 +257,14 @@ function UnavailableMethod({ title, onBack }: { title: string; onBack: () => voi
         請前往櫃檯由工作人員協助報到。
       </p>
       <p className="mt-2 text-base text-[#6F8A72]">
-        This check-in method requires scanning hardware that is not yet installed. Please see the front desk for assistance.
+        如需協助，請洽櫃檯工作人員。
       </p>
       <button
         type="button"
         onClick={onBack}
         className="mt-8 rounded-2xl border border-[#D9D5CC] bg-white px-8 py-4 text-lg font-semibold text-[#343A36] shadow-sm transition active:scale-95"
       >
-        返回 Back
+        返回
       </button>
     </div>
   )
@@ -316,7 +316,7 @@ function EntryStep({
           onClick={onCancel}
           className="flex-1 rounded-2xl border border-[#D9D5CC] bg-white py-5 text-xl font-semibold text-[#343A36] shadow-sm transition active:scale-95"
         >
-          取消 Cancel
+          取消
         </button>
       </div>
     </div>

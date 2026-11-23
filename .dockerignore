@@ -1,0 +1,12 @@
+.git
+node_modules
+.next
+.env
+.env.*
+cse03-ssh-YingAi
+prisma/dev.db*
+prisma/schema.production.prisma
+test-results
+playwright-report
+*.log
+*.vsix

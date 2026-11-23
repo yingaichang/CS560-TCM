@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { findHealthTopicById, healthTopics } from '@/lib/healthTopics'
 
@@ -8,6 +8,7 @@ function PaymentContent() {
   const params = useSearchParams()
   const topicId = params.get('topic') || ''
   const status = params.get('status') || ''
+  const sessionId = params.get('session_id') || ''
 
   const selectedTopic = useMemo(() => {
     return findHealthTopicById(topicId) || healthTopics[0]
@@ -15,6 +16,29 @@ function PaymentContent() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [registrationStatus, setRegistrationStatus] = useState<'loading' | 'pending' | 'paid' | 'failed' | 'expired' | 'unknown'>('unknown')
+
+  useEffect(() => {
+    if (status !== 'success') return
+    if (!sessionId) {
+      setRegistrationStatus('unknown')
+      return
+    }
+
+    let active = true
+    setRegistrationStatus('loading')
+    fetch(`/api/payment/registration?sessionId=${encodeURIComponent(sessionId)}`, { cache: 'no-store' })
+      .then(async (response) => {
+        const result = await response.json()
+        if (!response.ok) throw new Error(result.error || '付款狀態尚未同步。')
+        if (active) setRegistrationStatus(result.status)
+      })
+      .catch((error: unknown) => {
+        console.error('Unable to verify returned payment status:', error)
+        if (active) setRegistrationStatus('unknown')
+      })
+    return () => { active = false }
+  }, [sessionId, status])
 
   const handleStripeCheckout = async () => {
     setErrorMessage('')
@@ -49,12 +73,14 @@ function PaymentContent() {
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-md border border-gray-100 p-8 md:p-10">
         <p className="text-sm tracking-widest text-tcm-green font-medium">付款表單</p>
         <h1 className="text-3xl font-bold text-tcm-dark mt-3">健康專欄講座報名</h1>
-        <p className="text-gray-600 mt-3">請確認講座資訊後點擊付款，系統會導向 Stripe Sandbox 測試環境完成刷卡流程。</p>
+        <p className="text-gray-600 mt-3">請確認講座資訊後點擊付款，系統會導向 付款測試環境完成刷卡流程。</p>
 
         {status === 'success' && (
-          <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
-            付款成功，已完成報名。感謝您的參與。
-          </div>
+          registrationStatus === 'paid'
+            ? <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">已收到並核對付款平台事件，報名紀錄已建立。感謝您的參與。</div>
+            : <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900" role="status">
+                {registrationStatus === 'loading' || registrationStatus === 'pending' ? '已收到付款回跳，付款事件尚待伺服器確認；請稍後重新整理或聯絡診所。' : registrationStatus === 'failed' ? '付款未完成，尚未建立有效報名。' : registrationStatus === 'expired' ? '付款工作階段已逾期，尚未建立有效報名。' : '目前無法核對付款狀態；此頁面不代表付款成功，請聯絡診所確認。'}
+              </div>
         )}
 
         {status === 'cancel' && (

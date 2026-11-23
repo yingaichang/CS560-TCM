@@ -16,7 +16,7 @@ export default function AiHealthHighlightSection() {
         <article className="rounded-3xl border border-[#b8c7b3]/45 bg-[#fffaf2] p-6 shadow-[0_16px_34px_rgba(72,98,76,0.1)] md:p-7">
           <div className="flex items-center justify-between border-b border-[#d6dfd3] pb-4">
             <div>
-              <p className="text-xs font-semibold tracking-[0.12em] text-[#4c6852]">AI HEALTH REPORT</p>
+              <p className="text-xs font-semibold tracking-[0.12em] text-[#4c6852]">智慧健康報告</p>
               <p className="mt-1 text-sm text-[#5d6c61]">個人健康概覽</p>
             </div>
             <span className="rounded-full border border-[#97af94]/45 bg-[#f0f6ed] px-3 py-1 text-xs font-medium text-[#436449]">
@@ -58,7 +58,7 @@ export default function AiHealthHighlightSection() {
         </article>
 
         <div>
-          <p className="text-sm font-semibold tracking-[0.16em] text-[#4c6852]">AI 健康分析</p>
+          <p className="text-sm font-semibold tracking-[0.16em] text-[#4c6852]">智慧健康分析</p>
           <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-[#2d4b3b] sm:text-4xl">
             更早了解身體訊號，
             <br />
@@ -66,7 +66,7 @@ export default function AiHealthHighlightSection() {
           </h2>
 
           <p className="mt-6 text-base leading-8 text-[#4f6056] md:text-lg">
-            AI 工具協助整理個人問卷、生活習慣與健康紀錄，提供健康教育與個人化管理方向，並由中醫專業人員進一步評估。
+            智慧工具協助整理個人問卷、生活習慣與健康紀錄，提供健康教育與個人化管理方向，並由中醫專業人員進一步評估。
           </p>
 
           <ul className="mt-7 space-y-3 text-sm text-[#42564a] md:text-base">
@@ -82,11 +82,11 @@ export default function AiHealthHighlightSection() {
             href="/ai-health-analysis"
             className="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-[#3c6346] px-7 py-3.5 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(60,99,70,0.24)] transition hover:-translate-y-0.5 hover:bg-[#33563c]"
           >
-            開始 AI 體質分析
+            開始智慧體質分析
           </a>
 
           <p className="mt-6 rounded-2xl border border-[#d6d3c7] bg-[#fffaf1]/88 px-4 py-3 text-xs leading-6 text-[#5e6159] md:text-sm">
-            健康與醫療聲明：AI 分析結果僅作為健康教育與輔助資訊，不能取代醫師診斷、治療或緊急醫療服務。如有不適或緊急症狀，請立即就醫。
+            健康與醫療聲明：智慧分析結果僅作為健康教育與輔助資訊，不能取代醫師診斷、治療或緊急醫療服務。如有不適或緊急症狀，請立即就醫。
           </p>
         </div>
       </div>

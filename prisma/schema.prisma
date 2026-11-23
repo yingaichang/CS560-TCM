@@ -15,6 +15,7 @@ datasource db {
 
 model Appointment {
   id              String   @id @default(cuid())
+  patientId       String?
   name            String
   email           String
   phone           String
@@ -36,6 +37,10 @@ model Appointment {
   verificationAttempts      Int       @default(0)
   verifiedForCheckinAt      DateTime?
 
+  patient Patient? @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  encounter Encounter?
+
+  @@index([patientId])
   @@index([email])
   @@index([date])
   @@index([doctorId])
@@ -57,11 +62,15 @@ model Holiday {
 
 model Contact {
   id        String   @id @default(cuid())
+  submissionId String? @unique
   name      String
   email     String
   subject   String
   message   String
   status    String   @default("new")
+  emailDeliveryStatus     String   @default("not_attempted")
+  emailDeliveryAttempts   Int      @default(0)
+  emailDeliveryAttemptedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -140,6 +149,7 @@ model Patient {
   womensHealth      WomensHealth?
   diagnosticTests   DiagnosticTest[]
   encounters        Encounter[]
+  appointments      Appointment[]
   interviews        AiVoiceInterview[]
   documents         Document[]
   auditLogs         AuditLog[]
@@ -406,8 +416,9 @@ model DiagnosticTest {
 model Encounter {
   id                 String   @id @default(cuid())
   encounterId        String   @unique
+  appointmentId      String?  @unique
   patientId          String
-  providerId         String
+  providerId         String?
   encounterDate      DateTime
   startTime          String?
   endTime            String?
@@ -423,7 +434,8 @@ model Encounter {
   updatedAt          DateTime @updatedAt
 
   patient        Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  provider       User          @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  provider       User?         @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  appointment    Appointment?  @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
   clinicalNote   ClinicalNote?
   treatments     Treatment[]
   billingRecords BillingRecord[]
@@ -645,6 +657,22 @@ model AuditWebhookReceipt {
   receivedAt DateTime @default(now())
 
   @@index([provider, receivedAt])
+}
+
+model HealthTopicRegistration {
+  id                 String   @id @default(cuid())
+  checkoutSessionId  String   @unique
+  topicId            String
+  topicName          String
+  amountTwd          Int
+  currency           String   @default("twd")
+  status             String   @default("pending")
+  customerEmail      String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([topicId, status])
+  @@index([createdAt])
 }
 
 model ProviderPatientAccess {

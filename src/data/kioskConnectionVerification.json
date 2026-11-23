@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-23T01:50:24.135Z",
+  "result": "failed",
+  "command": "node scripts/test-kiosk-connection.cjs",
+  "scope": "最近一次本機隔離報到測試未通過；診斷內容不公開。",
+  "components": [
+    "kiosk",
+    "kioskApi",
+    "clinicalWrite",
+    "sms"
+  ],
+  "connections": [
+    "kiosk-request",
+    "kiosk-save",
+    "kiosk-sms",
+    "kiosk-audit",
+    "checkin-encounter"
+  ],
+  "cases": []
+}

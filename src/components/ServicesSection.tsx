@@ -10,16 +10,16 @@ const services: Service[] = [
   {
     id: 'ai-health-profile',
     icon: '01',
-    title: 'AI 健康分析引擎',
-    tag: 'Assessment',
+    title: '智慧健康分析引擎',
+    tag: '健康評估',
     description:
-      '以 AI 與中醫體質理論整合問卷、生活型態與症狀資料，生成個人健康風險地圖與優先改善建議。',
+      '以智慧與中醫體質理論整合問卷、生活型態與症狀資料，生成個人健康風險地圖與優先改善建議。',
   },
   {
     id: 'integrated-tcm-care',
     icon: '02',
     title: '中醫診療與針灸照護',
-    tag: 'Clinical Care',
+    tag: '臨床照護',
     description:
       '中醫師依個人狀態安排門診、針灸、推拿與藥膳建議，讓治療從單點處置轉為完整照護路徑。',
   },
@@ -27,7 +27,7 @@ const services: Service[] = [
     id: 'chronic-monitoring',
     icon: '03',
     title: '慢性健康監測模組',
-    tag: 'Monitoring',
+    tag: '健康追蹤',
     description:
       '追蹤血壓、血糖、睡眠、壓力與疼痛等關鍵指標，提供週期提醒與異常回報機制。',
   },
@@ -35,7 +35,7 @@ const services: Service[] = [
     id: 'health-academy',
     icon: '04',
     title: '健康學院與課程系統',
-    tag: 'Education',
+    tag: '健康教育',
     description:
       '透過主題講座、工作坊與影片學習，協助使用者把健康知識轉化為每天可實踐的習慣。',
   },
@@ -43,7 +43,7 @@ const services: Service[] = [
     id: 'family-plan',
     icon: '05',
     title: '家庭健康管理帳戶',
-    tag: 'Family Plan',
+    tag: '家庭健康計畫',
     description:
       '支援家庭共同追蹤與跨世代健康管理，特別適合銀髮照護與親子同步維護日常健康。',
   },
@@ -54,7 +54,7 @@ export default function ServicesSection() {
     <section id="services" className="bg-[linear-gradient(180deg,#f6f1e8_0%,#f1ecdf_100%)] py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <span className="text-sm font-medium tracking-[0.18em] text-primary">CORE MODULES</span>
+          <span className="text-sm font-medium tracking-[0.18em] text-primary">核心服務</span>
           <h2 className="section-title mt-4">可持續擴充的五大平台模組</h2>
           <p className="section-subtitle mx-auto mb-14 max-w-3xl">
             每個模組可獨立運作，也可串接成完整健康旅程，從首次評估到長期照護都能持續擴充。

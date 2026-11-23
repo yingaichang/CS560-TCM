@@ -1,8 +1,9 @@
 'use client'
 
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useRef, useState } from 'react'
 
 export default function ContactSection() {
+  const submissionId = useRef<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -29,12 +30,15 @@ export default function ContactSection() {
     setIsLoading(true)
     setErrorMessage('')
     setSuccessMessage('')
+    const idempotencyKey = submissionId.current ?? crypto.randomUUID()
+    submissionId.current = idempotencyKey
 
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Idempotency-Key': idempotencyKey,
         },
         body: JSON.stringify(formData),
       })
@@ -42,6 +46,7 @@ export default function ContactSection() {
       const data = await response.json().catch(() => null)
 
       if (response.ok) {
+        submissionId.current = null
         setSubmitted(true)
         setSuccessMessage(data?.message || '✓ 感謝您的訊息！我們會盡快回覆。')
         setFormData({
@@ -246,7 +251,7 @@ export default function ContactSection() {
                 >
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
                 </svg>
-                <p className="text-tcm-green font-medium">Google Maps</p>
+                <p className="text-tcm-green font-medium">地圖位置</p>
                 <p className="text-sm text-gray-400 mt-1">
                   將在此處嵌入診所地圖
                 </p>

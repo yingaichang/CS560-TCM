@@ -14,7 +14,7 @@ const HASH_ACTIVE_MAP: Record<string, string> = {
   '#about': 'about',
   '#services': 'services',
   '#articles': 'academy',
-  '#team': 'events',
+  '#team': '筆紀錄',
   '#appointment': 'services',
   '#contact': 'home',
 }
@@ -66,7 +66,7 @@ export default function Header() {
       }
 
       if (feature?.includes('course') || feature?.includes('seminar') || feature?.includes('live') || feature?.includes('community')) {
-        setActiveKey('events')
+        setActiveKey('筆紀錄')
         return
       }
 
@@ -139,7 +139,7 @@ export default function Header() {
         <Link href="/#home" className="flex items-center gap-2 xl:gap-2.5">
           <Image
             src="/images/ai-tcm-health-management-center-logo.png"
-            alt="愛中醫健康管理中心 Logo"
+            alt="愛中醫健康管理中心標誌"
             width={36}
             height={36}
             className="h-8 w-8 rounded-full border border-primary/20 bg-white object-contain shadow-sm xl:h-9 xl:w-9"
@@ -149,7 +149,7 @@ export default function Header() {
               愛中醫健康管理中心
             </strong>
             <span className="font-brand block text-[9px] tracking-[0.06em] text-wood xl:text-[10px] xl:tracking-[0.08em]">
-              AI TCM HEALTH MANAGEMENT CENTER
+              愛中醫健康管理中心
             </span>
           </span>
         </Link>
@@ -204,7 +204,7 @@ export default function Header() {
                             <span>{child.label}</span>
                             {child.comingSoon ? (
                               <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-medium tracking-[0.06em] text-primary/75">
-                                Soon
+                                即將推出
                               </span>
                             ) : null}
                           </Link>

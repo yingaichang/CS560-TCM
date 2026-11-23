@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import nodemailer from 'nodemailer'
 import { writeAuditLog } from '@/lib/auditLog'
-
-const prisma = new PrismaClient()
+import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
+import { prisma } from '@/lib/prisma'
 
 interface ContactPayload {
   name: string
@@ -82,84 +82,163 @@ export async function POST(request: NextRequest) {
     }
 
     const smtpConfig = getSmtpConfig()
-    if (!smtpConfig) {
-      return NextResponse.json(
-        { error: '伺服器郵件設定不完整，請聯絡管理員' },
-        { status: 500 }
-      )
-    }
-
     const { name, email, subject, message } = validation.value
-
-    const transporter = nodemailer.createTransport({
-      host: smtpConfig.host,
-      port: smtpConfig.port,
-      secure: smtpConfig.secure,
-      auth: {
-        user: smtpConfig.user,
-        pass: smtpConfig.pass,
-      },
-    })
-
-    await transporter.sendMail({
-      from: smtpConfig.from,
-      to: smtpConfig.to,
-      replyTo: email,
-      subject: `網站聯絡表單: ${subject}`,
-      text: [
-        '收到新的聯絡訊息',
-        '',
-        `姓名: ${name}`,
-        `Email: ${email}`,
-        `主旨: ${subject}`,
-        '',
-        '內容:',
-        message,
-      ].join('\n'),
-      html: `
-        <h2>收到新的聯絡訊息</h2>
-        <p><strong>姓名:</strong> ${escapeHtml(name)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-        <p><strong>主旨:</strong> ${escapeHtml(subject)}</p>
-        <p><strong>內容:</strong><br/>${escapeHtml(message)}</p>
-      `,
-    })
-
-    let savedToDatabase = false
-    let contactId: string | null = null
-    try {
-      const contact = await prisma.contact.create({
-        data: {
-          name,
-          email,
-          subject,
-          message,
-          status: 'new',
-        },
-        select: { id: true },
-      })
-      contactId = contact.id
-      savedToDatabase = true
-    } catch (dbError) {
-      console.error('Contact saved email but DB write failed:', dbError)
+    const submissionId = request.headers.get('idempotency-key')
+    if (submissionId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId)) {
+      return NextResponse.json({ error: 'Invalid submission identifier.' }, { status: 400 })
     }
 
-    await writeAuditLog({
-      serviceId: 'contact-form',
-      action: 'submit',
-      resource: 'contact_message',
-      resourceId: contactId,
-      actorRole: 'public',
-      source: 'public.contact',
-      module: 'contact',
-      outcome: savedToDatabase ? 'success' : 'email_sent_db_save_failed',
-      summary: savedToDatabase ? 'Contact message submitted' : 'Contact message emailed; database save failed',
-    })
+    if (submissionId) {
+      const previous = await prisma.contact.findUnique({ where: { submissionId } })
+      if (previous) {
+        const sameSubmission = previous.name === name
+          && previous.email === email
+          && previous.subject === subject
+          && previous.message === message
+        if (!sameSubmission) return NextResponse.json({ error: 'Submission identifier was already used.' }, { status: 409 })
+        return NextResponse.json({
+          message: previous.emailDeliveryStatus === 'sent'
+            ? '訊息已保存，通知郵件已送出。'
+            : '訊息已保存；郵件通知尚未確認，診所可從管理清單追蹤。',
+          savedToDatabase: true,
+          emailDeliveryStatus: previous.emailDeliveryStatus,
+          duplicate: true,
+        })
+      }
+    }
+
+    let contact: { id: string }
+    try {
+      contact = await prisma.$transaction(async (transaction) => {
+        const saved = await transaction.contact.create({
+          data: {
+            submissionId,
+            name,
+            email,
+            subject,
+            message,
+            status: 'new',
+            emailDeliveryStatus: smtpConfig ? 'sending' : 'not_configured',
+            emailDeliveryAttempts: smtpConfig ? 1 : 0,
+            emailDeliveryAttemptedAt: smtpConfig ? new Date() : null,
+          },
+          select: { id: true, submissionId: true },
+        })
+        await writeAuditLog({
+          serviceId: 'contact-form',
+          action: 'submit',
+          resource: 'contact_message',
+          resourceId: saved.id,
+          actorRole: 'public',
+          source: 'public.contact',
+          module: 'contact',
+          outcome: 'saved',
+          summary: 'Contact message saved',
+        }, transaction)
+        return saved
+      })
+    } catch (error) {
+      if (submissionId && error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        const previous = await prisma.contact.findUnique({ where: { submissionId } })
+        if (previous) {
+          const sameSubmission = previous.name === name
+            && previous.email === email
+            && previous.subject === subject
+            && previous.message === message
+          if (!sameSubmission) return NextResponse.json({ error: 'Submission identifier was already used.' }, { status: 409 })
+          return NextResponse.json({
+            message: '訊息已保存；郵件通知尚未確認，診所可從管理清單追蹤。',
+            savedToDatabase: true,
+            emailDeliveryStatus: previous.emailDeliveryStatus,
+            duplicate: true,
+          })
+        }
+      }
+      throw error
+    }
+
+    if (smtpConfig) {
+      try {
+        const transporter = nodemailer.createTransport({
+          host: smtpConfig.host,
+          port: smtpConfig.port,
+          secure: smtpConfig.secure,
+          auth: { user: smtpConfig.user, pass: smtpConfig.pass },
+        })
+        await transporter.sendMail({
+          from: smtpConfig.from,
+          to: smtpConfig.to,
+          replyTo: email,
+          subject: `網站聯絡表單: ${subject}`,
+          text: [
+            '收到新的聯絡訊息',
+            '',
+            `姓名: ${name}`,
+            `Email: ${email}`,
+            `主旨: ${subject}`,
+            '',
+            '內容:',
+            message,
+          ].join('\n'),
+          html: `
+            <h2>收到新的聯絡訊息</h2>
+            <p><strong>姓名:</strong> ${escapeHtml(name)}</p>
+            <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+            <p><strong>主旨:</strong> ${escapeHtml(subject)}</p>
+            <p><strong>內容:</strong><br/>${escapeHtml(message)}</p>
+          `,
+        })
+        await prisma.$transaction(async (transaction) => {
+          await transaction.contact.update({
+            where: { id: contact.id },
+            data: { emailDeliveryStatus: 'sent' },
+          })
+          await writeAuditLog({
+            serviceId: 'contact-form',
+            action: 'notification_sent',
+            resource: 'contact_message',
+            resourceId: contact.id,
+            actorRole: 'system',
+            source: 'system.contact-mail',
+            module: 'contact',
+            outcome: 'success',
+            summary: 'Contact notification sent',
+          }, transaction)
+        })
+      } catch (error) {
+        console.error('Contact message saved but email delivery could not be confirmed:', error)
+        await prisma.$transaction(async (transaction) => {
+          await transaction.contact.update({
+            where: { id: contact.id },
+            data: { emailDeliveryStatus: 'failed' },
+          })
+          await writeAuditLog({
+            serviceId: 'contact-form',
+            action: 'notification_failed',
+            resource: 'contact_message',
+            resourceId: contact.id,
+            actorRole: 'system',
+            source: 'system.contact-mail',
+            module: 'contact',
+            outcome: 'failed',
+            summary: 'Contact notification delivery failed',
+          }, transaction)
+        })
+        return NextResponse.json({
+          message: '訊息已保存，但郵件通知未能確認送達；診所可從管理清單追蹤。',
+          savedToDatabase: true,
+          emailDeliveryStatus: 'failed',
+        }, { status: 201 })
+      }
+    }
 
     return NextResponse.json(
       {
-        message: '訊息已成功送出，我們會盡快回覆您。',
-        savedToDatabase,
+        message: smtpConfig
+          ? '訊息已保存，通知郵件已送出。'
+          : '訊息已保存；郵件尚未設定，診所可從管理清單追蹤。',
+        savedToDatabase: true,
+        emailDeliveryStatus: smtpConfig ? 'sent' : 'not_configured',
       },
       { status: 201 }
     )
@@ -173,6 +252,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
+  const actor = await authorizeEhrRequest(['admin', 'clinic_staff'])
+  if (!actor) return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+
   try {
     const contacts = await prisma.contact.findMany({
       orderBy: {
@@ -182,11 +264,13 @@ export async function GET() {
     })
 
     await writeAuditLog({
-      serviceId: 'contact-api',
+      userId: actor.userId,
+      externalUserId: actor.externalUserId,
+      sessionId: actor.sessionId,
+      actorRole: actor.role,
       action: 'read_list',
       resource: 'contact_message',
-      actorRole: 'system',
-      source: 'system.contact-list',
+      source: 'admin.contact-list',
       module: 'contact',
       summary: 'Contact message list read',
     })

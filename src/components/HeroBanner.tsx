@@ -20,7 +20,7 @@ export default function Hero() {
           </h1>
 
           <p className="mt-2.5 max-w-xl text-xs font-medium tracking-[0.02em] text-[#59615B] sm:text-sm lg:whitespace-nowrap lg:text-xs">
-            AI 體質分析 × 中醫診療 × 預防醫學 × 健康教育 × 長期健康管理
+            智慧體質分析 × 中醫診療 × 預防醫學 × 健康教育 × 長期健康管理
           </p>
 
           <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:gap-4">
@@ -35,7 +35,7 @@ export default function Hero() {
               href="/ai-health-analysis"
               className="inline-flex min-h-9 w-full items-center justify-center rounded-full border border-[#A78D60]/30 bg-[#FAF8F2] px-4 py-1.5 text-sm font-semibold text-[#355C46] transition hover:bg-[#f4f1e8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A78D60] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f2] sm:w-auto"
             >
-              免費 AI 體質分析
+              免費智慧體質分析
             </Link>
           </div>
 

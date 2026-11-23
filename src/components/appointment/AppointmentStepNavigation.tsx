@@ -96,7 +96,7 @@ export default function AppointmentStepNavigation({
             <CalendarDays className="h-6 w-6" />
           </div>
 
-          <p className="text-sm font-medium text-[#6F8A72]">Online Appointment</p>
+          <p className="text-sm font-medium text-[#6F8A72]">線上預約</p>
 
           <h2 className="mt-1 text-lg font-semibold text-[#355C46]">線上預約</h2>
         </div>

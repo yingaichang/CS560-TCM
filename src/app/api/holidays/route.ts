@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Prisma, PrismaClient } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { writeAuditLog } from '@/lib/auditLog'
-
-const prisma = new PrismaClient()
+import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
+import { prisma } from '@/lib/prisma'
 
 type CreateHolidayPayload = {
   date?: string
@@ -35,6 +35,9 @@ const parseDateOnly = (value: string) => {
 }
 
 export async function GET(request: NextRequest) {
+  const actor = await authorizeEhrRequest(['admin', 'clinic_staff'])
+  if (!actor) return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+
   try {
     const searchParams = request.nextUrl.searchParams
     const yearParam = searchParams.get('year')
@@ -62,6 +65,16 @@ export async function GET(request: NextRequest) {
       },
     })
 
+    await writeAuditLog({
+      userId: actor.userId,
+      externalUserId: actor.externalUserId,
+      sessionId: actor.sessionId,
+      actorRole: actor.role,
+      action: 'read_list',
+      resource: 'holiday',
+      source: 'admin.holiday-calendar',
+      module: 'appointments',
+    })
     return NextResponse.json(holidays)
   } catch (error) {
     console.error('Error fetching holidays:', error)
@@ -73,6 +86,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const actor = await authorizeEhrRequest(['admin', 'clinic_staff'])
+  if (!actor) return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+
   try {
     const body = (await request.json()) as CreateHolidayPayload
 
@@ -100,12 +116,15 @@ export async function POST(request: NextRequest) {
         data: { holidayDate, name, isClosed },
       })
       await writeAuditLog({
+        userId: actor.userId,
+        externalUserId: actor.externalUserId,
+        sessionId: actor.sessionId,
         serviceId: 'holiday-api',
         action: 'create',
         resource: 'holiday',
         resourceId: created.id,
-        actorRole: 'system',
-        source: 'system.holidays',
+        actorRole: actor.role,
+        source: 'admin.holiday-calendar',
         module: 'holidays',
         summary: 'Holiday record created',
       }, transaction)
@@ -134,6 +153,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const actor = await authorizeEhrRequest(['admin', 'clinic_staff'])
+  if (!actor) return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+
   try {
     const searchParams = request.nextUrl.searchParams
     const id = (searchParams.get('id') || '').trim()
@@ -150,12 +172,15 @@ export async function DELETE(request: NextRequest) {
       await prisma.$transaction(async (transaction) => {
         await transaction.holiday.delete({ where: { id } })
         await writeAuditLog({
+          userId: actor.userId,
+          externalUserId: actor.externalUserId,
+          sessionId: actor.sessionId,
           serviceId: 'holiday-api',
           action: 'delete',
           resource: 'holiday',
           resourceId: id,
-          actorRole: 'system',
-          source: 'system.holidays',
+          actorRole: actor.role,
+          source: 'admin.holiday-calendar',
           module: 'holidays',
           summary: 'Holiday record deleted',
         }, transaction)
@@ -176,12 +201,15 @@ export async function DELETE(request: NextRequest) {
       const holiday = await transaction.holiday.findUniqueOrThrow({ where: { holidayDate }, select: { id: true } })
       await transaction.holiday.delete({ where: { holidayDate } })
       await writeAuditLog({
+        userId: actor.userId,
+        externalUserId: actor.externalUserId,
+        sessionId: actor.sessionId,
         serviceId: 'holiday-api',
         action: 'delete',
         resource: 'holiday',
         resourceId: holiday.id,
-        actorRole: 'system',
-        source: 'system.holidays',
+        actorRole: actor.role,
+        source: 'admin.holiday-calendar',
         module: 'holidays',
         summary: 'Holiday record deleted',
       }, transaction)

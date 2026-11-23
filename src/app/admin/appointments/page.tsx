@@ -17,6 +17,8 @@ type Appointment = {
   createdAt: string
   checkedIn: boolean
   checkedInAt?: string | null
+  patientId: string | null
+  patient: { id: string; patientId: string; firstName: string; lastName: string } | null
 }
 
 type AppointmentUpdates = {
@@ -24,6 +26,14 @@ type AppointmentUpdates = {
   date?: string
   appointmentTime?: string
   message?: string | null
+  patientId?: string | null
+}
+
+type PatientOption = {
+  id: string
+  patientId: string
+  firstName: string
+  lastName: string
 }
 
 function toCsv(rows: Appointment[]) {
@@ -35,7 +45,7 @@ function toCsv(rows: Appointment[]) {
     '預約時間',
     '指定醫師',
     '電話',
-    'Email',
+    '電子郵件',
     '問卷完成',
     '預約狀態',
     '送出時間',
@@ -67,7 +77,9 @@ export default function AdminAppointmentsPage() {
   const [pageSize, setPageSize] = useState(10)
   const [hasMore, setHasMore] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const [actionError, setActionError] = useState('')
   const [selected, setSelected] = useState<Appointment | null>(null)
+  const [patients, setPatients] = useState<PatientOption[]>([])
   const [editDate, setEditDate] = useState('')
   const [editTime, setEditTime] = useState('')
   const pollInFlight = useRef(false)
@@ -114,6 +126,21 @@ export default function AdminAppointmentsPage() {
     fetchAppointments(filter, page, pageSize)
   }, [filter, page, pageSize])
 
+  useEffect(() => {
+    let active = true
+    fetch('/api/ehr/patients')
+      .then(async (response) => {
+        const result = await response.json()
+        if (!response.ok) throw new Error(result.error || '無法載入病人清單。')
+        if (active) setPatients(result.patients)
+      })
+      .catch((error: unknown) => {
+        console.error('Unable to load patients for appointment linking:', error)
+        if (active) setActionError(error instanceof Error ? error.message : '無法載入病人清單。')
+      })
+    return () => { active = false }
+  }, [])
+
   // Poll so kiosk self check-ins show up here without a manual refresh.
   // Skip a tick while a request is still running so slow responses don't pile up.
   useEffect(() => {
@@ -136,17 +163,23 @@ export default function AdminAppointmentsPage() {
   }, [selected])
 
   const updateAppointment = async (id: string, updates: AppointmentUpdates) => {
+    setActionError('')
     try {
       const res = await fetch(`/api/appointments/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
       })
-      if (res.ok) {
-        fetchAppointments(filter, page, pageSize)
+      const result = await res.json()
+      if (!res.ok) {
+        setActionError(result.error || '無法更新預約。')
+        return
       }
-    } catch (e) {
-      console.error(e)
+      if (selected?.id === id) setSelected(result)
+      await fetchAppointments(filter, page, pageSize)
+    } catch (error) {
+      console.error('Unable to update appointment:', error)
+      setActionError('無法更新預約，請稍後重試。')
     }
   }
 
@@ -177,7 +210,7 @@ export default function AdminAppointmentsPage() {
             <option value="pending">待確認預約</option>
             <option value="new">初診預約</option>
             <option value="followup">複診預約</option>
-            <option value="ai_initial">AI 初診預約</option>
+            <option value="ai_initial">智慧初診預約</option>
             <option value="waitlist">候補名單</option>
             <option value="confirmed">已確認預約</option>
             <option value="completed">已完成預約</option>
@@ -189,15 +222,16 @@ export default function AdminAppointmentsPage() {
             <option value={10}>10 / 頁</option>
             <option value={25}>25 / 頁</option>
           </select>
-          <button onClick={exportCsv} className="rounded bg-sky-600 px-3 py-2 text-white text-sm">匯出 CSV</button>
+          <button onClick={exportCsv} className="rounded bg-sky-600 px-3 py-2 text-white text-sm">匯出試算表</button>
         </div>
       </div>
 
       <div className="overflow-x-auto rounded-lg border bg-white p-4 shadow-sm">
+        {actionError ? <p className="mb-3 rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">{actionError}</p> : null}
         {loadError ? (
           <div role="alert" className="mb-3 rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
             {loadError}
-            <button onClick={() => fetchAppointments(filter, page, pageSize)} className="ml-2 underline">Retry</button>
+            <button onClick={() => fetchAppointments(filter, page, pageSize)} className="ml-2 underline">重試</button>
           </div>
         ) : null}
         {loading ? (
@@ -208,12 +242,13 @@ export default function AdminAppointmentsPage() {
               <tr className="text-left text-xs text-gray-500">
                 <th className="py-2">預約編號</th>
                 <th>病人姓名</th>
+                <th>病歷連結</th>
                 <th>預約類型</th>
                 <th>日期</th>
                 <th>時間</th>
                 <th>指定醫師</th>
                 <th>電話</th>
-                <th>Email</th>
+                <th>電子郵件</th>
                 <th>問卷完成</th>
                 <th>狀態</th>
                 <th>報到</th>
@@ -226,8 +261,9 @@ export default function AdminAppointmentsPage() {
                 <tr key={a.id} className="border-t align-top">
                   <td className="py-3 align-top">{a.id}</td>
                   <td className="align-top">{a.name}</td>
+                  <td className="align-top">{a.patient ? `${a.patient.patientId} · ${a.patient.firstName} ${a.patient.lastName}` : '尚未連結'}</td>
                   <td className="align-top">{a.service}</td>
-                  <td className="align-top">{new Date(a.date).toLocaleDateString()}</td>
+                  <td className="align-top">{new Date(a.date).toLocaleDateString('zh-TW')}</td>
                   <td className="align-top">{a.appointmentTime}</td>
                   <td className="align-top">{a.doctorId}</td>
                   <td className="align-top">{a.phone}</td>
@@ -255,7 +291,7 @@ export default function AdminAppointmentsPage() {
                         if (newDate && newTime) updateAppointment(a.id, { date: newDate, appointmentTime: newTime })
                       }} className="rounded bg-yellow-500 px-2 py-1 text-white text-xs">修改日期/時間</button>
                       <button onClick={() => updateAppointment(a.id, { status: 'cancelled' })} className="rounded bg-red-600 px-2 py-1 text-white text-xs">取消預約</button>
-                      <button onClick={() => updateAppointment(a.id, { status: 'ai_sent' })} className="rounded bg-indigo-600 px-2 py-1 text-white text-xs">發送 AI 問卷</button>
+                      <button onClick={() => updateAppointment(a.id, { status: 'ai_sent' })} className="rounded bg-indigo-600 px-2 py-1 text-white text-xs">發送智慧問卷</button>
                       <button onClick={() => updateAppointment(a.id, { status: 'waitlist' })} className="rounded bg-slate-500 px-2 py-1 text-white text-xs">加入候補名單</button>
                       <button onClick={() => updateAppointment(a.id, { status: 'completed' })} className="rounded bg-teal-600 px-2 py-1 text-white text-xs">標記已完成</button>
                       <button onClick={() => updateAppointment(a.id, { status: 'no_show' })} className="rounded bg-gray-700 px-2 py-1 text-white text-xs">標記未到診</button>
@@ -295,7 +331,7 @@ export default function AdminAppointmentsPage() {
                 <p className="font-medium">{selected.phone}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Email</p>
+                <p className="text-sm text-gray-500">電子郵件</p>
                 <p className="font-medium">{selected.email}</p>
               </div>
               <div>
@@ -309,6 +345,23 @@ export default function AdminAppointmentsPage() {
               <div>
                 <p className="text-sm text-gray-500">問卷狀態</p>
                 <p className="font-medium">{selected.message ? '已填寫' : '未填寫'}</p>
+              </div>
+              <div className="md:col-span-2">
+                <label htmlFor="appointment-patient-link" className="text-sm text-gray-500">關聯既有病人</label>
+                <select
+                  id="appointment-patient-link"
+                  value={selected.patientId || ''}
+                  onChange={(event) => updateAppointment(selected.id, { patientId: event.target.value || null })}
+                  className="mt-1 w-full rounded border px-3 py-2"
+                >
+                  <option value="">不連結病歷</option>
+                  {patients.map((patient) => (
+                    <option key={patient.id} value={patient.id}>
+                      {patient.patientId} · {patient.firstName} {patient.lastName}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-gray-500">僅選擇經診所人員確認的既有病歷；系統不會依姓名或電話自動合併資料。</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">預約日期</p>
@@ -328,7 +381,7 @@ export default function AdminAppointmentsPage() {
               <button onClick={() => { updateAppointment(selected.id, { status: 'confirmed' }); setSelected(null) }} className="rounded bg-green-600 px-4 py-2 text-white">確認預約</button>
               <button onClick={() => { updateAppointment(selected.id, { date: editDate, appointmentTime: editTime }); setSelected(null) }} className="rounded bg-yellow-500 px-4 py-2 text-white">儲存日期/時間</button>
               <button onClick={() => { updateAppointment(selected.id, { status: 'cancelled' }); setSelected(null) }} className="rounded bg-red-600 px-4 py-2 text-white">取消預約</button>
-              <button onClick={() => { updateAppointment(selected.id, { status: 'ai_sent' }); setSelected(null) }} className="rounded bg-indigo-600 px-4 py-2 text-white">發送 AI 問卷</button>
+              <button onClick={() => { updateAppointment(selected.id, { status: 'ai_sent' }); setSelected(null) }} className="rounded bg-indigo-600 px-4 py-2 text-white">發送智慧問卷</button>
               <button onClick={() => { updateAppointment(selected.id, { status: 'waitlist' }); setSelected(null) }} className="rounded bg-slate-500 px-4 py-2 text-white">加入候補</button>
               <button onClick={() => { updateAppointment(selected.id, { status: 'completed' }); setSelected(null) }} className="rounded bg-teal-600 px-4 py-2 text-white">標記已完成</button>
               <button onClick={() => { updateAppointment(selected.id, { status: 'no_show' }); setSelected(null) }} className="rounded bg-gray-700 px-4 py-2 text-white">標記未到診</button>

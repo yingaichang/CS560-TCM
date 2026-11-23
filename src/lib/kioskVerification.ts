@@ -27,20 +27,28 @@ export const generateVerificationCode = () => String(crypto.randomInt(0, 1_000_0
 
 // --- Verification code delivery ----------------------------------------
 //
-// No SMS gateway (e.g. Twilio) is configured in this project. In production
-// this must be replaced with a real SMS/voice provider. For local
-// development and grading we log the code to the server console so the
-// kiosk flow can be tested end-to-end.
+// Development tests use a loopback-only delivery stub. Never log codes or
+// pretend that an unconfigured/failed delivery was successful.
+
+export class KioskDeliveryError extends Error {
+  constructor() {
+    super('驗證簡訊暫時無法傳送，請稍後再試或洽櫃檯協助。')
+    this.name = 'KioskDeliveryError'
+  }
+}
 
 export const sendVerificationCode = async (phone: string, code: string) => {
-  if (process.env.SMS_PROVIDER_WEBHOOK_URL) {
-    await fetch(process.env.SMS_PROVIDER_WEBHOOK_URL, {
+  const endpoint = process.env.SMS_PROVIDER_WEBHOOK_URL
+  if (!endpoint) throw new KioskDeliveryError()
+  try {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ to: phone, code }),
-    }).catch((error) => console.error('Failed to send SMS via configured provider:', error))
-    return
+      signal: AbortSignal.timeout(8_000),
+    })
+    if (!response.ok) throw new KioskDeliveryError()
+  } catch {
+    throw new KioskDeliveryError()
   }
-
-  console.log(`[KIOSK DEV SMS SIMULATION] Verification code for ${maskPhone(phone)}: ${code}`)
 }

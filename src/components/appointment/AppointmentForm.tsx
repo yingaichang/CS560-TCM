@@ -1,5 +1,7 @@
 'use client'
 
+import { chineseText } from '@/lib/chinese'
+
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -61,12 +63,12 @@ const consultationTypeDetails = [
   {
     type: '體質與健康管理',
     patient: '睡眠、疲勞、消化、壓力、養生規劃',
-    destination: 'AI 初診問卷',
+    destination: '智慧初診問卷',
   },
   {
     type: 'AI 健康分析＋初診',
     patient: '希望先完成體質分析與健康報告',
-    destination: 'AI 健康分析',
+    destination: '智慧健康分析',
   },
 ]
 
@@ -114,7 +116,7 @@ const fieldLabel = {
   lastName: '姓氏',
   birthDate: '出生日期',
   phone: '手機',
-  email: 'Email',
+  email: '電子郵件',
   preferredLanguage: '希望聯絡語言',
   isFirstVisit: '是否為第一次來診',
   primaryConcern: '這次最希望我們協助的健康問題是什麼？',
@@ -205,7 +207,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
     if (currentStep === 7 && submitted && appointmentResult) {
       const nextRoute = consultationTypeRoutes[appointmentResult.consultationType] || '/appointments'
       const primaryButtonLabel = appointmentResult.consultationType === '體質與健康管理'
-        ? '開始 AI 初診問卷'
+        ? '開始智慧初診問卷'
         : '繼續填寫初診健康資料'
 
       return (
@@ -214,7 +216,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
             <p className="text-2xl font-semibold text-[#355C46]">✓ 您的初診預約已送出</p>
             <div className="rounded-3xl bg-white p-5 shadow-sm">
               <p className="text-sm text-[#6F8A72]">預約類型</p>
-              <p className="mt-2 text-lg font-semibold text-[#343A36]">{appointmentResult.consultationType}</p>
+              <p className="mt-2 text-lg font-semibold text-[#343A36]">{chineseText(appointmentResult.consultationType)}</p>
               <p className="mt-3 text-sm text-[#6F8A72]">日期</p>
               <p className="mt-1 text-lg font-semibold text-[#343A36]">{formatConfirmationDate(appointmentResult.date)}</p>
               <p className="mt-3 text-sm text-[#6F8A72]">時間</p>
@@ -250,7 +252,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
           <div className="rounded-[32px] border border-[#D9D5CC] bg-[#FAF8F2] p-6 text-[#343A36] shadow-sm">
             <h2 className="text-2xl font-semibold text-[#355C46]">初診預約</h2>
             <p className="mt-4 text-sm leading-7 text-[#4D5C50]">
-              第一次來到愛中醫健康管理中心，請先完成線上預約。預約完成後，您可以繼續填寫健康資料或 AI 初診問卷，協助我們在看診前了解您的主要需求。
+              第一次來到愛中醫健康管理中心，請先完成線上預約。預約完成後，您可以繼續填寫健康資料或智慧初診問卷，協助我們在看診前了解您的主要需求。
             </p>
             <div className="mt-6 space-y-4 rounded-3xl border border-[#D9D5CC] bg-white p-5 text-[#343A36] shadow-sm">
               <div>
@@ -288,8 +290,8 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                 </thead>
                 <tbody>
                   {consultationTypeDetails.map((item, index) => (
-                    <tr key={item.type} className={index % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF8F2]'}>
-                      <td className="px-4 py-3 align-top text-[#343A36]">{item.type}</td>
+                    <tr key={chineseText(item.type)} className={index % 2 === 0 ? 'bg-[#FFFFFF]' : 'bg-[#FAF8F2]'}>
+                      <td className="px-4 py-3 align-top text-[#343A36]">{chineseText(item.type)}</td>
                       <td className="px-4 py-3 align-top text-[#4D5C50]">{item.patient}</td>
                       <td className="px-4 py-3 align-top text-[#4D5C50]">{item.destination}</td>
                     </tr>
@@ -310,8 +312,8 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                 className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
               >
                 {consultationTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
+                  <option key={chineseText(type)} value={type}>
+                    {chineseText(type)}
                   </option>
                 ))}
               </select>
@@ -588,8 +590,8 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
                     className="w-full rounded-3xl border border-[#D9D5CC] bg-white px-4 py-3 text-[#343A36] shadow-sm transition focus:border-[#355C46] focus:outline-none focus:ring-2 focus:ring-[#355C46]/30"
                   >
                     {preferredContactMethods.map((method) => (
-                      <option key={method} value={method}>
-                        {method}
+                      <option key={chineseText(method)} value={method}>
+                        {chineseText(method)}
                       </option>
                     ))}
                   </select>
@@ -679,7 +681,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
             <div className="grid gap-3">
               <div className="rounded-3xl bg-white p-4 shadow-sm">
                 <p className="text-sm text-[#6F8A72]">初診類型</p>
-                <p className="mt-2 font-semibold text-[#343A36]">{formData.consultationType}</p>
+                <p className="mt-2 font-semibold text-[#343A36]">{chineseText(formData.consultationType)}</p>
               </div>
               <div className="rounded-3xl bg-white p-4 shadow-sm">
                 <p className="text-sm text-[#6F8A72]">診療項目</p>
@@ -714,7 +716,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
             <div className="rounded-3xl border border-[#D9D5CC] bg-[#F7F4EB] p-4 text-sm text-[#4D5C50]">
               <p className="font-semibold text-[#355C46]">預約政策提示</p>
               <p className="mt-2 leading-7">
-                送出預約後，我們將以電話或 Email 聯繫您確認最終門診時段與候診安排。若需取消或更改，請至少於兩個工作天前通知本中心。
+                送出預約後，我們將以電話或電子郵件聯繫您確認最終門診時段與候診安排。若需取消或更改，請至少於兩個工作天前通知本中心。
               </p>
             </div>
           </div>
@@ -748,9 +750,9 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
       if (!formData.birthDate) nextErrors.birthDate = '請填寫出生日期'
       if (!/^[0-9]{10}$/.test(formData.phone)) nextErrors.phone = '請輸入 10 碼手機號碼'
       if (!formData.email.trim()) {
-        nextErrors.email = '請輸入 Email'
+        nextErrors.email = '請輸入電子郵件'
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        nextErrors.email = '請輸入有效 Email'
+        nextErrors.email = '請輸入有效電子郵件'
       }
       if (!formData.preferredLanguage) nextErrors.preferredLanguage = '請選擇聯絡語言'
       if (!formData.isFirstVisit) nextErrors.isFirstVisit = '請確認是否為第一次來診'
@@ -771,9 +773,9 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
       if (!formData.birthDate) nextErrors.birthDate = '請填寫出生日期'
       if (!/^[0-9]{10}$/.test(formData.phone)) nextErrors.phone = '請輸入 10 碼手機號碼'
       if (!formData.email.trim()) {
-        nextErrors.email = '請輸入 Email'
+        nextErrors.email = '請輸入電子郵件'
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        nextErrors.email = '請輸入有效 Email'
+        nextErrors.email = '請輸入有效電子郵件'
       }
       if (!formData.preferredLanguage) nextErrors.preferredLanguage = '請選擇聯絡語言'
       if (!formData.isFirstVisit) nextErrors.isFirstVisit = '請確認是否為第一次來診'
@@ -807,7 +809,7 @@ export default function AppointmentForm({ currentStep, onNextStep, onPreviousSte
             doctor: formData.doctor,
             date: formData.date,
             time: formData.time,
-            message: `${formData.consultationType}\n${formData.primaryConcern}\n${formData.concernDetail}`,
+            message: `${chineseText(formData.consultationType)}\n${formData.primaryConcern}\n${formData.concernDetail}`,
           }),
         })
 

@@ -8,6 +8,7 @@ import {
   maskPhone,
   normalizeDigits,
   sendVerificationCode,
+  KioskDeliveryError,
 } from '@/lib/kioskVerification'
 
 const prisma = new PrismaClient()
@@ -85,14 +86,27 @@ export async function POST(request: NextRequest) {
       actorRole: 'kiosk',
       source: 'kiosk.lookup',
     })
-    await sendVerificationCode(appointment.phone, code)
+    try {
+      await sendVerificationCode(appointment.phone, code)
+    } catch (error) {
+      // Do not leave a usable challenge after failed delivery or invalidate
+      // a newer challenge created by another request.
+      await prisma.appointment.updateMany({
+        where: { id: appointment.id, verificationCode: code },
+        data: { verificationCode: null, verificationCodeExpiresAt: null },
+      })
+      throw error
+    }
 
     return NextResponse.json({
       token: appointment.id,
       maskedPhone: maskPhone(appointment.phone),
     })
   } catch (error) {
-    console.error('Error during kiosk lookup:', error)
+    if (error instanceof KioskDeliveryError) {
+      return NextResponse.json({ message: error.message }, { status: 503 })
+    }
+    console.error('Kiosk lookup failed; diagnostic contents withheld.')
     return NextResponse.json(
       { error: '系統發生錯誤，請洽櫃檯協助。' },
       { status: 500 }

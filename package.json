@@ -4,7 +4,7 @@
   "description": "Traditional Chinese Medicine Clinic Homepage",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev-with-architecture-status.cjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -14,12 +14,18 @@
     "db:seed:ehr": "npx tsx scripts/seed-ehr-catalog.ts",
     "db:seed:ehr-demo": "npx tsx scripts/seed-ehr-demo.ts",
     "db:seed:audit-demo": "npx tsx scripts/seed-audit-demo.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "architecture:update": "node scripts/update-architecture-status.cjs",
+    "prebuild": "node scripts/update-architecture-status.cjs",
+    "test:kiosk": "node scripts/test-kiosk-connection.cjs",
+    "test:checkin-encounter": "node scripts/test-checkin-encounter.cjs",
+    "test:kiosk-dashboard": "node scripts/test-kiosk-dashboard-update.cjs"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@clerk/localizations": "^4.26.3",
     "@clerk/nextjs": "^7.9.10",
     "@prisma/client": "^5.8.0",
     "@stripe/stripe-js": "^9.10.0",

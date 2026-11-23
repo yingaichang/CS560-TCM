@@ -9,7 +9,7 @@ export default function MembershipPreviewSection() {
         <div className="rounded-[1.8rem] border border-[#d8ddcf] bg-[#fffdf8]/92 p-6 shadow-[0_14px_34px_rgba(82,108,87,0.1)] md:p-8">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center rounded-full border border-[#9fb498]/45 bg-[#f1f7ee] px-3 py-1 text-xs font-semibold tracking-[0.08em] text-[#3f6548]">
-              MEMBER PREVIEW
+              會員服務預覽
             </span>
             <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-[#2e4c3d] sm:text-4xl">
               建立屬於您與家人的長期健康紀錄
@@ -39,7 +39,7 @@ export default function MembershipPreviewSection() {
             >
               了解會員方案
               <span className="rounded-full border border-[#aac0a5]/45 bg-white px-2 py-0.5 text-[10px] font-semibold tracking-[0.06em] text-[#4f6f55]">
-                Coming Soon
+                即將推出
               </span>
             </a>
 

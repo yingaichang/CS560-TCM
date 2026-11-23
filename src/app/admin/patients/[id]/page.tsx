@@ -1,5 +1,7 @@
 'use client'
 
+import { chineseText } from '@/lib/chinese'
+
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -22,12 +24,12 @@ type PatientRecord = {
   } | null
 }
 
-const tabs = ['Overview', 'Medical History', 'Visits'] as const
+const tabs = ['總覽', '過去病歷', '看診紀錄'] as const
 type PatientTab = (typeof tabs)[number]
 
 export default function PatientProfilePage() {
   const { id } = useParams<{ id: string }>()
-  const [activeTab, setActiveTab] = useState<PatientTab>('Overview')
+  const [activeTab, setActiveTab] = useState<PatientTab>('總覽')
   const [patient, setPatient] = useState<PatientRecord | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -40,13 +42,13 @@ export default function PatientProfilePage() {
         const response = await fetch(`/api/ehr/patients/${encodeURIComponent(id)}`)
         const result = await response.json()
         if (!response.ok) {
-          if (isCurrent) setError(result.error || 'Unable to load patient information.')
+          if (isCurrent) setError(result.error || '無法載入病人資料。')
           return
         }
         if (isCurrent) setPatient(result.patient)
       } catch (loadError) {
         console.error('Error loading patient profile:', loadError)
-        if (isCurrent) setError('Unable to load patient information. Check your connection and try again.')
+        if (isCurrent) setError('無法載入病人資料，請檢查網路連線後重試。')
       } finally {
         if (isCurrent) setIsLoading(false)
       }
@@ -69,28 +71,28 @@ export default function PatientProfilePage() {
       ].filter(Boolean).join(', ')
     : ''
   const patientDetails = patient ? [
-    ['Patient ID', patient.patientId],
-    ['Date of birth', patient.dateOfBirth ? new Date(patient.dateOfBirth).toLocaleDateString() : '—'],
-    ['Gender', patient.gender || '—'],
-    ['Phone', patient.phone || '—'],
-    ['Email', patient.email || '—'],
-    ['Address', address || '—'],
+    ['病歷編號', patient.patientId],
+    ['出生日期', patient.dateOfBirth ? new Date(patient.dateOfBirth).toLocaleDateString('zh-TW') : '—'],
+    ['性別', chineseText(patient.gender || '—')],
+    ['電話', patient.phone || '—'],
+    ['電子郵件', patient.email || '—'],
+    ['地址', address || '—'],
   ] as const : []
 
   return (
     <AdminPageScaffold
-      title="Patient Profile"
-      description={patient ? `Patient ID: ${patient.patientId}. View patient information and care history.` : 'View patient information and care history.'}
+      title="病人資料"
+      description={patient ? `病歷編號：${patient.patientId}。查看病人的基本資料及照護紀錄。` : '查看病人的基本資料及照護紀錄。'}
       backHref="/admin/patients"
-      backLabel="Back to Patients"
+      backLabel="返回病人清單"
     >
       {isLoading ? (
         <div className="rounded-lg border border-gray-200 bg-white p-6 text-sm text-gray-600 shadow-sm" role="status">
-          Loading patient information…
+          正在載入病人資料…
         </div>
       ) : error || !patient ? (
         <div className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm text-red-700" role="alert">
-          {error || 'Patient not found.'}
+          {error || '找不到病人資料。'}
         </div>
       ) : (
         <>
@@ -101,22 +103,22 @@ export default function PatientProfilePage() {
                   {patient.firstName[0]}{patient.lastName[0]}
                 </div>
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Patient profile</p>
+                  <p className="text-xs font-medium uppercase tracking-wide text-gray-500">病人資料</p>
                   <h2 className="mt-1 text-xl font-semibold text-gray-900">{patientName}</h2>
-                  <p className="mt-1 text-sm text-gray-600">Patient ID: {patient.patientId}</p>
+                  <p className="mt-1 text-sm text-gray-600">病歷編號： {patient.patientId}</p>
                 </div>
               </div>
               <Link
                 href={`/admin/patients/${id}/edit`}
                 className="inline-flex w-fit items-center justify-center rounded-md bg-[#355C46] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#294936]"
               >
-                Edit Patient
+                修改病人資料
               </Link>
             </div>
           </section>
 
           <div className="border-b border-gray-200">
-            <div aria-label="Patient profile sections" className="-mb-px flex gap-6 overflow-x-auto" role="tablist">
+            <div aria-label="病人資料分頁" className="-mb-px flex gap-6 overflow-x-auto" role="tablist">
               {tabs.map((tab) => (
                 <button
                   key={tab}
@@ -144,15 +146,15 @@ export default function PatientProfilePage() {
             aria-labelledby={`tab-${activeTab.toLowerCase().replace(/ /g, '-')}`}
             className="mt-6 rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
           >
-            {activeTab === 'Overview' ? (
+            {activeTab === '總覽' ? (
               <>
                 <div className="mb-5">
-                  <h2 className="text-lg font-semibold text-[#355C46]">Basic Information</h2>
-                  <p className="mt-1 text-sm text-gray-500">Patient contact and identification details.</p>
+                  <h2 className="text-lg font-semibold text-[#355C46]">基本資料</h2>
+                  <p className="mt-1 text-sm text-gray-500">病人的聯絡方式及身分資料。</p>
                 </div>
                 <dl className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
                   {patientDetails.map(([label, value]) => (
-                    <div key={label} className={label === 'Address' ? 'sm:col-span-2' : undefined}>
+                    <div key={label} className={label === '地址' ? 'sm:col-span-2' : undefined}>
                       <dt className="text-sm font-medium text-gray-500">{label}</dt>
                       <dd className="mt-1 break-words text-sm text-gray-900">{value}</dd>
                     </div>
@@ -162,7 +164,7 @@ export default function PatientProfilePage() {
             ) : (
               <div className="py-8 text-center">
                 <h2 className="text-lg font-semibold text-[#355C46]">{activeTab}</h2>
-                <p className="mt-2 text-sm text-gray-600">This section will be available in a future update.</p>
+                <p className="mt-2 text-sm text-gray-600">此功能將於後續更新推出。</p>
               </div>
             )}
           </section>

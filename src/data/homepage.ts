@@ -41,7 +41,7 @@ export interface CommunityActivityData {
 
 export const trustIndicators: TrustIndicator[] = [
   { title: '專業中醫團隊', subtitle: '豐富臨床經驗', iconKey: 'team' },
-  { title: 'AI 智慧分析', subtitle: '科學健康評估', iconKey: 'analysis' },
+  { title: '智慧分析', subtitle: '科學健康評估', iconKey: 'analysis' },
   { title: '個人化管理', subtitle: '量身健康計畫', iconKey: 'personalized' },
   { title: '健康教育', subtitle: '實用養生知識', iconKey: 'education' },
   { title: '專業追蹤', subtitle: '完整健康紀錄', iconKey: 'tracking' },
@@ -51,7 +51,7 @@ export const healthJourneyCards: HealthJourneyCardData[] = [
   {
     id: 'health-insight',
     title: '我想了解自己的健康',
-    description: '透過 AI 體質分析與健康問卷，認識目前的身體狀態。',
+    description: '透過智慧體質分析與健康問卷，認識目前的身體狀態。',
     buttonText: '開始免費分析',
     href: '/ai-health-analysis',
     iconKey: 'insight',
@@ -100,8 +100,8 @@ export const coreServices: CoreServiceData[] = [
   },
   {
     id: 'ai-analysis',
-    title: 'AI 體質與健康分析',
-    description: '透過 AI 問卷與體質模型，快速掌握目前健康輪廓與優先改善方向。',
+    title: '智慧體質與健康分析',
+    description: '透過智慧問卷與體質模型，快速掌握目前健康輪廓與優先改善方向。',
     href: '/ai-health-analysis',
     iconKey: 'analysis',
   },

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { findHealthTopicById } from '@/lib/healthTopics'
 import { writeAuditLog } from '@/lib/auditLog'
+import { prisma } from '@/lib/prisma'
 
 function getStripeClient() {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
           },
         },
       ],
-      success_url: `${appUrl}/payment?topic=${topic.id}&status=success`,
+      success_url: `${appUrl}/payment?topic=${topic.id}&status=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/payment?topic=${topic.id}&status=cancel`,
       metadata: {
         topicId: topic.id,
@@ -68,13 +69,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    await writeAuditLog({
-      action: 'checkout_session_created',
-      resource: 'health_topic_checkout',
-      resourceId: session.id,
-      actorRole: 'public',
-      source: 'public.payment',
-      outcome: 'initiated',
+    await prisma.$transaction(async (transaction) => {
+      await transaction.healthTopicRegistration.upsert({
+        where: { checkoutSessionId: session.id },
+        create: {
+          checkoutSessionId: session.id,
+          topicId: topic.id,
+          topicName: topic.topic,
+          amountTwd: topic.feeTwd,
+          currency: 'twd',
+          status: 'pending',
+        },
+        update: {},
+      })
+      await writeAuditLog({
+        action: 'checkout_session_created',
+        resource: 'health_topic_checkout',
+        resourceId: session.id,
+        actorRole: 'public',
+        source: 'public.payment',
+        outcome: 'initiated',
+      }, transaction)
     })
 
     return NextResponse.json({ sessionId: session.id, sessionUrl: session.url })

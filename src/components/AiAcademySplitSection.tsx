@@ -2,11 +2,11 @@ import Image from 'next/image'
 import { healthAcademyTopics } from '@/data/homepage'
 
 const aiHighlights = [
-  'AI 體質分析',
-  'AI 健康評估',
-  'AI 飲食建議',
-  'AI 養生建議',
-  'AI 健康報告',
+  '智慧體質分析',
+  '智慧健康評估',
+  '智慧飲食建議',
+  '智慧養生建議',
+  '智慧健康報告',
 ]
 
 export default function AiAcademySplitSection() {
@@ -16,14 +16,14 @@ export default function AiAcademySplitSection() {
 
       <div className="relative mx-auto grid max-w-7xl gap-5 px-6 md:px-10 lg:grid-cols-2 lg:px-12">
         <article className="rounded-[1.8rem] border border-[#d8ddcf] bg-[#fffdf8]/92 p-6 shadow-[0_14px_34px_rgba(82,108,87,0.1)] md:p-8">
-          <p className="text-sm font-semibold tracking-[0.14em] text-[#476a4d]">AI 健康分析中心</p>
+          <p className="text-sm font-semibold tracking-[0.14em] text-[#476a4d]">智慧健康分析中心</p>
           <h2 className="mt-3 font-display text-3xl font-semibold leading-tight text-[#2f4f3f] sm:text-4xl">
             科技結合中醫智慧，
             <br />
             為您提供個人化健康建議
           </h2>
           <p className="mt-4 text-sm leading-7 text-[#506056] md:text-base">
-            AI 整合問卷與日常紀錄，提供健康教育與生活管理方向，後續可銜接專業中醫評估。
+            智慧整合問卷與日常紀錄，提供健康教育與生活管理方向，後續可銜接專業中醫評估。
           </p>
 
           <div className="mt-6 grid grid-cols-2 gap-3">
@@ -40,7 +40,7 @@ export default function AiAcademySplitSection() {
           <div className="relative mt-6 h-48 overflow-hidden rounded-2xl border border-[#d7dfd2] bg-[#f4f8ef]">
             <Image
               src="/images/bamboo-4.webp"
-              alt="AI 健康分析視覺"
+              alt="智慧健康分析視覺"
               fill
               sizes="(min-width: 1024px) 40vw, 100vw"
               className="object-cover opacity-35"
@@ -52,7 +52,7 @@ export default function AiAcademySplitSection() {
             href="/ai-health-analysis"
             className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-[#3d6448] px-7 py-3 text-sm font-semibold text-white shadow-[0_12px_26px_rgba(61,100,72,0.22)] transition hover:bg-[#34563d]"
           >
-            開始 AI 分析
+            開始智慧分析
           </a>
         </article>
 

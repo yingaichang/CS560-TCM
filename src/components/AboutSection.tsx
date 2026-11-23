@@ -1,7 +1,7 @@
 export default function AboutSection() {
   const pillars = [
     {
-      title: 'AI 健康分析',
+      title: '智慧健康分析',
       detail: '從問卷、生活習慣與生理數據建立個人化健康輪廓。',
     },
     {
@@ -36,7 +36,7 @@ export default function AboutSection() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.03fr_0.97fr] lg:px-8">
         <div>
           <span className="text-sm font-medium tracking-[0.18em] text-primary">
-            PLATFORM POSITIONING
+            平台定位
           </span>
           <h2 className="section-title mt-4">從診所網站，升級為全人健康管理平台</h2>
           <p className="section-subtitle mb-8 max-w-2xl">
@@ -55,7 +55,7 @@ export default function AboutSection() {
         </div>
 
         <aside className="rounded-3xl border border-primary/10 bg-gradient-to-br from-[#f7f3ea] via-white to-[#f0ebdd] p-7 shadow-[0_15px_40px_rgba(52,74,57,0.08)]">
-          <p className="text-xs font-semibold tracking-[0.2em] text-wood">WHO WE SERVE</p>
+          <p className="text-xs font-semibold tracking-[0.2em] text-wood">服務對象</p>
           <h3 className="mt-3 font-display text-2xl text-primary">主要使用者場景</h3>
           <ul className="mt-6 space-y-4 text-sm leading-7 text-ink/85">
             {audiences.map((audience) => (
@@ -69,7 +69,7 @@ export default function AboutSection() {
           <div className="mt-6 rounded-2xl border border-primary/10 bg-white/80 p-5">
             <p className="text-sm font-semibold text-primary">品牌核心理念</p>
             <p className="mt-2 text-sm leading-7 text-ink/80">
-              AI 健康分析 × 中醫診療 × 預防醫學 × 健康教育 × 長期健康管理
+              智慧健康分析 × 中醫診療 × 預防醫學 × 健康教育 × 長期健康管理
             </p>
           </div>
         </aside>

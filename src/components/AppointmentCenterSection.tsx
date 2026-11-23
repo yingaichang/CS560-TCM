@@ -11,8 +11,8 @@ const appointmentCenterItems = [
   },
   {
     id: 'ai-questionnaire',
-    title: 'AI 初診問卷',
-    description: '以 AI 問卷收集健康資訊，協助醫師了解您的體質與症狀。',
+    title: '智慧初診問卷',
+    description: '以智慧問卷收集健康資訊，協助醫師了解您的體質與症狀。',
   },
   {
     id: 'health-profile',

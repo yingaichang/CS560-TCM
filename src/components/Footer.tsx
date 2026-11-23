@@ -9,18 +9,18 @@ export default function Footer() {
             <div className="mb-4 flex items-center gap-3">
               <Image
                 src="/images/ai-tcm-health-management-center-logo.png"
-                alt="愛中醫健康管理中心 Logo"
+                alt="愛中醫健康管理中心標誌"
                 width={44}
                 height={44}
                 className="h-11 w-11 rounded-full border border-white/30 bg-white/15 object-contain"
               />
               <div>
                 <h3 className="text-base font-semibold tracking-[0.12em]">愛中醫健康管理中心</h3>
-                <p className="font-brand text-sm tracking-[0.05em] text-white/78">AI TCM HEALTH MANAGEMENT CENTER</p>
+                <p className="font-brand text-sm tracking-[0.05em] text-white/78">愛中醫健康管理中心</p>
               </div>
             </div>
             <p className="text-sm leading-7 text-white/75">
-              AI 智慧中醫健康管理平台，結合中醫診療、預防醫學、健康教育與長期追蹤，
+              智慧中醫健康管理平台，結合中醫診療、預防醫學、健康教育與長期追蹤，
               讓個人與家庭擁有更穩定的健康生活。
             </p>
           </div>
@@ -40,7 +40,7 @@ export default function Footer() {
               </li>
               <li>
                 <a href="/ai-health-analysis" className="transition-colors hover:text-white">
-                  AI 健康分析
+                  智慧健康分析
                 </a>
               </li>
               <li>
@@ -65,7 +65,7 @@ export default function Footer() {
               </li>
               <li>
                 <a href="/faq" className="transition-colors hover:text-white">
-                  FAQ
+                  常見問題
                 </a>
               </li>
             </ul>
@@ -74,13 +74,13 @@ export default function Footer() {
           <div>
             <h4 className="mb-4 font-semibold text-[#A78D60]">聯絡資料</h4>
             <ul className="space-y-2 text-sm text-white/75">
-              <li>地址：地址 placeholder</li>
-              <li>電話：電話 placeholder</li>
-              <li>Email：Email placeholder</li>
-              <li>LINE 官方帳號：LINE 官方帳號 placeholder</li>
-              <li>微信：微信 placeholder</li>
-              <li>營業時間：營業時間 placeholder</li>
-              <li>Google 地圖：Google 地圖 placeholder</li>
+              <li>地址：待公布</li>
+              <li>電話：待公布</li>
+              <li>電子郵件：待公布</li>
+              <li>通訊軟體官方帳號：待公布</li>
+              <li>微信：待公布</li>
+              <li>營業時間：待公布</li>
+              <li>地圖位置：待公布</li>
             </ul>
           </div>
 
@@ -99,12 +99,12 @@ export default function Footer() {
               </li>
               <li>
                 <a href="/coming-soon?feature=hipaa-pdpa" className="transition-colors hover:text-white">
-                  HIPAA／個資相關聲明 placeholder
+                  健康資訊隱私與個資相關聲明（建置中）
                 </a>
               </li>
               <li>
                 <a href="/coming-soon?feature=ai-health-disclaimer" className="transition-colors hover:text-white">
-                  AI 健康資訊免責聲明
+                  智慧健康資訊免責聲明
                 </a>
               </li>
             </ul>
@@ -113,7 +113,7 @@ export default function Footer() {
 
         <div className="border-t border-white/20 pt-8">
           <div className="flex justify-center">
-            <p className="text-sm text-white/60">© 2026 AI TCM HEALTH MANAGEMENT CENTER. All rights reserved.</p>
+            <p className="text-sm text-white/60">© 2026 愛中醫健康管理中心。版權所有。</p>
           </div>
         </div>
       </div>

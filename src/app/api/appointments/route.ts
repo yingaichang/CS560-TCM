@@ -257,6 +257,9 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
       take: Number.isFinite(takeParam) && takeParam > 0 ? takeParam : 10,
       skip: Number.isFinite(skipParam) && skipParam > 0 ? skipParam : 0,
+      include: {
+        patient: { select: { id: true, patientId: true, firstName: true, lastName: true } },
+      },
     })
 
     await writeAuditLog({

@@ -1,5 +1,7 @@
 'use client'
 
+import { chineseText } from '@/lib/chinese'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -34,11 +36,11 @@ export default function EhrShell({ children }: { children: React.ReactNode }) {
           <div className="ehr-brand">
             <div className="ehr-brand-mark">
               <div className="ehr-brand-icon">瀛</div>
-              <div className="ehr-brand-name">YING AI <small>瀛愛 · CLINICAL WORKSPACE</small></div>
+              <div className="ehr-brand-name">瀛愛 <small>瀛愛・臨床工作區</small></div>
             </div>
           </div>
-          <div className="ehr-nav-label">CLINICAL</div>
-          <nav className="ehr-nav" aria-label="EHR navigation">
+          <div className="ehr-nav-label">臨床作業</div>
+          <nav className="ehr-nav" aria-label="電子病歷導覽">
             {navigation.map(({ label, href, icon: Icon }) => (
               <Link
                 key={href}
@@ -47,20 +49,20 @@ export default function EhrShell({ children }: { children: React.ReactNode }) {
                 aria-current={active?.href === href ? 'page' : undefined}
                 onClick={() => setMenuOpen(false)}
               >
-                <Icon aria-hidden="true" />{label}
+                <Icon aria-hidden="true" />{chineseText(label)}
               </Link>
             ))}
           </nav>
-          <div className="ehr-sidebar-foot">YING AI · 瀛愛<br />Clinical operations · Phase 1</div>
+          <div className="ehr-sidebar-foot">瀛愛<br />臨床作業・第一階段</div>
         </aside>
         <div className="ehr-main">
           <header className="ehr-topbar">
-            <button className="ehr-mobile-toggle" type="button" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMenuOpen(!menuOpen)}>
+            <button className="ehr-mobile-toggle" type="button" aria-label={menuOpen ? '關閉選單' : '開啟選單'} onClick={() => setMenuOpen(!menuOpen)}>
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-            <div className="ehr-top-title">Clinical workspace <span aria-hidden="true">/</span> {active?.label ?? 'Patient profile'}</div>
+            <div className="ehr-top-title">臨床工作區 <span aria-hidden="true">/</span> {chineseText(active?.label ?? 'Patient profile')}</div>
             <div className="ehr-top-actions">
-              <span className="ehr-demo-chip">DEVELOPMENT · SYNTHETIC DATA</span>
+              <span className="ehr-demo-chip">開發環境・模擬資料</span>
               <ClerkAuthControls className="ehr-clerk-controls" />
             </div>
           </header>

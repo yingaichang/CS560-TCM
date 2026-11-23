@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { CalendarDays, ChevronDown, ClipboardList, ShieldCheck, Users, Wrench, type LucideIcon } from 'lucide-react'
+import { CalendarDays, ChevronDown, ClipboardList, Mail, Receipt, ShieldCheck, Users, Wrench, type LucideIcon } from 'lucide-react'
 
 type MenuItem = { label: string; href?: string; planned?: boolean }
 type MenuSection = { key: string; label: string; icon: LucideIcon; basePath: string; items: MenuItem[] }
@@ -19,6 +19,7 @@ const sections: MenuSection[] = [
       { label: '預約清單', href: '/admin/appointments' },
       { label: '新增預約', href: '/admin/appointments/new' },
       { label: '預約日曆', planned: true },
+      { label: '休診日管理', href: '/admin/holidays' },
     ],
   },
   {
@@ -51,16 +52,30 @@ const sections: MenuSection[] = [
       { label: '稽核紀錄', href: '/admin/audit-logs' },
     ],
   },
+  {
+    key: 'contacts',
+    label: '聯絡訊息',
+    icon: Mail,
+    basePath: '/admin/contacts',
+    items: [{ label: '訊息收件匣', href: '/admin/contacts' }],
+  },
+  {
+    key: 'registrations',
+    label: '講座報名',
+    icon: Receipt,
+    basePath: '/admin/registrations',
+    items: [{ label: '報名紀錄', href: '/admin/registrations' }],
+  },
 ]
 
 const matchesPath = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`)
 
 const developmentSection: MenuSection = {
   key: 'development',
-  label: 'Development',
+  label: '開發工具',
   icon: Wrench,
   basePath: '/admin/development',
-  items: [{ label: 'Architecture Status', href: '/admin/development/architecture-status' }],
+  items: [{ label: '系統架構狀態', href: '/admin/development/architecture-status' }],
 }
 
 // Patient profile and record pages need an id, so they only appear once a patient is selected.
