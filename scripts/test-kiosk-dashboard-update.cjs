@@ -19,7 +19,21 @@ function load(file, overrides = {}) {
 const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'kiosk-dashboard-'))
 try {
   fs.mkdirSync(path.join(temporary, 'src/data'), { recursive: true })
-  const original = JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8'))
+  // A rendering test must not depend on the last integration run succeeding.
+  const original = {
+    at: new Date(Date.now() - 10_000).toISOString(), result: 'passed',
+    command: 'node scripts/test-kiosk-connection.cjs',
+    components: ['kiosk', 'kioskApi', 'clinicalWrite', 'sms'],
+    connections: ['kiosk-request', 'kiosk-save', 'kiosk-sms', 'kiosk-audit', 'checkin-encounter'],
+    cases: [
+      { name: '成功報到', result: 'passed', savedCheckin: true, encounterCreatedOnce: true, auditVerified: true,
+        requests: ['/api/kiosk/lookup', '/api/kiosk/verify', '/api/kiosk/checkin'].map(path => ({ method: 'POST', path, status: 200 })) },
+      { name: '錯誤驗證碼', result: 'passed', savedCheckin: false, auditVerified: true,
+        requests: [{ method: 'POST', path: '/api/kiosk/lookup', status: 200 }, { method: 'POST', path: '/api/kiosk/verify', status: 401 }] },
+      { name: '簡訊替身拒收', result: 'passed', challengeInvalidated: true,
+        requests: [{ method: 'POST', path: '/api/kiosk/lookup', status: 503 }] },
+    ],
+  }
   const parser = load('src/lib/kioskTestReport.ts')
   // Keep the same loaded reader and UI modules while replacing the on-disk report.
   const reader = load('src/lib/readKioskTestReport.ts', {
@@ -43,9 +57,9 @@ try {
   let html = render()
   assert.ok(kioskCard(html).includes(`dateTime="${original.at}"`))
   assert.ok(kioskCard(html).includes('部分連接'))
-  assert.ok(kioskCard(html).includes('200／200／200'))
-  assert.ok(kioskCard(html).includes('401'))
-  assert.ok(kioskCard(html).includes('503'))
+  assert.ok(kioskCard(html).includes('單一待指派看診'))
+  assert.ok(kioskCard(html).includes('錯碼拒絕'))
+  assert.ok(kioskCard(html).includes('簡訊替身拒收'))
   assert.ok(kioskCard(html).includes('src/app/kiosk/page.tsx:'))
   for (const id of ['kiosk-request', 'kiosk-save', 'kiosk-sms', 'kiosk-audit']) {
     assert.ok(html.split(`id="connection-${id}"`)[1].split('</article>')[0].includes(`dateTime="${original.at}"`))
