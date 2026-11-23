@@ -408,8 +408,8 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
     "layer": "伺服器",
     "purpose": "檢查登入、角色及醫師的病歷存取範圍",
     "status": "connected",
-    "assessment": "Admin and EHR server layouts enforce role checks before rendering; APIs independently enforce authorization. Layout boundaries pass 16 access scenarios.",
-    "missingRequirement": "Real-user sign-in and provider-specific workflows still require end-to-end verification.",
+    "assessment": "後台與電子病歷的伺服器版型會在呈現內容前驗證角色；API 另行授權。版型權限邊界已通過十六種存取情境測試。",
+    "missingRequirement": "真實使用者登入與各角色的完整業務流程仍需端到端驗證。",
     "safeError": null,
     "evidence": [
       {
@@ -1740,7 +1740,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
     "to": "admin",
     "status": "connected",
     "data": "管理員判定結果、選單顯示權限及直接網址請求的拒絕結果。",
-    "assessment": "All admin pages inherit a server-side admin/clinic_staff role boundary; architecture status remains admin-only.",
+    "assessment": "所有後台頁面繼承伺服器端管理員／診所人員角色邊界；架構狀態頁仍限管理員存取。",
     "evidence": [
       {
         "path": "src/app/admin/development/architecture-status/page.tsx",
@@ -1771,9 +1771,9 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "line": 1
       }
     ],
-    "next": "Maintain role-boundary regression tests; account management remains a separate unfinished feature.",
+    "next": "持續維護角色邊界回歸測試；帳號管理功能另需完成實作。",
     "description": "控制架構頁的直接存取及管理選單。",
-    "missingRequirement": "Maintain role-boundary regression tests; account management remains a separate unfinished feature.",
+    "missingRequirement": "持續維護角色邊界回歸測試；帳號管理功能另需完成實作。",
     "safeError": null
   },
   {

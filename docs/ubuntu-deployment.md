@@ -47,8 +47,33 @@ The Compose build passes `DEPLOY_REV` as a build argument so code or private
 environment changes invalidate the final build step. Package installation is
 cached separately from source changes. Secrets remain BuildKit mounts.
 
-The public domain still needs to be routed by school IT to this Ubuntu host.
+The public domain must be routed by school IT to this Ubuntu host. The live
+status page compares public and Ubuntu asset fingerprints to confirm the switch.
 Neither publisher nor timer modifies central Dokploy or the school's proxy.
+
+## Live system checks
+
+The admin-only architecture status page now runs actual read-only service checks
+with a 30-second cache. It checks database connectivity and required schema
+columns, Clerk API authentication, SMTP connection/authentication, Stripe's
+read-only API, deployment revision evidence and the public-domain asset version.
+It never sends messages, sends verification codes, charges a card or changes
+database data. API connectivity does not verify end-to-end delivery or complete
+unfinished clinical, account, student or AI features.
+
+The operator can run the identical checks over SSH without bypassing page access:
+
+```sh
+cd ~/apps/cse03
+docker compose exec -T web node scripts/check-system-connections.cjs
+```
+
+Only safe summaries are emitted. Missing provider configuration stays incomplete;
+rejected credentials and routing mismatches are reported as failures. Never change
+these results to success without performing the corresponding check. The Ubuntu
+deployment script writes a private `.local-deploy/deployment-status.json` after a
+successful HTTP 200 check; Compose mounts that directory read-only into `web` and
+the status page compares the evidence with the image's `SITE_BUILD_REVISION`.
 
 The development schema uses SQLite. The production Docker build must run:
 
