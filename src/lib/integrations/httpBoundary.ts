@@ -29,5 +29,12 @@ export function parseJson(body: string): unknown {
 }
 
 export function requireSameOrigin(request: Request) {
-  if (request.headers.get('origin') !== new URL(request.url).origin) throw new BoundaryError(403, 'A same-origin request is required.')
+  // Next.js can use its internal bind hostname in request.url. Host retains the
+  // browser-facing host through the configured Caddy proxy and SSH tunnel.
+  // Never accept an arbitrary X-Forwarded-Host as an origin allowlist.
+  const host = request.headers.get('host')
+  const url = new URL(request.url)
+  let expected = url.origin
+  try { if (host) expected = new URL(url.protocol + '//' + host).origin } catch { throw new BoundaryError(403, 'A same-origin request is required.') }
+  if (request.headers.get('origin') !== expected) throw new BoundaryError(403, 'A same-origin request is required.')
 }
