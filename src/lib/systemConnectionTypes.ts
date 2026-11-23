@@ -8,4 +8,4 @@ export type SystemCheck = {
   detail: string
   checkedAt: string
 }
-export type SystemConnectionReport = { checkedAt: string; checks: SystemCheck[] }
+export type SystemConnectionReport = { checkedAt: string; environment: 'ubuntu' | 'local'; databaseKind: 'postgresql' | 'sqlite'; checks: SystemCheck[] }

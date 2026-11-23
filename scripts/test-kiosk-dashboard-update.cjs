@@ -50,6 +50,7 @@ try {
   })
   const View = load('src/components/admin/ArchitectureMap.tsx', {
     '@/lib/architectureMap': map, './ArchitectureAutoRefresh': { default: () => null, __esModule: true },
+    '@/lib/architectureLiveStatus': load('src/lib/architectureLiveStatus.ts'),
   }).default
   const render = () => renderToStaticMarkup(React.createElement(View, { kioskTest: reader.readKioskTestReport() }))
   const kioskCard = html => html.split('id="component-kiosk"')[1].split('</article>')[0]

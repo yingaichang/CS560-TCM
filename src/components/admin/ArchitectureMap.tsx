@@ -1,8 +1,10 @@
 import {
-  architectureComponents, architectureConnections, architectureWorkflows, architectureDiscovery, systemStatuses,
+  architectureComponents as sourceComponents, architectureConnections as sourceConnections, architectureWorkflows, architectureDiscovery, systemStatuses,
   type ComponentId, type ConnectionStatus, type Evidence, type TestRecord,
 } from '@/lib/architectureMap'
 import ArchitectureAutoRefresh from './ArchitectureAutoRefresh'
+import { withLiveSystemStatus } from '@/lib/architectureLiveStatus'
+import type { SystemConnectionReport } from '@/lib/systemConnectionTypes'
 
 function StatusBadge({ status }: { status: ConnectionStatus }) {
   const display = systemStatuses[status]
@@ -22,13 +24,14 @@ function LastTest({ test }: { test: TestRecord | null }) {
   if (!test) return <p className="text-sm leading-6 text-gray-600">尚無可對應的測試時間；程式碼查核時間不當作服務測試時間。</p>
   return <div className="space-y-1 text-sm leading-6 text-gray-600">
     <p><time dateTime={test.at}>{new Intl.DateTimeFormat('zh-TW', { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'long' }).format(new Date(test.at))}</time>（美國洛杉磯時間）</p>
-    <p>結果：{test.result === 'passed' ? '通過本機隔離測試。' : '最近一次測試未通過，請重新檢查。'}</p><p>範圍：{test.scope}</p>
-    <p>驗證來源：{test.command === 'node scripts/test-kiosk-connection.cjs' ? '報到畫面與服務整合測試' : '專案架構回歸檢查'}。</p>
+    <p>結果：{test.result === 'passed' ? (test.command === 'live-system-connections' ? '通過目前部署唯讀連線檢查。' : '通過本機隔離測試。') : '最近一次測試未通過，請重新檢查。'}</p><p>範圍：{test.scope}</p>
+    <p>驗證來源：{test.command === 'live-system-connections' ? '目前部署實際服務檢查' : test.command === 'node scripts/test-kiosk-connection.cjs' ? '報到畫面與服務整合測試' : '專案架構回歸檢查'}。</p>
     <p>這是上次執行的紀錄；重新整理頁面不會重新測試。</p>
   </div>
 }
 
-export default function ArchitectureMap({ kioskTest }: { kioskTest?: TestRecord | null } = {}) {
+export default function ArchitectureMap({ kioskTest, liveReport }: { kioskTest?: TestRecord | null; liveReport?: SystemConnectionReport } = {}) {
+  const { components: architectureComponents, connections: architectureConnections } = withLiveSystemStatus(sourceComponents, sourceConnections, liveReport)
   // Runtime evidence overrides the bundled record, including explicit absence.
   const testFor = (kind: 'component' | 'connection', id: string, original: TestRecord | null) =>
     kioskTest !== undefined && (kind === 'component' ? ['kiosk', 'kioskApi', 'sms'] : ['kiosk-request', 'kiosk-save', 'kiosk-sms', 'kiosk-audit']).includes(id)

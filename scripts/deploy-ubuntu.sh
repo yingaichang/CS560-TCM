@@ -58,5 +58,17 @@ if [[ "$healthy" != true ]]; then
   exit 1
 fi
 printf '%s\n' "$revision" > .deployed-revision
+mkdir -p .local-deploy
+chmod 700 .local-deploy
+python3 - "$target" <<'PY'
+import sys, json, pathlib, datetime, os
+if 'ID=ubuntu' not in pathlib.Path('/etc/os-release').read_text():
+    raise SystemExit('Host is not the expected Ubuntu deployment target')
+destination = pathlib.Path('.local-deploy/deployment-status.json')
+temporary = destination.with_suffix('.tmp')
+temporary.write_text(json.dumps({'version': 1, 'target': 'ubuntu', 'revision': sys.argv[1], 'result': 'passed', 'checkedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'httpStatus': 200}) + '\n')
+temporary.chmod(0o600)
+os.replace(temporary, destination)
+PY
 rm -f .blocked-revision
 echo "Ubuntu deployment verified: $target (homepage HTTP 200)."

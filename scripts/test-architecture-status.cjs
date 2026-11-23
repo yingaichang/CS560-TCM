@@ -35,6 +35,7 @@ async function main() {
   })
   const ArchitectureMap = load('src/components/admin/ArchitectureMap.tsx', {
     '@/lib/architectureMap': map,
+    '@/lib/architectureLiveStatus': load('src/lib/architectureLiveStatus.ts', {}),
     './ArchitectureAutoRefresh': { __esModule: true, default: () => null },
   }).default
   const connectionIds = map.architectureConnections.map((connection) => connection.id)
@@ -124,20 +125,25 @@ async function main() {
     assert.equal(await canViewArchitectureStatus(), scenario.allowed, scenario.name)
 
     let reportReads = 0
+    let connectionReads = 0
     const page = load('src/app/admin/development/architecture-status/page.tsx', {
       '@/components/admin/ArchitectureMap': { __esModule: true, default: ArchitectureMap },
       '@/lib/architectureStatusAccess': { canViewArchitectureStatus },
       '@/lib/readKioskTestReport': { readKioskTestReport: () => { reportReads++; return null } },
+      '@/lib/architectureMap': map,
+      '@/lib/systemConnections': { getSystemConnections: async () => { connectionReads++; return { checkedAt: new Date().toISOString(), environment: 'local', databaseKind: 'sqlite', checks: [] } } },
       'next/navigation': { notFound: () => { throw new Error('NOT_FOUND') } },
       'next/link': { __esModule: true, default: ({ children, href, ...props }) => React.createElement('a', { href, ...props }, children) },
     })
     if (!scenario.allowed) {
       await assert.rejects(page.default(), /NOT_FOUND/, scenario.name)
       assert.equal(reportReads, 0, 'Denied requests must not read test evidence')
+      assert.equal(connectionReads, 0, 'Denied requests must not execute service probes')
     } else {
       const html = renderToStaticMarkup(await page.default())
       assert.equal(reportReads, 1, 'Authorized page must read current test evidence')
-      for (const text of ['系統架構狀態總覽', '臨時開發工具', '已連接', '部分連接', '規劃中', '未知', '失敗', '設定狀態快照']) {
+      assert.equal(connectionReads, 1)
+      for (const text of ['系統架構狀態總覽', '臨時開發工具', '已連接', '部分連接', '規劃中', '未知', '失敗', '目前部署的實際連線檢查']) {
         assert.ok(html.includes(text), `Administrator view missing ${text}`)
       }
     }

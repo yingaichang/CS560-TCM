@@ -114,7 +114,7 @@ async function inspect(): Promise<SystemConnectionReport> {
       return expected && expected === assets(publicHtml) ? passed('正式網址與 Ubuntu 首頁的 JavaScript/CSS 版本指紋一致。') : failed('正式網址與 Ubuntu 版本不同；需要學校 IT 完成上游轉送切換。')
     }, '正式網址版本比對失敗或逾時。'),
   ])
-  return { checkedAt, checks }
+  return { checkedAt, environment: isUbuntu ? 'ubuntu' : 'local', databaseKind: /^postgres(?:ql)?:/.test(process.env.DATABASE_URL || '') ? 'postgresql' : 'sqlite', checks }
 }
 
 // Results contain fixed summaries only. No response bodies, credentials or patient data.
