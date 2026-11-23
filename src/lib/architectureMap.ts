@@ -138,7 +138,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "GET / PATCH / DELETE / authorizeEhrRequest",
         "kind": "code",
         "anchor": "GET",
-        "line": 23
+        "line": 24
       },
       {
         "path": "src/app/admin/audit-logs/AuditLogViewer.tsx",
@@ -184,7 +184,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "PatientDirectoryScreen / NewPatientScreen / IntakeScreen",
         "kind": "code",
         "anchor": "PatientDirectoryScreen",
-        "line": 36
+        "line": 31
       },
       {
         "path": "src/app/api/ehr/patients/route.ts",
@@ -205,7 +205,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "include / encounters / clinicalNote / documents",
         "kind": "code",
         "anchor": "include",
-        "line": 51
+        "line": 53
       },
       {
         "path": "src/app/ehr/EhrScreens.tsx",
@@ -240,7 +240,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "尚未開始問診 / 智慧語音問診",
         "kind": "code",
         "anchor": "尚未開始問診",
-        "line": 140
+        "line": 137
       },
       {
         "path": "prisma/schema.prisma",
@@ -548,14 +548,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "GET / PATCH / DELETE / authorizeEhrRequest",
         "kind": "code",
         "anchor": "GET",
-        "line": 23
+        "line": 24
       },
       {
         "path": "src/lib/appointmentMail.ts",
         "symbol": "send / notifyNewAppointment / notifyAppointmentStatus",
         "kind": "code",
         "anchor": "send",
-        "line": 14
+        "line": 15
       },
       {
         "path": "src/app/api/appointments/route.ts",
@@ -664,7 +664,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "PatientDirectoryScreen / NewPatientScreen / IntakeScreen",
         "kind": "code",
         "anchor": "PatientDirectoryScreen",
-        "line": 36
+        "line": 31
       },
       {
         "path": "src/app/api/ehr/patients/route.ts",
@@ -699,7 +699,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "GET / PUT",
         "kind": "code",
         "anchor": "GET",
-        "line": 39
+        "line": 41
       }
     ]
   },
@@ -932,7 +932,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "constructEvent / auditWebhookReceipt.create / event.type",
         "kind": "code",
         "anchor": "constructEvent",
-        "line": 21
+        "line": 22
       },
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
@@ -960,7 +960,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "auditWebhookReceipt / writeAuditLog",
         "kind": "code",
         "anchor": "auditWebhookReceipt",
-        "line": 65
+        "line": 66
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",
@@ -1013,14 +1013,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "deliverContact / bounded SMTP / delivery audit",
         "kind": "code",
         "anchor": "deliverContact",
-        "line": 14
+        "line": 15
       },
       {
         "path": "src/app/api/contact/route.ts",
         "symbol": "contact.create / savedToDatabase / GET",
         "kind": "code",
         "anchor": "contact.create",
-        "line": 85
+        "line": 88
       },
       {
         "path": "src/middleware.ts",
@@ -1034,7 +1034,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "deliverContact / bounded SMTP / delivery audit",
         "kind": "code",
         "anchor": "deliverContact",
-        "line": 14
+        "line": 15
       }
     ]
   },
@@ -1094,7 +1094,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "auditWebhookReceipt / writeAuditLog",
         "kind": "code",
         "anchor": "auditWebhookReceipt",
-        "line": 65
+        "line": 66
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",
@@ -1196,7 +1196,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "POST",
         "kind": "code",
         "anchor": "POST",
-        "line": 9
+        "line": 10
       },
       {
         "path": "src/app/api/appointments/route.ts",
@@ -1231,14 +1231,14 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "GET / PUT",
         "kind": "code",
         "anchor": "GET",
-        "line": 39
+        "line": 41
       },
       {
         "path": "src/app/api/ehr/patients/[id]/route.ts",
         "symbol": "include / encounters / clinicalNote / documents",
         "kind": "code",
         "anchor": "include",
-        "line": 51
+        "line": 53
       },
       {
         "path": "src/app/ehr/EhrScreens.tsx",
@@ -1273,7 +1273,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "contact.create / savedToDatabase / GET",
         "kind": "code",
         "anchor": "contact.create",
-        "line": 85
+        "line": 88
       },
       {
         "path": "src/middleware.ts",
@@ -1312,7 +1312,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "send / notifyNewAppointment / notifyAppointmentStatus",
         "kind": "code",
         "anchor": "send",
-        "line": 14
+        "line": 15
       },
       {
         "path": "src/app/api/appointments/route.ts",
@@ -1326,7 +1326,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "deliverContact / bounded SMTP / delivery audit",
         "kind": "code",
         "anchor": "deliverContact",
-        "line": 14
+        "line": 15
       }
     ]
   },
@@ -1376,7 +1376,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "constructEvent / auditWebhookReceipt.create / event.type",
         "kind": "code",
         "anchor": "constructEvent",
-        "line": 21
+        "line": 22
       }
     ]
   },
@@ -1401,7 +1401,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "POST",
         "kind": "code",
         "anchor": "POST",
-        "line": 9
+        "line": 10
       },
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
@@ -1461,7 +1461,7 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "symbol": "尚未開始問診 / 智慧語音問診",
         "kind": "code",
         "anchor": "尚未開始問診",
-        "line": 140
+        "line": 137
       },
       {
         "path": "prisma/schema.prisma",
@@ -1601,14 +1601,14 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "healthTopicRegistration.upsert / writeAuditLog",
         "kind": "code",
         "anchor": "healthTopicRegistration.upsert",
-        "line": 84
+        "line": 85
       },
       {
         "path": "src/app/api/webhooks/stripe/route.ts",
         "symbol": "registration amount and currency match",
         "kind": "code",
         "anchor": "const matches",
-        "line": 77
+        "line": 78
       }
     ],
     "next": "持續驗證角色、重送與資料衝突；外部服務與正式啟用狀態需獨立證據。",
@@ -1937,7 +1937,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "GET / PATCH / DELETE / authorizeEhrRequest",
         "kind": "code",
         "anchor": "GET",
-        "line": 23
+        "line": 24
       }
     ],
     "next": "驗證狀態更新、刪除及異動後畫面重新整理。",
@@ -1993,7 +1993,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "sendAppointmentNotification / persisted state and audit",
         "kind": "code",
         "anchor": "sendAppointmentNotification",
-        "line": 14
+        "line": 15
       },
       {
         "path": "src/app/api/appointments/[id]/notification/route.ts",
@@ -2035,7 +2035,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "patientId / writeAuditLog",
         "kind": "code",
         "anchor": "patientId",
-        "line": 20
+        "line": 21
       }
     ],
     "next": "驗證明確連結、錯誤病人修正及 kiosk 僅處理已連結預約。",
@@ -2056,7 +2056,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "PatientDirectoryScreen / NewPatientScreen / IntakeScreen",
         "kind": "code",
         "anchor": "PatientDirectoryScreen",
-        "line": 36
+        "line": 31
       },
       {
         "path": "src/app/api/ehr/patients/route.ts",
@@ -2077,7 +2077,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "stable patient and intake submission keys",
         "kind": "code",
         "anchor": "submissionKeys",
-        "line": 192
+        "line": 189
       }
     ],
     "next": "持續驗證角色、重送與資料衝突；外部服務與正式啟用狀態需獨立證據。",
@@ -2112,7 +2112,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "GET / PUT",
         "kind": "code",
         "anchor": "GET",
-        "line": 39
+        "line": 41
       }
     ],
     "next": "以開發資料庫驗證新增、修改、問卷與未授權醫師存取。",
@@ -2133,7 +2133,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "include / encounters / clinicalNote / documents",
         "kind": "code",
         "anchor": "include",
-        "line": 51
+        "line": 53
       },
       {
         "path": "src/app/ehr/EhrScreens.tsx",
@@ -2210,7 +2210,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "尚未開始問診 / 智慧語音問診",
         "kind": "code",
         "anchor": "尚未開始問診",
-        "line": 140
+        "line": 137
       },
       {
         "path": "prisma/schema.prisma",
@@ -2336,7 +2336,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "encounter.upsert / appointmentId",
         "kind": "code",
         "anchor": "appointmentId",
-        "line": 20
+        "line": 21
       },
       {
         "path": "prisma/schema.prisma",
@@ -2413,7 +2413,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "constructEvent / auditWebhookReceipt.create / event.type",
         "kind": "code",
         "anchor": "constructEvent",
-        "line": 21
+        "line": 22
       }
     ],
     "next": "用付款平台測試事件驗證簽章、重送及非同步結果。",
@@ -2434,7 +2434,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "constructEvent / healthTopicRegistration.upsert",
         "kind": "code",
         "anchor": "healthTopicRegistration.upsert",
-        "line": 84
+        "line": 85
       },
       {
         "path": "src/app/payment/page.tsx",
@@ -2455,7 +2455,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "registration amount and currency match",
         "kind": "code",
         "anchor": "const matches",
-        "line": 77
+        "line": 78
       }
     ],
     "next": "持續驗證角色、重送與資料衝突；外部服務與正式啟用狀態需獨立證據。",
@@ -2532,7 +2532,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "deliverContact / bounded SMTP / delivery audit",
         "kind": "code",
         "anchor": "deliverContact",
-        "line": 14
+        "line": 15
       }
     ],
     "next": "使用者更新 Ubuntu SMTP 設定後再確認實際投遞。",
@@ -2553,7 +2553,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "contact.create / savedToDatabase / authorizeEhrRequest",
         "kind": "code",
         "anchor": "transaction.contact.create",
-        "line": 85
+        "line": 88
       },
       {
         "path": "src/app/api/admin/contacts/[id]/route.ts",
@@ -2623,7 +2623,7 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "symbol": "auditWebhookReceipt / writeAuditLog",
         "kind": "code",
         "anchor": "auditWebhookReceipt",
-        "line": 65
+        "line": 66
       },
       {
         "path": "src/app/api/webhooks/clerk/route.ts",

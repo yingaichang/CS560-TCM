@@ -53,6 +53,7 @@ export default async function ArchitectureStatusPage() {
       <div className="flex flex-wrap gap-4 text-sm font-medium text-[#355C46]">
         <Link href="/admin" className="underline underline-offset-4">返回後台首頁</Link>
         <Link href="/admin/audit-logs" className="underline underline-offset-4">查看稽核紀錄</Link>
+        <Link href="/admin/development/architecture-tests" className="underline underline-offset-4">Architecture Test Center</Link>
       </div>
     </section>
   )

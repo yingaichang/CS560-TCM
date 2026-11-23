@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T07:27:54.586Z",
+  "generatedAt": "2026-11-23T18:04:25.759Z",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
@@ -179,7 +179,7 @@
     },
     "src/lib/appointmentMail.ts|send / notifyNewAppointment / notifyAppointmentStatus": {
       "valid": true,
-      "line": 14
+      "line": 15
     },
     "src/app/api/appointments/route.ts|notifyNewAppointment": {
       "valid": true,
@@ -279,7 +279,7 @@
     },
     "src/app/api/webhooks/stripe/route.ts|constructEvent / auditWebhookReceipt.create / event.type": {
       "valid": true,
-      "line": 21
+      "line": 22
     },
     "src/app/api/webhooks/stripe/route.ts|writeAuditLog": {
       "valid": true,
@@ -295,7 +295,7 @@
     },
     "src/app/api/webhooks/stripe/route.ts|auditWebhookReceipt / writeAuditLog": {
       "valid": true,
-      "line": 65
+      "line": 66
     },
     "src/app/api/webhooks/clerk/route.ts|verifyWebhook / auditWebhookReceipt / writeAuditLog": {
       "valid": true,
@@ -303,7 +303,7 @@
     },
     "src/lib/contactDelivery.ts|deliverContact / bounded SMTP / delivery audit": {
       "valid": true,
-      "line": 14
+      "line": 15
     },
     "src/app/api/contact/route.ts|contact.create / savedToDatabase / GET": {
       "valid": true,
@@ -323,7 +323,7 @@
     },
     "src/app/api/webhooks/stripe/route.ts|POST": {
       "valid": true,
-      "line": 9
+      "line": 10
     },
     "prisma/schema.prisma|HealthTopicRegistration / checkoutSessionId": {
       "valid": true,
@@ -351,11 +351,11 @@
     },
     "src/app/api/webhooks/stripe/route.ts|healthTopicRegistration.upsert / writeAuditLog": {
       "valid": true,
-      "line": 84
+      "line": 85
     },
     "src/app/api/webhooks/stripe/route.ts|registration amount and currency match": {
       "valid": true,
-      "line": 77
+      "line": 78
     },
     "src/app/admin/holidays/page.tsx|fetch /api/holidays": {
       "valid": true,
@@ -371,7 +371,7 @@
     },
     "src/lib/appointmentMail.ts|sendAppointmentNotification / persisted state and audit": {
       "valid": true,
-      "line": 14
+      "line": 15
     },
     "src/app/api/appointments/[id]/notification/route.ts|authorized explicit appointment notification retry": {
       "valid": true,
@@ -403,7 +403,7 @@
     },
     "src/lib/checkinEncounter.ts|encounter.upsert / appointmentId": {
       "valid": true,
-      "line": 20
+      "line": 21
     },
     "prisma/schema.prisma|Appointment.patientId / Encounter.appointmentId": {
       "valid": true,
@@ -411,7 +411,7 @@
     },
     "src/app/api/webhooks/stripe/route.ts|constructEvent / healthTopicRegistration.upsert": {
       "valid": true,
-      "line": 84
+      "line": 85
     },
     "src/app/payment/page.tsx|/api/payment/registration status lookup": {
       "valid": true,
@@ -456,6 +456,30 @@
       "file": "src/app/api/admin/contacts/[id]/route.ts",
       "methods": [
         "PATCH"
+      ],
+      "status": "unknown"
+    },
+    {
+      "path": "/api/admin/development/architecture-tests/live",
+      "file": "src/app/api/admin/development/architecture-tests/live/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "status": "unknown"
+    },
+    {
+      "path": "/api/admin/development/architecture-tests",
+      "file": "src/app/api/admin/development/architecture-tests/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "status": "connected"
+    },
+    {
+      "path": "/api/admin/development/architecture-tests/simulate",
+      "file": "src/app/api/admin/development/architecture-tests/simulate/route.ts",
+      "methods": [
+        "POST"
       ],
       "status": "unknown"
     },
@@ -575,6 +599,14 @@
     {
       "path": "/api/holidays/seed",
       "file": "src/app/api/holidays/seed/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "status": "unknown"
+    },
+    {
+      "path": "/api/integrations/[service]",
+      "file": "src/app/api/integrations/[service]/route.ts",
       "methods": [
         "POST"
       ],
@@ -820,6 +852,14 @@
       "path": "/api/appointments",
       "method": "POST",
       "handler": "src/app/api/appointments/route.ts",
+      "status": "connected"
+    },
+    {
+      "caller": "src/components/admin/ArchitectureTestCenter.tsx",
+      "line": 23,
+      "path": "/api/admin/development/architecture-tests",
+      "method": "GET",
+      "handler": "src/app/api/admin/development/architecture-tests/route.ts",
       "status": "connected"
     },
     {

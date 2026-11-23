@@ -5,6 +5,7 @@ import { findHealthTopicById } from '@/lib/healthTopics'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
 import { CommandError, lockSoftwareWrites } from '@/lib/softwareCommands'
+import { matchesRegistrationPayment } from '@/lib/integrations/workflowPolicies'
 
 export async function POST(request: NextRequest) {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY
@@ -74,8 +75,8 @@ export async function POST(request: NextRequest) {
         ? ''
         : metadataTopicId || current?.topicId || ''
       const topic = findHealthTopicById(topicId)
-      const matches = topic && session.mode === 'payment' && session.currency === current.currency && session.amount_total === current.amountTwd * 100
-      if (matches) {
+      const matches = matchesRegistrationPayment(current, session, Boolean(topic))
+      if (matches && topic) {
         const status = current?.status === 'paid'
           ? 'paid'
           : current && current.status !== 'pending' && registrationStatus !== 'paid'

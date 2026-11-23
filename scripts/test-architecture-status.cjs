@@ -160,6 +160,7 @@ async function main() {
     }).default
     const html = renderToStaticMarkup(React.createElement(sidebar, { showDevelopment }))
     assert.equal(html.includes('href="/admin/development/architecture-status"'), showDevelopment)
+    assert.equal(html.includes('href="/admin/development/architecture-tests"'), showDevelopment)
   }
 
   const references = []
@@ -179,6 +180,7 @@ async function main() {
   assert.deepEqual(references.sort(), [
     'src/app/admin/development/architecture-status/page.tsx',
     'src/components/AdminSidebar.tsx',
+    'src/components/admin/ArchitectureTestCenter.tsx',
   ])
   if (process.argv.includes('--record')) {
     // Record only the scopes actually exercised with mocks; no operational service claims.

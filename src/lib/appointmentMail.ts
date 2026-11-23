@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
 import { contactSmtpConfig } from '@/lib/contactDelivery'
 import { CommandError, lockSoftwareWrites } from '@/lib/softwareCommands'
+import { classifyMailAcceptance } from '@/lib/integrations/workflowPolicies'
 
 type MailAppointment = { id: string; name: string; email: string | null; phone: string; service: string; date: Date; appointmentTime: string | null; status: string; updatedAt: Date }
 type Delivery = { state: string; attempts: number }
@@ -33,7 +34,7 @@ export async function sendAppointmentNotification(a: MailAppointment, kind: 'adm
   let state = 'unknown'
   try {
     const result = await transport.sendMail({ from: config.from, to: kind === 'admin' ? config.to : a.email!, subject: kind === 'admin' ? '新預約申請' : `預約狀態：${a.status}`, text: [`姓名: ${a.name}`, `服務: ${a.service}`, `日期: ${a.date.toISOString().slice(0, 10)} ${a.appointmentTime || ''}`, `狀態: ${a.status}`].join('\n') })
-    state = result.accepted?.length ? result.rejected?.length ? 'unknown' : 'sent' : 'failed'
+    state = classifyMailAcceptance(result)
   } catch (error) {
     state = ['EAUTH', 'EENVELOPE', 'ECONNECTION', 'EDNS'].includes((error as { code?: string }).code || '') ? 'failed' : 'unknown'
   } finally { transport.close() }

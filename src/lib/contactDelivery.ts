@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog, type AuditEvent } from '@/lib/auditLog'
 import { CommandError, lockSoftwareWrites } from '@/lib/softwareCommands'
+import { classifyMailAcceptance } from '@/lib/integrations/workflowPolicies'
 
 export function contactSmtpConfig() {
   const host = process.env.SMTP_HOST, user = process.env.SMTP_USER, pass = process.env.SMTP_PASS
@@ -29,7 +30,7 @@ export async function deliverContact(id: string, retry = false, actor?: Pick<Aud
   const transport = nodemailer.createTransport({ host: config.host, port: config.port, secure: config.secure, auth: { user: config.user, pass: config.pass }, connectionTimeout: 8000, greetingTimeout: 8000, socketTimeout: 15000 })
   try {
     const result = await transport.sendMail({ from: config.from, to: config.to, replyTo: contact.email, subject: `網站聯絡表單: ${contact.subject}`, text: `姓名: ${contact.name}\nEmail: ${contact.email}\n主旨: ${contact.subject}\n\n${contact.message}` })
-    status = result.accepted?.length > 0 ? result.rejected?.length ? 'unknown' : 'sent' : 'failed'
+    status = classifyMailAcceptance(result)
   } catch (error) {
     // A timeout/disconnect may occur after acceptance. Do not encourage blind retries.
     const code = (error as { code?: string }).code

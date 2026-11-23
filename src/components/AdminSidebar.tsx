@@ -75,7 +75,7 @@ const developmentSection: MenuSection = {
   label: '開發工具',
   icon: Wrench,
   basePath: '/admin/development',
-  items: [{ label: '系統架構狀態', href: '/admin/development/architecture-status' }],
+  items: [{ label: '系統架構狀態', href: '/admin/development/architecture-status' }, { label: 'Architecture Test Center', href: '/admin/development/architecture-tests' }],
 }
 
 // Patient profile and record pages need an id, so they only appear once a patient is selected.

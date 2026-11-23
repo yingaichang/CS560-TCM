@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import type { Prisma } from '@prisma/client'
 import { writeAuditLog } from '@/lib/auditLog'
+import { planCheckedInEncounter } from '@/lib/integrations/workflowPolicies'
 
 type CheckedInAppointment = {
   id: string
@@ -22,16 +23,10 @@ export async function ensureEncounterForCheckedInAppointment(
   })
   if (existing) return existing
 
+  const data = planCheckedInEncounter(appointment, `ENC-${randomUUID()}`)
+  if (!data) return null
   const encounter = await transaction.encounter.create({
-    data: {
-      encounterId: `ENC-${randomUUID()}`,
-      appointmentId: appointment.id,
-      patientId: appointment.patientId,
-      encounterDate: appointment.date,
-      visitType: appointment.service,
-      chiefComplaint: appointment.message,
-      status: 'checked_in',
-    },
+    data,
     select: { id: true, encounterId: true },
   })
 

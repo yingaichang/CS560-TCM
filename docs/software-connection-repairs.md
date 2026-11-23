@@ -33,3 +33,7 @@ The suite covers replay and payload conflicts, concurrent duplicate treatment re
 - Account mutations: need durable reconciliation of Clerk identity and local roles, self-lockout/last-administrator rules and recovery behavior. A local user row alone is insufficient to safely create, disable or change an external identity.
 
 No database schema changes, production data seeding, credential transfers or upstream routing changes are part of these repairs.
+
+## Prepared integration boundaries and test center
+
+See [Architecture Test Center and integration contracts](architecture-test-center.md) for every unavailable device/service's send/receive requirements, exact versioned JSON schemas, signed receipt-only endpoints, administrator authorization, five test outcomes and the development-only simulation flag. Simulations retain the source **Development Simulation** in safe audit metadata and never promote a real device, identity, payment or delivery connection to success.

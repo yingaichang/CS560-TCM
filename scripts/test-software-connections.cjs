@@ -33,11 +33,14 @@ function load(relative) {
   const module = { exports: {} }; cache.set(relative, module)
   const code = ts.transpileModule(fs.readFileSync(path.join(root, relative), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true, target: ts.ScriptTarget.ES2020 } }).outputText
   const customRequire = name => {
+    if (name === 'server-only') return {}
+    if (name === '@/lib/systemConnections') return { getSystemConnections: async () => ({ checkedAt: new Date().toISOString(), checks: [{ id: 'database', name: 'Fictional read-only probe', status: 'connected', detail: 'Isolated fixture, not a live service result' }] }) }
     if (name === '@/lib/prisma') return { prisma }
     if (name === '@/lib/ehrAuthorization') return { authorizeEhrRequest: async roles => actor && (!roles || roles.includes(actor.role)) ? actor : null }
     if (name === 'nodemailer') return { createTransport: () => ({ close() {}, sendMail: async () => { mailCalls++; if (mailMode === 'timeout') throw Object.assign(new Error('synthetic'), { code: 'ETIMEDOUT' }); if (mailMode === 'denied') throw Object.assign(new Error('synthetic'), { code: 'EAUTH' }); return { accepted: ['synthetic@example.test'], rejected: mailMode === 'partial' ? ['rejected@example.test'] : [] } } }) }
     if (name === 'stripe') return FixtureStripe
-    if (name.startsWith('@/')) return load('src/' + name.slice(2) + '.ts')
+    if (name.startsWith('@/')) return name.endsWith('.json') ? require(path.join(root, 'src/' + name.slice(2))) : load('src/' + name.slice(2) + '.ts')
+    if (name.startsWith('.')) return load(path.posix.join(path.posix.dirname(relative), name) + '.ts')
     return require(name)
   }
   new Function('require', 'module', 'exports', 'process', 'console', code)(customRequire, module, module.exports, { env: testEnv }, { log() {}, error() {}, warn() {} })
@@ -175,8 +178,9 @@ async function main() {
   assert.equal((await appointmentMail.sendAppointmentNotification(latestAppointment, 'patient')).state, 'not_configured')
   testEnv.SMTP_HOST = 'synthetic.invalid'
   const beforeMail = mailCalls
-  const attempts = await Promise.all([appointmentMail.sendAppointmentNotification(latestAppointment, 'patient', 0), appointmentMail.sendAppointmentNotification(latestAppointment, 'patient', 0).catch(error => error)])
+  const attempts = await Promise.all([0, 1].map(() => appointmentMail.sendAppointmentNotification(latestAppointment, 'patient', 0).catch(error => error)))
   assert.ok(attempts.some(x => x.state === 'sent'))
+  assert.equal(attempts.filter(x => x instanceof load('src/lib/softwareCommands.ts').CommandError).length, 1)
   assert.equal(mailCalls, beforeMail + 1)
   await appointmentMail.notifyAppointmentStatus(latestAppointment)
   assert.equal(mailCalls, beforeMail + 1)
@@ -227,6 +231,8 @@ async function main() {
   assert.equal(await prisma.auditWebhookReceipt.count({ where: { id: 'stripe:evt_syntheticUnmatched' } }), 0)
   const registered = await expect(await load('src/app/api/admin/registrations/route.ts').GET(), 200)
   assert.equal(registered.registrations[0].status, 'paid')
+  stage = 'Architecture Test Center and signed receipt-only integrations'
+  await require('./architecture-test-center-cases.cjs')({ load, prisma, actor: actorFor(admin), setActor: value => { actor = value }, testEnv })
   stage = 'audit chain integrity'
   assert.equal(await load('src/lib/auditLog.ts').verifyAuditChain(), true)
   console.log(JSON.stringify({ result: 'passed', at: new Date().toISOString(), command: 'isolated PostgreSQL: node scripts/test-software-connections.cjs', scope: 'Isolated PostgreSQL with fictional records; real handlers, transactions, access filters, replay/conflict protection, management reads and audit integrity. SMTP and Stripe are local fixtures, not external service success. Production clinical writes remain disabled.', components: ['patientApi', 'clinicalWrite', 'contactApi'], connections: ['patient-entry', 'patient-save', 'clinical-read', 'clinical-write', 'clinical-persist', 'registration-persist', 'payment-registration', 'contact-storage', 'contact-mail', 'booking-notify', 'booking-save', 'checkout-audit', 'business-audit', 'audit-storage'] }))

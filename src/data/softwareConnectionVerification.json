@@ -1,1 +1,27 @@
-{"result":"passed","at":"2026-11-23T07:19:57.525Z","command":"isolated PostgreSQL: node scripts/test-software-connections.cjs","scope":"Isolated PostgreSQL with fictional records; real handlers, transactions, access filters, replay/conflict protection, management reads and audit integrity. SMTP and Stripe are local fixtures, not external service success. Production clinical writes remain disabled.","components":["patientApi","clinicalWrite","contactApi"],"connections":["patient-entry","patient-save","clinical-read","clinical-write","clinical-persist","registration-persist","payment-registration","contact-storage","contact-mail","booking-notify","booking-save","checkout-audit","business-audit","audit-storage"]}
+{
+  "result": "passed",
+  "at": "2026-11-23T18:01:48.110Z",
+  "command": "isolated PostgreSQL: node scripts/test-software-connections.cjs",
+  "scope": "Isolated PostgreSQL with fictional records; real handlers, transactions, access filters, replay/conflict protection, management reads and audit integrity. SMTP and Stripe are local fixtures, not external service success. Production clinical writes remain disabled. Architecture Test Center: real administrator APIs, fixed fictional fixtures, feature flags, production denial, actor/run conflicts, safe audit history and receipt-only HMAC adapters. Read-only provider probes are mocked in this suite.",
+  "components": [
+    "patientApi",
+    "clinicalWrite",
+    "contactApi"
+  ],
+  "connections": [
+    "patient-entry",
+    "patient-save",
+    "clinical-read",
+    "clinical-write",
+    "clinical-persist",
+    "registration-persist",
+    "payment-registration",
+    "contact-storage",
+    "contact-mail",
+    "booking-notify",
+    "booking-save",
+    "checkout-audit",
+    "business-audit",
+    "audit-storage"
+  ]
+}
