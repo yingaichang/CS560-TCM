@@ -1,8 +1,43 @@
 # Ubuntu deployment
 
-GitHub pushes do not automatically deploy this installation. The production
+The production
 checkout is `~/apps/cse03/src`; Compose and its private `.env` are in
 `~/apps/cse03` on `cse03`.
+
+## Automatic publishing
+
+The Windows scheduled task `TCM Website Auto Publish` starts the publisher at
+sign-in. `scripts/start-auto-publish.ps1` runs it in the background. After saved
+website files stop changing for 45 seconds, it commits and pushes `main` to
+GitHub. Unsaved VS Code edits cannot be published. The computer needs internet
+access and working GitHub authentication. The publisher does not need the VPN.
+
+The publisher covers website source, public assets, Prisma source, scripts,
+documentation, tests and the known root configuration files. Environment files,
+SSH/VPN credentials, databases and build outputs stay excluded. Recognized
+credential patterns and staged files outside this scope stop the attempt. Other
+branches require manual publishing. Logs: `.local-deploy/publisher.log`.
+
+Ubuntu's `tcm-ubuntu-deploy.timer` checks GitHub every minute, independently of
+the Windows computer and VPN. It builds new revisions, checks for database
+schema differences, restarts only `web`, and verifies the homepage through
+Caddy. A failed homepage check restores the previous running image. The timer
+never applies future database migrations automatically; schema differences stop
+deployment for review. A blocked revision is not retried until its source or
+environment changes, or an operator removes `.blocked-revision` after resolving
+the cause. Database contents and volumes are never replaced by the publisher.
+
+```sh
+systemctl status tcm-ubuntu-deploy.timer
+journalctl -u tcm-ubuntu-deploy.service -n 80 --no-pager
+```
+
+The Compose build passes `DEPLOY_REV` as a build argument so code or private
+environment changes invalidate the final build step. Package installation is
+cached separately from source changes. Secrets remain BuildKit mounts.
+
+The public domain still needs to be routed by school IT to this Ubuntu host.
+Neither publisher nor timer modifies central Dokploy or the school's proxy.
 
 The development schema uses SQLite. The production Docker build must run:
 

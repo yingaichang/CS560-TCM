@@ -1,0 +1,11 @@
+[Unit]
+Description=Check GitHub for TCM website updates every minute
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=60s
+Persistent=true
+Unit=tcm-ubuntu-deploy.service
+
+[Install]
+WantedBy=timers.target

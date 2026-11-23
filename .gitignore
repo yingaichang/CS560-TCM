@@ -58,6 +58,7 @@ Thumbs.db
 prisma/dev.db
 prisma/dev.db-journal
 prisma/schema.production.prisma
+/.local-deploy/
 
 # Next.js cache
 .next

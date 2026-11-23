@@ -1,0 +1,12 @@
+[Unit]
+Description=Deploy the TCM website from GitHub main to Ubuntu
+Wants=network-online.target docker.service
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+User=yingai
+WorkingDirectory=/home/yingai/apps/cse03
+ExecStart=/bin/bash /home/yingai/apps/cse03/src/scripts/deploy-ubuntu.sh
+TimeoutStartSec=1200
+UMask=0077
