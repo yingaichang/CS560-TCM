@@ -75,6 +75,12 @@ async function main() {
   assert.equal(result.components.ubuntuHost.status,'connected')
   assert.equal(result.components.portals.status,'planned', 'A successful service probe cannot promote an unfinished feature')
   assert.equal(result.connections[1].status,'planned')
+  const external = [{ id: 'contact-mail', status: 'partly_connected' }, { id: 'payment-platform', status: 'partly_connected' }]
+  const healthyExternal = overlay.withLiveSystemStatus(components, external, healthy)
+  assert.ok(healthyExternal.connections.every(item => item.status === 'partly_connected'), 'Read-only success cannot replace complete workflow evidence')
+  const failedExternal = overlay.withLiveSystemStatus(components, external, failures)
+  assert.ok(failedExternal.connections.every(item => item.status === 'failed'), 'Real rejected credentials must remain visible on the affected connection')
+  assert.ok(failedExternal.connections.every(item => item.liveObservation.source === 'Real Read-only Service Check'))
   assert.equal(components.ubuntuHost.status,'planned', 'Runtime overlays must not mutate static source evidence')
   console.log('PASS: authenticated-service probes, live DB/schema checks, routing mismatch, rejected credentials, stale deployment evidence, caching, secret exclusion, and no promotion of unfinished features.')
 }

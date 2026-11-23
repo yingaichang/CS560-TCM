@@ -18,7 +18,7 @@ export function withLiveSystemStatus(
       safeError: check.status === 'failed' ? check.detail : null,
       lastTest: ['connected', 'failed'].includes(check.status) ? {
         at: check.checkedAt, command: 'live-system-connections', scope: check.detail,
-        result: check.status === 'connected' ? 'passed' : 'failed',
+        result: check.status === 'connected' ? 'passed' : 'failed', source: 'Real Read-only Service Check',
       } : null,
     }
   }
@@ -29,9 +29,20 @@ export function withLiveSystemStatus(
   }
   for (const [id, check] of Object.entries(componentChecks)) components[id as ComponentId] = patch(components[id as ComponentId], check)
   const connectionChecks: Record<string, SystemCheck | undefined> = {
+    'booking-notify': byId.mail,
+    'contact-mail': byId.mail,
+    'payment-platform': byId.stripe,
+    'payment-callback': byId.stripeWebhook,
+    'identity-session': byId.identity,
+    'kiosk-sms': byId.sms,
     'ubuntu-application': byId.ubuntu,
     'ubuntu-database': report.environment === 'ubuntu' && report.databaseKind === 'postgresql' ? byId.database : undefined,
     'database-migration': report.environment === 'ubuntu' ? byId.schema : undefined,
   }
-  return { components, connections: connections.map(item => patch(item, connectionChecks[item.id])) }
+  return { components, connections: connections.map(item => {
+    const check = connectionChecks[item.id]
+    if (!check) return item
+    // Read-only probes never prove workflow writes, UI updates or migrations.
+    return { ...item, ...(check.status === 'failed' ? { status: 'failed' as const, safeError: check.detail } : {}), liveObservation: { at: check.checkedAt, status: check.status, detail: check.detail, source: 'Real Read-only Service Check' } }
+  }) }
 }

@@ -37,3 +37,68 @@ No database schema changes, production data seeding, credential transfers or ups
 ## Prepared integration boundaries and test center
 
 See [Architecture Test Center and integration contracts](architecture-test-center.md) for every unavailable device/service's send/receive requirements, exact versioned JSON schemas, signed receipt-only endpoints, administrator authorization, five test outcomes and the development-only simulation flag. Simulations retain the source **Development Simulation** in safe audit metadata and never promote a real device, identity, payment or delivery connection to success.
+
+## Independent workflow connection verification
+
+Last isolated run: 2026-11-23T19:01:46.353Z. Nine workflows and 50 separately assessed connections. {"connected":35,"partly_connected":9,"planned":6}.
+
+The full machine-readable report is [workflowConnectionVerification.json](../src/data/workflowConnectionVerification.json). Each row includes its components, exchanged information, source references, six stage outcomes, named cases, timestamp, safe error and remaining requirement. Connected means complete evidence within the explicitly stated isolated application scope; it never establishes real hardware, browser identity, message delivery or payment. Signed receipt adapters are tested only as receipt/audit software (`applied=false`), and remain disabled in production.
+
+The application handlers write fictional records into a disposable PostgreSQL database on a Docker internal network with tmpfs data and no production volumes or provider calls. Receiving components execute their real initial effects against those handlers and are rendered to verify persisted results. This is not a full browser click-through. Local Clerk/Stripe signatures use their actual verifiers with fictional keys. Negative assertions cover denial, unavailable configuration, stale versions, invalid signatures, consumed grants, replay/conflict, rollback and safe failure.
+
+Code evidence alone and aggregate suite success cannot promote a connection. All six stages require an executed case or an explicit justified Not Applicable. A canonical SHA-256 fingerprint of application/test sources binds evidence to the tested version; changed code, missing stages/cases, duplicate IDs or invalid provenance remove Connected. Existing kiosk batch artifacts cannot overwrite per-connection test times. Real read-only observations are shown separately; failed mail/Stripe authentication affects only their corresponding connections, and successful probes cannot claim an executed migration or business workflow.
+
+| Connection | Components | Isolated status | Last test (UTC) | Source | Incomplete stages |
+|---|---|---|---|---|---|
+| `guard-storage` | guard -> db | partly_connected | 2026-11-23T19:01:45.538Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `clinical-persist` | clinicalWrite -> db | connected | 2026-11-23T19:01:44.616Z | Fictional inputs; real isolated application | None within stated scope |
+| `registration-persist` | registration -> db | connected | 2026-11-23T19:01:44.895Z | Fictional inputs; real isolated application | None within stated scope |
+| `patient-audit` | patientApi -> audit | connected | 2026-11-23T19:01:45.636Z | Fictional inputs; real isolated application | None within stated scope |
+| `kiosk-audit` | kioskApi -> audit | connected | 2026-11-23T19:01:45.704Z | Fictional inputs; real isolated application | None within stated scope |
+| `contact-audit` | contactApi -> audit | connected | 2026-11-23T19:01:45.768Z | Fictional inputs; real isolated application | None within stated scope |
+| `checkout-audit` | checkout -> audit | connected | 2026-11-23T19:01:45.874Z | Fictional inputs; real isolated application | None within stated scope |
+| `identity-session` | admin -> identity | partly_connected | 2026-11-23T19:01:44.982Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `identity-role` | identity -> guard | partly_connected | 2026-11-23T19:01:45.538Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `admin-guard` | guard -> admin | partly_connected | 2026-11-23T19:01:45.538Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `account-management` | admin -> identity | planned | 2026-11-23T19:01:46.351Z | Fictional inputs; real isolated application | record: Not Tested, managementScreen: Not Tested, audit: Not Tested, finalResult: Not Tested |
+| `booking-submit` | public -> bookingApi | connected | 2026-11-23T19:01:44.723Z | Fictional inputs; real isolated application | None within stated scope |
+| `booking-save` | bookingApi -> db | connected | 2026-11-23T19:01:44.723Z | Fictional inputs; real isolated application | None within stated scope |
+| `booking-manage` | admin -> bookingApi | connected | 2026-11-23T19:01:44.723Z | Fictional inputs; real isolated application | None within stated scope |
+| `holiday-management` | admin -> bookingApi | connected | 2026-11-23T19:01:44.789Z | Fictional inputs; real isolated application | None within stated scope |
+| `booking-notify` | bookingApi -> mail | partly_connected | 2026-11-23T19:01:45.366Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `booking-patient` | bookingApi -> patientApi | connected | 2026-11-23T19:01:44.723Z | Fictional inputs; real isolated application | None within stated scope |
+| `patient-entry` | clinical -> patientApi | connected | 2026-11-23T19:01:44.430Z | Fictional inputs; real isolated application | None within stated scope |
+| `patient-save` | patientApi -> db | connected | 2026-11-23T19:01:44.430Z | Fictional inputs; real isolated application | None within stated scope |
+| `clinical-read` | db -> clinical | connected | 2026-11-23T19:01:46.350Z | Fictional inputs; real isolated application | None within stated scope |
+| `clinical-write` | clinical -> clinicalWrite | connected | 2026-11-23T19:01:44.616Z | Fictional inputs; real isolated application | None within stated scope |
+| `clinical-ai` | clinical -> ai | planned | 2026-11-23T19:01:46.351Z | Fictional inputs; real isolated application | record: Not Tested, managementScreen: Not Tested, audit: Not Tested, finalResult: Not Tested |
+| `kiosk-request` | kiosk -> kioskApi | connected | 2026-11-23T19:01:45.132Z | Fictional inputs; real isolated application | None within stated scope |
+| `kiosk-sms` | kioskApi -> sms | partly_connected | 2026-11-23T19:01:45.132Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `kiosk-save` | kioskApi -> db | connected | 2026-11-23T19:01:45.132Z | Fictional inputs; real isolated application | None within stated scope |
+| `checkin-encounter` | kioskApi -> clinicalWrite | connected | 2026-11-23T19:01:45.132Z | Fictional inputs; real isolated application | None within stated scope |
+| `payment-request` | payment -> checkout | connected | 2026-11-23T19:01:44.894Z | Fictional inputs; real isolated application | None within stated scope |
+| `payment-platform` | checkout -> stripe | partly_connected | 2026-11-23T19:01:45.433Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `payment-callback` | stripe -> webhook | partly_connected | 2026-11-23T19:01:45.452Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `payment-registration` | webhook -> registration | connected | 2026-11-23T19:01:44.894Z | Fictional inputs; real isolated application | None within stated scope |
+| `portal-entitlements` | registration -> portals | planned | 2026-11-23T19:01:46.351Z | Fictional inputs; real isolated application | record: Not Tested, managementScreen: Not Tested, audit: Not Tested, finalResult: Not Tested |
+| `contact-submit` | contact -> contactApi | connected | 2026-11-23T19:01:44.843Z | Fictional inputs; real isolated application | None within stated scope |
+| `contact-mail` | contactApi -> mail | partly_connected | 2026-11-23T19:01:45.408Z | Fictional inputs; real isolated application | finalResult: Not Tested |
+| `contact-storage` | contactApi -> db | connected | 2026-11-23T19:01:44.843Z | Fictional inputs; real isolated application | None within stated scope |
+| `business-audit` | bookingApi -> audit | connected | 2026-11-23T19:01:45.948Z | Fictional inputs; real isolated application | None within stated scope |
+| `webhook-audit` | webhook -> audit | connected | 2026-11-23T19:01:46.008Z | Fictional inputs; real isolated application | None within stated scope |
+| `audit-storage` | audit -> db | connected | 2026-11-23T19:01:46.070Z | Fictional inputs; real isolated application | None within stated scope |
+| `audit-view` | admin -> audit | connected | 2026-11-23T19:01:46.135Z | Fictional inputs; real isolated application | None within stated scope |
+| `ubuntu-application` | ubuntuHost -> public | planned | Not Tested | Not Tested | service: Planned, record: Planned, managementScreen: Planned, audit: Planned, finalResult: Not Tested, negativeCase: Planned |
+| `ubuntu-database` | ubuntuHost -> databaseServer | planned | Not Tested | Not Tested | service: Planned, record: Planned, managementScreen: Planned, audit: Planned, finalResult: Not Tested, negativeCase: Planned |
+| `database-migration` | db -> databaseServer | planned | Not Tested | Not Tested | service: Planned, record: Planned, managementScreen: Planned, audit: Planned, finalResult: Not Tested, negativeCase: Planned |
+| `adapter-scanner` | integrationAdapter -> audit | connected | 2026-11-23T19:01:45.299Z | Fictional inputs; real isolated application | None within stated scope |
+| `adapter-sms` | integrationAdapter -> audit | connected | 2026-11-23T19:01:45.299Z | Fictional inputs; real isolated application | None within stated scope |
+| `adapter-voice` | integrationAdapter -> audit | connected | 2026-11-23T19:01:45.299Z | Fictional inputs; real isolated application | None within stated scope |
+| `adapter-learning` | integrationAdapter -> audit | connected | 2026-11-23T19:01:45.299Z | Fictional inputs; real isolated application | None within stated scope |
+| `adapter-storage` | integrationAdapter -> audit | connected | 2026-11-23T19:01:45.300Z | Fictional inputs; real isolated application | None within stated scope |
+| `adapter-measurements` | integrationAdapter -> audit | connected | 2026-11-23T19:01:45.300Z | Fictional inputs; real isolated application | None within stated scope |
+| `test-center-access` | admin -> testCenter | connected | 2026-11-23T19:01:45.299Z | Fictional inputs; real isolated application | None within stated scope |
+| `test-center-simulation` | testCenter -> audit | connected | 2026-11-23T19:01:45.299Z | Fictional inputs; real isolated application | None within stated scope |
+| `test-center-live` | testCenter -> audit | connected | 2026-11-23T19:01:45.299Z | Fictional inputs; real isolated application | None within stated scope |
+
+Re-run safe unit/regression checks with `node scripts/test-workflow-evidence.cjs`, `node scripts/test-architecture-status.cjs`, `node scripts/test-system-connections.cjs`, `node scripts/test-architecture-test-center.cjs`, `node scripts/test-kiosk-dashboard-update.cjs`, `node scripts/test-architecture-discovery.cjs`, `node scripts/test-management-record-states.cjs`, `node scripts/test-protected-layouts.cjs` and `node scripts/test-auto-publish.cjs`. The PostgreSQL runner refuses any host/database other than the explicitly enabled fictional `synthetic-db/synthetic_connections`; never point it at an application database.

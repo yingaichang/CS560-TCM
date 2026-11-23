@@ -61,10 +61,10 @@ function scan(root, definitions) {
   }
   const connections = calls.map(call => {
     const handler = routes.find(route => route.path === call.path && route.methods.includes(call.method))
-    return { ...call, handler: handler?.file ?? null, status: handler ? 'connected' : 'partly_connected' }
+    return { ...call, handler: handler?.file ?? null, status: handler ? 'partly_connected' : 'unknown' }
   })
-  for (const route of routes) if (connections.some(connection => connection.handler === route.file)) route.status = 'connected'
-  return { generatedAt: new Date().toISOString(), evidence, routes, connections }
+  for (const route of routes) if (connections.some(connection => connection.handler === route.file)) route.status = 'partly_connected'
+  return { generatedAt: new Date().toISOString(), workflowSourceDigest: require('./workflow-source-digest.cjs')(root), evidence, routes, connections }
 }
 
 function update(root = path.resolve(__dirname, '..')) {
@@ -73,6 +73,7 @@ function update(root = path.resolve(__dirname, '..')) {
   const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true } }).outputText
   new Function('require', 'module', 'exports', compiled)(name => {
     const files = {
+      '@/data/workflowConnectionVerification.json': 'src/data/workflowConnectionVerification.json',
       '@/data/kioskConnectionVerification.json': 'src/data/kioskConnectionVerification.json',
       '@/data/architectureStatusVerification.json': 'src/data/architectureStatusVerification.json',
       '@/data/softwareConnectionVerification.json': 'src/data/softwareConnectionVerification.json',

@@ -1,5 +1,6 @@
 {
-  "generatedAt": "2026-11-23T18:26:06.811Z",
+  "generatedAt": "2026-11-23T19:03:45.836Z",
+  "workflowSourceDigest": "83f2b1e6e2e09922cea983f14259f09f927566a1aa66fd4ddfedf0909b6797d7",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
@@ -341,6 +342,14 @@
       "valid": true,
       "line": 8
     },
+    "src/app/api/admin/development/architecture-tests/route.ts|authorizeEhrRequest": {
+      "valid": true,
+      "line": 3
+    },
+    "src/lib/integrations/receiptAdapter.ts|receiveAdapterEvent": {
+      "valid": true,
+      "line": 21
+    },
     "src/app/api/ehr/encounters/[id]/notes/route.ts|clinicalNote.upsert / writeAuditLog": {
       "valid": true,
       "line": 61
@@ -424,6 +433,14 @@
     "src/app/api/admin/contacts/[id]/route.ts|contact.update / writeAuditLog": {
       "valid": true,
       "line": 31
+    },
+    "src/lib/architectureTests/service.ts|simulate": {
+      "valid": true,
+      "line": 31
+    },
+    "src/lib/architectureTests/service.ts|runReadOnly": {
+      "valid": true,
+      "line": 45
     }
   },
   "routes": [
@@ -441,7 +458,7 @@
       "methods": [
         "GET"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/admin/contacts/[id]/retry",
@@ -473,7 +490,7 @@
       "methods": [
         "GET"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/admin/development/architecture-tests/simulate",
@@ -489,7 +506,7 @@
       "methods": [
         "GET"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/appointments/[id]/notification",
@@ -516,7 +533,7 @@
         "POST",
         "GET"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/contact",
@@ -525,7 +542,7 @@
         "POST",
         "GET"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/ehr/encounters/[id]/notes",
@@ -549,7 +566,7 @@
       "methods": [
         "GET"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/ehr/intakes",
@@ -557,7 +574,7 @@
       "methods": [
         "POST"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/ehr/patients/[id]",
@@ -575,7 +592,7 @@
         "GET",
         "POST"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/ehr/workflow",
@@ -584,7 +601,7 @@
         "GET",
         "POST"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/holidays",
@@ -594,7 +611,7 @@
         "POST",
         "DELETE"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/holidays/seed",
@@ -618,7 +635,7 @@
       "methods": [
         "POST"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/kiosk/lookup",
@@ -626,7 +643,7 @@
       "methods": [
         "POST"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/kiosk/verify",
@@ -634,7 +651,7 @@
       "methods": [
         "POST"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/payment/checkout-session",
@@ -642,7 +659,7 @@
       "methods": [
         "POST"
       ],
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "path": "/api/payment/registration",
@@ -676,7 +693,7 @@
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/admin/audit-logs/AuditLogViewer.tsx",
@@ -684,7 +701,7 @@
       "path": "/api/admin/audit-logs/verify-chain",
       "method": "GET",
       "handler": "src/app/api/admin/audit-logs/verify-chain/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/admin/contacts/page.tsx",
@@ -692,7 +709,7 @@
       "path": "/api/contact",
       "method": "GET",
       "handler": "src/app/api/contact/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/admin/holidays/page.tsx",
@@ -700,7 +717,7 @@
       "path": "/api/holidays",
       "method": "POST",
       "handler": "src/app/api/holidays/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/admin/patients/new/page.tsx",
@@ -708,7 +725,7 @@
       "path": "/api/ehr/patients",
       "method": "POST",
       "handler": "src/app/api/ehr/patients/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/admin/patients/page.tsx",
@@ -716,7 +733,7 @@
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/admin/registrations/page.tsx",
@@ -724,7 +741,7 @@
       "path": "/api/admin/registrations",
       "method": "GET",
       "handler": "src/app/api/admin/registrations/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
@@ -732,7 +749,7 @@
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
@@ -740,7 +757,7 @@
       "path": "/api/ehr/patients",
       "method": "GET",
       "handler": "src/app/api/ehr/patients/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
@@ -748,7 +765,7 @@
       "path": "/api/ehr/intakes",
       "method": "POST",
       "handler": "src/app/api/ehr/intakes/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/EhrScreens.tsx",
@@ -756,7 +773,7 @@
       "path": "/api/ehr/patients",
       "method": "POST",
       "handler": "src/app/api/ehr/patients/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/EncounterQueueScreen.tsx",
@@ -764,7 +781,7 @@
       "path": "/api/ehr/encounters",
       "method": "GET",
       "handler": "src/app/api/ehr/encounters/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/EncounterQueueScreen.tsx",
@@ -772,7 +789,7 @@
       "path": "/api/ehr/workflow",
       "method": "POST",
       "handler": "src/app/api/ehr/workflow/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/WorkflowScreen.tsx",
@@ -780,7 +797,7 @@
       "path": "/api/ehr/workflow",
       "method": "GET",
       "handler": "src/app/api/ehr/workflow/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/WorkflowScreen.tsx",
@@ -788,7 +805,7 @@
       "path": "/api/ehr/encounters",
       "method": "GET",
       "handler": "src/app/api/ehr/encounters/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/ehr/WorkflowScreen.tsx",
@@ -796,7 +813,7 @@
       "path": "/api/ehr/workflow",
       "method": "POST",
       "handler": "src/app/api/ehr/workflow/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/kiosk/page.tsx",
@@ -804,7 +821,7 @@
       "path": "/api/kiosk/lookup",
       "method": "POST",
       "handler": "src/app/api/kiosk/lookup/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/kiosk/page.tsx",
@@ -812,7 +829,7 @@
       "path": "/api/kiosk/verify",
       "method": "POST",
       "handler": "src/app/api/kiosk/verify/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/kiosk/page.tsx",
@@ -820,7 +837,7 @@
       "path": "/api/kiosk/checkin",
       "method": "POST",
       "handler": "src/app/api/kiosk/checkin/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/app/payment/page.tsx",
@@ -828,7 +845,7 @@
       "path": "/api/payment/checkout-session",
       "method": "POST",
       "handler": "src/app/api/payment/checkout-session/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/components/AppointmentForm.tsx",
@@ -836,7 +853,7 @@
       "path": "/api/appointments",
       "method": "POST",
       "handler": "src/app/api/appointments/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/components/ContactSection.tsx",
@@ -844,7 +861,7 @@
       "path": "/api/contact",
       "method": "POST",
       "handler": "src/app/api/contact/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/components/QuickAppointmentDialog.tsx",
@@ -852,7 +869,7 @@
       "path": "/api/appointments",
       "method": "POST",
       "handler": "src/app/api/appointments/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/components/admin/ArchitectureTestCenter.tsx",
@@ -860,7 +877,7 @@
       "path": "/api/admin/development/architecture-tests",
       "method": "GET",
       "handler": "src/app/api/admin/development/architecture-tests/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     },
     {
       "caller": "src/components/appointment/AppointmentForm.tsx",
@@ -868,7 +885,7 @@
       "path": "/api/appointments",
       "method": "POST",
       "handler": "src/app/api/appointments/route.ts",
-      "status": "connected"
+      "status": "partly_connected"
     }
   ]
 }

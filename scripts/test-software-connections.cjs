@@ -36,7 +36,9 @@ function load(relative) {
     if (name === 'server-only') return {}
     if (name === '@/lib/systemConnections') return { getSystemConnections: async () => ({ checkedAt: new Date().toISOString(), checks: [{ id: 'database', name: 'Fictional read-only probe', status: 'connected', detail: 'Isolated fixture, not a live service result' }] }) }
     if (name === '@/lib/prisma') return { prisma }
-    if (name === '@/lib/ehrAuthorization') return { authorizeEhrRequest: async roles => actor && (!roles || roles.includes(actor.role)) ? actor : null }
+    if (name === '@/lib/ehrAuthorization') return { authorizeEhrRequest: async roles => actor && (!roles || roles.includes(actor.role)) ? actor : null, authorizeAuditLogAccess: async () => actor?.role === 'admin' ? actor : null }
+    if (name === '@prisma/client') return { ...require(name), PrismaClient: class { constructor() { return prisma } } }
+    if (name === '@clerk/nextjs/webhooks') return { verifyWebhook: request => require(name).verifyWebhook(request, { signingSecret: testEnv.CLERK_WEBHOOK_SIGNING_SECRET }) }
     if (name === 'nodemailer') return { createTransport: () => ({ close() {}, sendMail: async () => { mailCalls++; if (mailMode === 'timeout') throw Object.assign(new Error('synthetic'), { code: 'ETIMEDOUT' }); if (mailMode === 'denied') throw Object.assign(new Error('synthetic'), { code: 'EAUTH' }); return { accepted: ['synthetic@example.test'], rejected: mailMode === 'partial' ? ['rejected@example.test'] : [] } } }) }
     if (name === 'stripe') return FixtureStripe
     if (name.startsWith('@/')) return name.endsWith('.json') ? require(path.join(root, 'src/' + name.slice(2))) : load('src/' + name.slice(2) + '.ts')
@@ -233,6 +235,8 @@ async function main() {
   assert.equal(registered.registrations[0].status, 'paid')
   stage = 'Architecture Test Center and signed receipt-only integrations'
   await require('./architecture-test-center-cases.cjs')({ load, prisma, actor: actorFor(admin), setActor: value => { actor = value }, testEnv })
+  stage = 'independent per-connection workflow witnesses'
+  await require('./workflow-evidence-cases.cjs')({ load, prisma, actor: actorFor(admin), setActor: value => { actor = value }, testEnv })
   stage = 'audit chain integrity'
   assert.equal(await load('src/lib/auditLog.ts').verifyAuditChain(), true)
   console.log(JSON.stringify({ result: 'passed', at: new Date().toISOString(), command: 'isolated PostgreSQL: node scripts/test-software-connections.cjs', scope: 'Isolated PostgreSQL with fictional records; real handlers, transactions, access filters, replay/conflict protection, management reads and audit integrity. SMTP and Stripe are local fixtures, not external service success. Production clinical writes remain disabled.', components: ['patientApi', 'clinicalWrite', 'contactApi'], connections: ['patient-entry', 'patient-save', 'clinical-read', 'clinical-write', 'clinical-persist', 'registration-persist', 'payment-registration', 'contact-storage', 'contact-mail', 'booking-notify', 'booking-save', 'checkout-audit', 'business-audit', 'audit-storage'] }))

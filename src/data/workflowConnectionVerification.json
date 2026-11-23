@@ -1,0 +1,4298 @@
+{
+  "version": 1,
+  "at": "2026-11-23T19:01:46.353Z",
+  "sourceDigest": "83f2b1e6e2e09922cea983f14259f09f927566a1aa66fd4ddfedf0909b6797d7",
+  "command": "isolated PostgreSQL: node scripts/test-software-connections.cjs",
+  "connections": [
+    {
+      "id": "patient-entry",
+      "at": "2026-11-23T19:01:44.430Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Real patient directory consumed the actual authorized handler response and rendered the persisted patient reference."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Identical retry preserved one record; changed payload conflicted; anonymous write was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "patient-entry:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-entry:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-entry:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-entry:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-entry:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-entry:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "clinical",
+        "to": "patientApi"
+      },
+      "informationExchanged": "病人與問卷畫面讀取已儲存紀錄並以固定送出識別碼提交；空清單及連線失敗不再以模擬病人替代。",
+      "evidence": [
+        {
+          "path": "src/app/ehr/EhrScreens.tsx",
+          "symbol": "PatientDirectoryScreen / NewPatientScreen / IntakeScreen",
+          "kind": "code",
+          "anchor": "PatientDirectoryScreen",
+          "line": 31
+        },
+        {
+          "path": "src/app/api/ehr/patients/route.ts",
+          "symbol": "NODE_ENV === production",
+          "kind": "code",
+          "anchor": "NODE_ENV === 'production'",
+          "line": 116
+        },
+        {
+          "path": "src/app/api/ehr/intakes/route.ts",
+          "symbol": "NODE_ENV === production",
+          "kind": "code",
+          "anchor": "NODE_ENV === 'production'",
+          "line": 51
+        },
+        {
+          "path": "src/app/ehr/EhrScreens.tsx",
+          "symbol": "stable patient and intake submission keys",
+          "kind": "code",
+          "anchor": "submissionKeys",
+          "line": 189
+        }
+      ]
+    },
+    {
+      "id": "patient-save",
+      "at": "2026-11-23T19:01:44.430Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Real patient directory consumed the actual authorized handler response and rendered the persisted patient reference."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Identical retry preserved one record; changed payload conflicted; anonymous write was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "patient-save:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-save:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-save:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-save:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-save:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-save:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "patientApi",
+        "to": "db"
+      },
+      "informationExchanged": "病人主檔、個人資料、問卷、症狀選項、診斷檢查、病史、過敏及生活習慣；附操作稽核。",
+      "evidence": [
+        {
+          "path": "src/app/api/ehr/patients/route.ts",
+          "symbol": "patient.create / providerAccess",
+          "kind": "code",
+          "anchor": "patient.create",
+          "line": 144
+        },
+        {
+          "path": "src/app/api/ehr/intakes/route.ts",
+          "symbol": "patientIntake.create / lifestyleEntry.upsert",
+          "kind": "code",
+          "anchor": "patientIntake.create",
+          "line": 83
+        },
+        {
+          "path": "src/app/api/ehr/patients/[id]/route.ts",
+          "symbol": "GET / PUT",
+          "kind": "code",
+          "anchor": "GET",
+          "line": 41
+        }
+      ]
+    },
+    {
+      "id": "clinical-write",
+      "at": "2026-11-23T19:01:44.616Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Signed note, reviewed linked billing and stopped medication from the preceding real handler workflow persisted."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Real billing and medication components rendered actual saved handler responses."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Production clinical write remained denied; baseline also exercises revoked access, immutable notes, stale versions and duplicate treatments."
+        }
+      },
+      "cases": [
+        {
+          "id": "clinical-write:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-write:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-write:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-write:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-write:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-write:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "clinical",
+        "to": "clinicalWrite"
+      },
+      "informationExchanged": "看診、治療、用藥與帳務畫面已連到開發環境授權服務及實際紀錄；正式寫入仍停用。",
+      "evidence": [
+        {
+          "path": "src/app/ehr/EncounterQueueScreen.tsx",
+          "symbol": "saveDraft / fetch /api/ehr/encounters",
+          "kind": "code",
+          "anchor": "/api/ehr/encounters/${encodeURIComponent(encounter.id)}/notes",
+          "line": 92
+        },
+        {
+          "path": "src/app/api/ehr/encounters/[id]/notes/route.ts",
+          "symbol": "clinicalNote.upsert / writeAuditLog",
+          "kind": "code",
+          "anchor": "clinicalNote.upsert",
+          "line": 61
+        },
+        {
+          "path": "src/app/api/ehr/workflow/route.ts",
+          "symbol": "development workflow / runSoftwareCommand",
+          "kind": "code",
+          "anchor": "runSoftwareCommand",
+          "line": 7
+        },
+        {
+          "path": "src/app/ehr/WorkflowScreen.tsx",
+          "symbol": "saved workflow records and explicit commands",
+          "kind": "code",
+          "anchor": "fetch('/api/ehr/workflow'",
+          "line": 30
+        }
+      ]
+    },
+    {
+      "id": "clinical-persist",
+      "at": "2026-11-23T19:01:44.616Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Signed note, reviewed linked billing and stopped medication from the preceding real handler workflow persisted."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Real billing and medication components rendered actual saved handler responses."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Production clinical write remained denied; baseline also exercises revoked access, immutable notes, stale versions and duplicate treatments."
+        }
+      },
+      "cases": [
+        {
+          "id": "clinical-persist:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-persist:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-persist:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-persist:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-persist:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-persist:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "clinicalWrite",
+        "to": "db"
+      },
+      "informationExchanged": "開發環境的病歷簽核、治療與帳務草稿、用藥均在具防重複保護的交易中保存並寫入稽核；隔離 PostgreSQL 驗證通過。",
+      "evidence": [
+        {
+          "path": "src/app/api/ehr/encounters/[id]/notes/route.ts",
+          "symbol": "clinicalNote.upsert / writeAuditLog",
+          "kind": "code",
+          "anchor": "clinicalNote.upsert",
+          "line": 61
+        },
+        {
+          "path": "src/app/api/ehr/encounters/[id]/route.ts",
+          "symbol": "encounter.update / writeAuditLog",
+          "kind": "code",
+          "anchor": "encounter.update",
+          "line": 56
+        },
+        {
+          "path": "src/app/api/ehr/workflow/route.ts",
+          "symbol": "development workflow / runSoftwareCommand",
+          "kind": "code",
+          "anchor": "runSoftwareCommand",
+          "line": 7
+        }
+      ]
+    },
+    {
+      "id": "booking-submit",
+      "at": "2026-11-23T19:01:44.723Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Persisted booking and explicit selected-patient association; no inferred person merge."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Real appointment management component consumed actual list and patient responses."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Unknown patient association was rejected without replacing the valid link. Baseline covers concurrent slot conflicts and stale edits."
+        }
+      },
+      "cases": [
+        {
+          "id": "booking-submit:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-submit:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-submit:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-submit:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-submit:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-submit:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "public",
+        "to": "bookingApi"
+      },
+      "informationExchanged": "姓名、電話、電子郵件、服務、醫師、日期、時段及主訴；回傳預約資料。",
+      "evidence": [
+        {
+          "path": "src/components/appointment/AppointmentForm.tsx",
+          "symbol": "fetch /api/appointments",
+          "kind": "code",
+          "anchor": "fetch('/api/appointments'",
+          "line": 800
+        },
+        {
+          "path": "src/app/api/appointments/route.ts",
+          "symbol": "POST",
+          "kind": "code",
+          "anchor": "POST",
+          "line": 79
+        }
+      ]
+    },
+    {
+      "id": "booking-save",
+      "at": "2026-11-23T19:01:44.723Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Persisted booking and explicit selected-patient association; no inferred person merge."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Real appointment management component consumed actual list and patient responses."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Unknown patient association was rejected without replacing the valid link. Baseline covers concurrent slot conflicts and stale edits."
+        }
+      },
+      "cases": [
+        {
+          "id": "booking-save:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-save:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-save:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-save:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-save:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-save:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "bookingApi",
+        "to": "db"
+      },
+      "informationExchanged": "預約、休診查詢、醫師與時段唯一性、預約狀態及同交易稽核事件。",
+      "evidence": [
+        {
+          "path": "src/app/api/appointments/route.ts",
+          "symbol": "prisma.$transaction / appointment.create",
+          "kind": "code",
+          "anchor": "prisma.$transaction",
+          "line": 193
+        },
+        {
+          "path": "prisma/schema.prisma",
+          "symbol": "Appointment / Holiday / @@unique([doctorId, date, appointmentTime])",
+          "kind": "code",
+          "anchor": "Appointment",
+          "line": 16
+        }
+      ]
+    },
+    {
+      "id": "booking-manage",
+      "at": "2026-11-23T19:01:44.723Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Persisted booking and explicit selected-patient association; no inferred person merge."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Real appointment management component consumed actual list and patient responses."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Unknown patient association was rejected without replacing the valid link. Baseline covers concurrent slot conflicts and stale edits."
+        }
+      },
+      "cases": [
+        {
+          "id": "booking-manage:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-manage:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-manage:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-manage:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-manage:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-manage:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "admin",
+        "to": "bookingApi"
+      },
+      "informationExchanged": "登入與角色、篩選及分頁條件、預約編號、狀態／日期／時段變更；回傳清單或更新結果。",
+      "evidence": [
+        {
+          "path": "src/app/admin/appointments/page.tsx",
+          "symbol": "fetchAppointments / AppointmentUpdates",
+          "kind": "code",
+          "anchor": "fetchAppointments",
+          "line": 98
+        },
+        {
+          "path": "src/app/api/appointments/[id]/route.ts",
+          "symbol": "GET / PATCH / DELETE / authorizeEhrRequest",
+          "kind": "code",
+          "anchor": "GET",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "id": "booking-patient",
+      "at": "2026-11-23T19:01:44.723Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Persisted booking and explicit selected-patient association; no inferred person merge."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Real appointment management component consumed actual list and patient responses."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Unknown patient association was rejected without replacing the valid link. Baseline covers concurrent slot conflicts and stale edits."
+        }
+      },
+      "cases": [
+        {
+          "id": "booking-patient:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-patient:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-patient:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-patient:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-patient:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-patient:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "bookingApi",
+        "to": "patientApi"
+      },
+      "informationExchanged": "診所人員明確選取的病人主檔識別碼；不依姓名或電話自動合併。",
+      "evidence": [
+        {
+          "path": "prisma/schema.prisma",
+          "symbol": "Appointment.patientId / Patient",
+          "kind": "code",
+          "anchor": "Appointment",
+          "line": 16
+        },
+        {
+          "path": "src/app/admin/appointments/page.tsx",
+          "symbol": "patientId / updateAppointment",
+          "kind": "code",
+          "anchor": "patientId",
+          "line": 20
+        },
+        {
+          "path": "src/app/api/appointments/[id]/route.ts",
+          "symbol": "patientId / writeAuditLog",
+          "kind": "code",
+          "anchor": "patientId",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": "holiday-management",
+      "at": "2026-11-23T19:01:44.789Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        }
+      },
+      "cases": [
+        {
+          "id": "holiday-management:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "holiday-management:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "holiday-management:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "holiday-management:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "holiday-management:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "holiday-management:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "admin",
+        "to": "bookingApi"
+      },
+      "informationExchanged": "管理人員新增、查詢、移除或明確匯入休診日；建立及移除操作同交易記錄稽核事件。",
+      "evidence": [
+        {
+          "path": "src/app/admin/holidays/page.tsx",
+          "symbol": "fetch /api/holidays",
+          "kind": "code",
+          "anchor": "fetch('/api/holidays",
+          "line": 40
+        },
+        {
+          "path": "src/app/api/holidays/route.ts",
+          "symbol": "authorizeEhrRequest / holiday.create / writeAuditLog",
+          "kind": "code",
+          "anchor": "transaction.holiday.create",
+          "line": 117
+        },
+        {
+          "path": "src/app/api/holidays/seed/route.ts",
+          "symbol": "createMany / writeAuditLog",
+          "kind": "code",
+          "anchor": "createMany",
+          "line": 109
+        }
+      ]
+    },
+    {
+      "id": "contact-submit",
+      "at": "2026-11-23T19:01:44.843Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Repeated management status did not duplicate its audit event; anonymous inbox read was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "contact-submit:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-submit:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-submit:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-submit:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-submit:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-submit:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "contact",
+        "to": "contactApi"
+      },
+      "informationExchanged": "姓名、電子郵件、主旨與訊息；回傳是否送出及是否已存入資料庫。",
+      "evidence": [
+        {
+          "path": "src/components/ContactSection.tsx",
+          "symbol": "fetch /api/contact",
+          "kind": "code",
+          "anchor": "fetch('/api/contact'",
+          "line": 37
+        },
+        {
+          "path": "src/app/api/contact/route.ts",
+          "symbol": "validateContactPayload / savedToDatabase",
+          "kind": "code",
+          "anchor": "validateContactPayload",
+          "line": 15
+        }
+      ]
+    },
+    {
+      "id": "contact-storage",
+      "at": "2026-11-23T19:01:44.843Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Repeated management status did not duplicate its audit event; anonymous inbox read was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "contact-storage:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-storage:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-storage:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-storage:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-storage:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-storage:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "contactApi",
+        "to": "db"
+      },
+      "informationExchanged": "先保存的聯絡訊息、郵件投遞狀態、管理處理狀態與稽核事件。",
+      "evidence": [
+        {
+          "path": "src/app/api/contact/route.ts",
+          "symbol": "contact.create / savedToDatabase / authorizeEhrRequest",
+          "kind": "code",
+          "anchor": "transaction.contact.create",
+          "line": 88
+        },
+        {
+          "path": "src/app/api/admin/contacts/[id]/route.ts",
+          "symbol": "contact.update / writeAuditLog",
+          "kind": "code",
+          "anchor": "transaction.contact.update",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "id": "payment-request",
+      "at": "2026-11-23T19:01:44.894Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Locally signed Stripe fixtures updated the matching isolated registration; no real payment occurred."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Malformed lookup and anonymous management read denied. Baseline covers signature errors, wrong amount, event replay and late failure."
+        }
+      },
+      "cases": [
+        {
+          "id": "payment-request:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-request:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-request:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-request:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-request:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-request:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "payment",
+        "to": "checkout"
+      },
+      "informationExchanged": "講座識別碼；伺服器由主檔決定名稱與金額，回傳結帳網址供瀏覽器跳轉。",
+      "evidence": [
+        {
+          "path": "src/app/payment/page.tsx",
+          "symbol": "handleStripeCheckout / window.location.assign",
+          "kind": "code",
+          "anchor": "handleStripeCheckout",
+          "line": 44
+        },
+        {
+          "path": "src/app/api/payment/checkout-session/route.ts",
+          "symbol": "findHealthTopicById / sessionUrl",
+          "kind": "code",
+          "anchor": "findHealthTopicById",
+          "line": 3
+        }
+      ]
+    },
+    {
+      "id": "payment-registration",
+      "at": "2026-11-23T19:01:44.894Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Locally signed Stripe fixtures updated the matching isolated registration; no real payment occurred."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Malformed lookup and anonymous management read denied. Baseline covers signature errors, wrong amount, event replay and late failure."
+        }
+      },
+      "cases": [
+        {
+          "id": "payment-registration:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-registration:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-registration:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-registration:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-registration:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-registration:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "webhook",
+        "to": "registration"
+      },
+      "informationExchanged": "可信簽章事件須對應既有報名、課程、金額、幣別及付款模式，才更新付款狀態；本機事件隔離測試通過。",
+      "evidence": [
+        {
+          "path": "src/app/api/webhooks/stripe/route.ts",
+          "symbol": "constructEvent / healthTopicRegistration.upsert",
+          "kind": "code",
+          "anchor": "healthTopicRegistration.upsert",
+          "line": 85
+        },
+        {
+          "path": "src/app/payment/page.tsx",
+          "symbol": "/api/payment/registration status lookup",
+          "kind": "code",
+          "anchor": "/api/payment/registration?sessionId=",
+          "line": 31
+        },
+        {
+          "path": "prisma/schema.prisma",
+          "symbol": "HealthTopicRegistration / checkoutSessionId",
+          "kind": "code",
+          "anchor": "model HealthTopicRegistration",
+          "line": 662
+        },
+        {
+          "path": "src/app/api/webhooks/stripe/route.ts",
+          "symbol": "registration amount and currency match",
+          "kind": "code",
+          "anchor": "const matches",
+          "line": 78
+        }
+      ]
+    },
+    {
+      "id": "registration-persist",
+      "at": "2026-11-23T19:01:44.895Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Locally signed Stripe fixtures updated the matching isolated registration; no real payment occurred."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Malformed lookup and anonymous management read denied. Baseline covers signature errors, wrong amount, event replay and late failure."
+        }
+      },
+      "cases": [
+        {
+          "id": "registration-persist:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "registration-persist:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "registration-persist:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "registration-persist:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "registration-persist:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "registration-persist:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "registration",
+        "to": "db"
+      },
+      "informationExchanged": "已以隔離資料庫及本機簽章事件驗證報名持久化、金額幣別核對、防重送、亂序狀態與稽核；不代表外部付款成功。",
+      "evidence": [
+        {
+          "path": "prisma/schema.prisma",
+          "symbol": "HealthTopicRegistration / checkoutSessionId",
+          "kind": "code",
+          "anchor": "model HealthTopicRegistration",
+          "line": 662
+        },
+        {
+          "path": "src/app/api/webhooks/stripe/route.ts",
+          "symbol": "healthTopicRegistration.upsert / writeAuditLog",
+          "kind": "code",
+          "anchor": "healthTopicRegistration.upsert",
+          "line": 85
+        },
+        {
+          "path": "src/app/api/webhooks/stripe/route.ts",
+          "symbol": "registration amount and currency match",
+          "kind": "code",
+          "anchor": "const matches",
+          "line": 78
+        }
+      ]
+    },
+    {
+      "id": "identity-session",
+      "at": "2026-11-23T19:01:44.982Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Actual SDK verified a locally signed fictional event. No real browser identity session was established."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        }
+      },
+      "cases": [
+        {
+          "id": "identity-session:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-session:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-session:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-session:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-session:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-session:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 以實際測試帳號驗證部署環境的登入、逾期及登出流程。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "admin",
+        "to": "identity"
+      },
+      "informationExchanged": "登入／註冊資料、登入工作階段及使用者識別碼。",
+      "evidence": [
+        {
+          "path": "src/app/layout.tsx",
+          "symbol": "ClerkProvider",
+          "kind": "code",
+          "anchor": "ClerkProvider",
+          "line": 1
+        },
+        {
+          "path": "src/app/sign-in/[[...sign-in]]/page.tsx",
+          "symbol": "SignIn",
+          "kind": "code",
+          "anchor": "SignIn",
+          "line": 1
+        },
+        {
+          "path": "src/middleware.ts",
+          "symbol": "auth.protect",
+          "kind": "code",
+          "anchor": "auth.protect",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "id": "kiosk-request",
+      "at": "2026-11-23T19:01:45.132Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Actual kiosk lookup/verification/check-in handlers with a strictly local fetch fixture; unconfigured delivery returned 503 and cleared its code."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual encounter queue consumed its authorized endpoint and rendered the persisted encounter."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Consumed check-in grant and unavailable scanner rejected; one encounter remained. No actual SMS or hardware success."
+        }
+      },
+      "cases": [
+        {
+          "id": "kiosk-request:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-request:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-request:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-request:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-request:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-request:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "kiosk",
+        "to": "kioskApi"
+      },
+      "informationExchanged": "手機或社會安全碼末四碼 → 查詢憑證與遮罩電話 → 六碼驗證碼 → 報到憑證與預約摘要 → 報到結果。",
+      "evidence": [
+        {
+          "path": "src/app/kiosk/page.tsx",
+          "symbol": "submitLookup / submitVerification / confirmCheckIn / UnavailableMethod",
+          "kind": "code",
+          "anchor": "submitLookup",
+          "line": 61
+        },
+        {
+          "path": "src/app/api/kiosk/verify/route.ts",
+          "symbol": "checkinToken",
+          "kind": "code",
+          "anchor": "checkinToken",
+          "line": 107
+        }
+      ]
+    },
+    {
+      "id": "kiosk-save",
+      "at": "2026-11-23T19:01:45.132Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Actual kiosk lookup/verification/check-in handlers with a strictly local fetch fixture; unconfigured delivery returned 503 and cleared its code."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual encounter queue consumed its authorized endpoint and rendered the persisted encounter."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Consumed check-in grant and unavailable scanner rejected; one encounter remained. No actual SMS or hardware success."
+        }
+      },
+      "cases": [
+        {
+          "id": "kiosk-save:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-save:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-save:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-save:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-save:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-save:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "kioskApi",
+        "to": "db"
+      },
+      "informationExchanged": "當日預約、驗證碼期限、失敗次數、短期報到授權、報到時間及狀態。",
+      "evidence": [
+        {
+          "path": "src/app/api/kiosk/lookup/route.ts",
+          "symbol": "verificationCodeExpiresAt",
+          "kind": "code",
+          "anchor": "verificationCodeExpiresAt",
+          "line": 78
+        },
+        {
+          "path": "src/app/api/kiosk/verify/route.ts",
+          "symbol": "verifiedForCheckinAt",
+          "kind": "code",
+          "anchor": "verifiedForCheckinAt",
+          "line": 95
+        },
+        {
+          "path": "src/app/api/kiosk/checkin/route.ts",
+          "symbol": "CHECKIN_GRANT_TTL_MS / updateMany",
+          "kind": "code",
+          "anchor": "CHECKIN_GRANT_TTL_MS",
+          "line": 3
+        }
+      ]
+    },
+    {
+      "id": "checkin-encounter",
+      "at": "2026-11-23T19:01:45.132Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Actual kiosk lookup/verification/check-in handlers with a strictly local fetch fixture; unconfigured delivery returned 503 and cleared its code."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual encounter queue consumed its authorized endpoint and rendered the persisted encounter."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Consumed check-in grant and unavailable scanner rejected; one encounter remained. No actual SMS or hardware success."
+        }
+      },
+      "cases": [
+        {
+          "id": "checkin-encounter:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkin-encounter:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkin-encounter:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkin-encounter:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkin-encounter:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkin-encounter:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "kioskApi",
+        "to": "clinicalWrite"
+      },
+      "informationExchanged": "已明確連結病人的已報到預約、待指派醫師的看診及工作清單；未連結病人時不建立看診。",
+      "evidence": [
+        {
+          "path": "src/app/api/kiosk/checkin/route.ts",
+          "symbol": "appointment.updateMany / ensureCheckinEncounter",
+          "kind": "code",
+          "anchor": "ensureEncounterForCheckedInAppointment",
+          "line": 5
+        },
+        {
+          "path": "src/lib/checkinEncounter.ts",
+          "symbol": "encounter.upsert / appointmentId",
+          "kind": "code",
+          "anchor": "appointmentId",
+          "line": 21
+        },
+        {
+          "path": "prisma/schema.prisma",
+          "symbol": "Appointment.patientId / Encounter.appointmentId",
+          "kind": "code",
+          "anchor": "appointmentId      String?  @unique",
+          "line": 419
+        }
+      ]
+    },
+    {
+      "id": "kiosk-sms",
+      "at": "2026-11-23T19:01:45.132Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Actual kiosk lookup/verification/check-in handlers with a strictly local fetch fixture; unconfigured delivery returned 503 and cleared its code."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual encounter queue consumed its authorized endpoint and rendered the persisted encounter."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Consumed check-in grant and unavailable scanner rejected; one encounter remained. No actual SMS or hardware success."
+        }
+      },
+      "cases": [
+        {
+          "id": "kiosk-sms:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-sms:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-sms:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-sms:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-sms:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-sms:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 串接真實簡訊供應商、檢查回應與投遞結果，再驗證正式報到。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "kioskApi",
+        "to": "sms"
+      },
+      "informationExchanged": "預約所存手機號碼及六碼驗證碼。",
+      "evidence": [
+        {
+          "path": "src/lib/kioskVerification.ts",
+          "symbol": "sendVerificationCode / SMS_PROVIDER_WEBHOOK_URL",
+          "kind": "code",
+          "anchor": "sendVerificationCode",
+          "line": 40
+        },
+        {
+          "path": "src/app/api/kiosk/lookup/route.ts",
+          "symbol": "sendVerificationCode",
+          "kind": "code",
+          "anchor": "sendVerificationCode",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "id": "test-center-access",
+      "at": "2026-11-23T19:01:45.299Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "test-center-access:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-access:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-access:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-access:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-access:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-access:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "admin",
+        "to": "testCenter"
+      },
+      "informationExchanged": "Authenticated administrator authorization and safe test metadata.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/app/api/admin/development/architecture-tests/route.ts",
+          "symbol": "authorizeEhrRequest",
+          "anchor": "authorizeEhrRequest",
+          "line": 3
+        }
+      ]
+    },
+    {
+      "id": "test-center-simulation",
+      "at": "2026-11-23T19:01:45.299Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "test-center-simulation:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-simulation:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-simulation:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-simulation:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-simulation:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-simulation:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "testCenter",
+        "to": "audit"
+      },
+      "informationExchanged": "Fixed fixture, run UUID and Development Simulation source; safe step outcomes only.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/lib/architectureTests/service.ts",
+          "symbol": "simulate",
+          "anchor": "simulate",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "id": "test-center-live",
+      "at": "2026-11-23T19:01:45.299Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "test-center-live:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-live:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-live:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-live:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-live:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "test-center-live:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "testCenter",
+        "to": "audit"
+      },
+      "informationExchanged": "Read-only outcomes, run UUID and Application Read-only Check source; no external business actions.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/lib/architectureTests/service.ts",
+          "symbol": "runReadOnly",
+          "anchor": "runReadOnly",
+          "line": 45
+        }
+      ]
+    },
+    {
+      "id": "adapter-scanner",
+      "at": "2026-11-23T19:01:45.299Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "adapter-scanner:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-scanner:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-scanner:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-scanner:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-scanner:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-scanner:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "integrationAdapter",
+        "to": "audit"
+      },
+      "informationExchanged": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/lib/integrations/receiptAdapter.ts",
+          "symbol": "receiveAdapterEvent",
+          "anchor": "receiveAdapterEvent",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": "adapter-sms",
+      "at": "2026-11-23T19:01:45.299Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "adapter-sms:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-sms:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-sms:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-sms:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-sms:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-sms:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "integrationAdapter",
+        "to": "audit"
+      },
+      "informationExchanged": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/lib/integrations/receiptAdapter.ts",
+          "symbol": "receiveAdapterEvent",
+          "anchor": "receiveAdapterEvent",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": "adapter-voice",
+      "at": "2026-11-23T19:01:45.299Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "adapter-voice:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-voice:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-voice:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-voice:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-voice:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-voice:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "integrationAdapter",
+        "to": "audit"
+      },
+      "informationExchanged": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/lib/integrations/receiptAdapter.ts",
+          "symbol": "receiveAdapterEvent",
+          "anchor": "receiveAdapterEvent",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": "adapter-learning",
+      "at": "2026-11-23T19:01:45.299Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "adapter-learning:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-learning:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-learning:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-learning:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-learning:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-learning:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "integrationAdapter",
+        "to": "audit"
+      },
+      "informationExchanged": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/lib/integrations/receiptAdapter.ts",
+          "symbol": "receiveAdapterEvent",
+          "anchor": "receiveAdapterEvent",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": "adapter-storage",
+      "at": "2026-11-23T19:01:45.300Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "adapter-storage:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-storage:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-storage:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-storage:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-storage:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-storage:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "integrationAdapter",
+        "to": "audit"
+      },
+      "informationExchanged": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/lib/integrations/receiptAdapter.ts",
+          "symbol": "receiveAdapterEvent",
+          "anchor": "receiveAdapterEvent",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": "adapter-measurements",
+      "at": "2026-11-23T19:01:45.300Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Six authenticated receipt-only events and fictional run metadata persisted; no patient/payment/entitlement mapping was applied."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual protected center rendered persisted run history and each signed receipt as Planned."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Source spoofing and production simulation denied; baseline also verifies per-service signatures, replay/conflict, audit outage and administrator authorization."
+        }
+      },
+      "cases": [
+        {
+          "id": "adapter-measurements:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-measurements:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-measurements:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-measurements:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-measurements:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "adapter-measurements:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "integrationAdapter",
+        "to": "audit"
+      },
+      "informationExchanged": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "src/lib/integrations/receiptAdapter.ts",
+          "symbol": "receiveAdapterEvent",
+          "anchor": "receiveAdapterEvent",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": "booking-notify",
+      "at": "2026-11-23T19:01:45.366Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Unavailable configuration was tested safely. Baseline uses provider fixtures only."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Existing isolated delivery/registration records were preserved; this is not provider acceptance evidence."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Missing credentials, unknown delivery or invalid signature do not create a real provider success."
+        }
+      },
+      "cases": [
+        {
+          "id": "booking-notify:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-notify:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-notify:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-notify:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "booking-notify:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 軟體流程已用虛構 SMTP 回應驗證；正式 SMTP 設定與實際投遞仍需驗證。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "bookingApi",
+        "to": "mail"
+      },
+      "informationExchanged": "管理員新預約通知、病人收件通知及預約狀態更新。",
+      "evidence": [
+        {
+          "path": "src/lib/appointmentMail.ts",
+          "symbol": "sendAppointmentNotification / persisted state and audit",
+          "kind": "code",
+          "anchor": "sendAppointmentNotification",
+          "line": 15
+        },
+        {
+          "path": "src/app/api/appointments/[id]/notification/route.ts",
+          "symbol": "authorized explicit appointment notification retry",
+          "kind": "code",
+          "anchor": "sendAppointmentNotification",
+          "line": 6
+        }
+      ]
+    },
+    {
+      "id": "contact-mail",
+      "at": "2026-11-23T19:01:45.408Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Unavailable configuration was tested safely. Baseline uses provider fixtures only."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Existing isolated delivery/registration records were preserved; this is not provider acceptance evidence."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Missing credentials, unknown delivery or invalid signature do not create a real provider success."
+        }
+      },
+      "cases": [
+        {
+          "id": "contact-mail:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-mail:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-mail:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-mail:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-mail:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 正式 SMTP 認證與實際投遞仍需供應商證據。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "contactApi",
+        "to": "mail"
+      },
+      "informationExchanged": "收件者、回覆地址、主旨與已跳脫內容的郵件本文。",
+      "evidence": [
+        {
+          "path": "src/lib/contactDelivery.ts",
+          "symbol": "deliverContact / bounded SMTP / delivery audit",
+          "kind": "code",
+          "anchor": "deliverContact",
+          "line": 15
+        }
+      ]
+    },
+    {
+      "id": "payment-platform",
+      "at": "2026-11-23T19:01:45.433Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Unavailable configuration was tested safely. Baseline uses provider fixtures only."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Existing isolated delivery/registration records were preserved; this is not provider acceptance evidence."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Missing credentials, unknown delivery or invalid signature do not create a real provider success."
+        }
+      },
+      "cases": [
+        {
+          "id": "payment-platform:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-platform:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-platform:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-platform:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-platform:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 完成測試金鑰與回跳網址設定，驗證付款成功及取消。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "checkout",
+        "to": "stripe"
+      },
+      "informationExchanged": "台幣金額、講座名稱、主題中繼資料、成功／取消回跳網址；回傳付款工作階段。",
+      "evidence": [
+        {
+          "path": "src/app/api/payment/checkout-session/route.ts",
+          "symbol": "STRIPE_SECRET_KEY / NEXT_PUBLIC_APP_URL / checkout.sessions.create",
+          "kind": "code",
+          "anchor": "STRIPE_SECRET_KEY",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "id": "payment-callback",
+      "at": "2026-11-23T19:01:45.452Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Unavailable configuration was tested safely. Baseline uses provider fixtures only."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Existing isolated delivery/registration records were preserved; this is not provider acceptance evidence."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Missing credentials, unknown delivery or invalid signature do not create a real provider success."
+        }
+      },
+      "cases": [
+        {
+          "id": "payment-callback:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-callback:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-callback:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-callback:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "payment-callback:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 用付款平台測試事件驗證簽章、重送及非同步結果。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "stripe",
+        "to": "webhook"
+      },
+      "informationExchanged": "已簽章的付款完成、非同步成功／失敗及逾期事件。",
+      "evidence": [
+        {
+          "path": "src/app/api/webhooks/stripe/route.ts",
+          "symbol": "constructEvent / auditWebhookReceipt.create / event.type",
+          "kind": "code",
+          "anchor": "constructEvent",
+          "line": 22
+        }
+      ]
+    },
+    {
+      "id": "identity-role",
+      "at": "2026-11-23T19:01:45.538Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Actual authorization function used isolated local role records and explicit fictional Clerk responses."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Protected catalog denied anonymous access and returned persisted history only to the fictional administrator. Full browser session is not tested."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Lower external metadata role overrode a local administrator role and was denied with a real isolated audit event."
+        }
+      },
+      "cases": [
+        {
+          "id": "identity-role:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-role:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-role:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-role:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-role:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "identity-role:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 持續維護角色優先順序及拒絕存取的回歸檢查。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "identity",
+        "to": "guard"
+      },
+      "informationExchanged": "使用者識別碼、主要電子郵件及受信任的角色中繼資料。",
+      "evidence": [
+        {
+          "path": "src/lib/architectureStatusAccess.ts",
+          "symbol": "canViewArchitectureStatus",
+          "kind": "code",
+          "anchor": "canViewArchitectureStatus",
+          "line": 9
+        },
+        {
+          "path": "src/lib/ehrAuthorization.ts",
+          "symbol": "authorizeEhrRequest",
+          "kind": "code",
+          "anchor": "authorizeEhrRequest",
+          "line": 42
+        }
+      ]
+    },
+    {
+      "id": "guard-storage",
+      "at": "2026-11-23T19:01:45.538Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Actual authorization function used isolated local role records and explicit fictional Clerk responses."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Protected catalog denied anonymous access and returned persisted history only to the fictional administrator. Full browser session is not tested."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Lower external metadata role overrode a local administrator role and was denied with a real isolated audit event."
+        }
+      },
+      "cases": [
+        {
+          "id": "guard-storage:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "guard-storage:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "guard-storage:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "guard-storage:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "guard-storage:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "guard-storage:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 驗證本機帳號對應、角色優先順序及醫師授權撤銷。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "guard",
+        "to": "db"
+      },
+      "informationExchanged": "本機帳號電子郵件、角色、稽核檢視權限及醫師的病人存取授權。",
+      "evidence": [
+        {
+          "path": "src/lib/architectureStatusAccess.ts",
+          "symbol": "prisma.user.findUnique",
+          "kind": "code",
+          "anchor": "prisma.user.findUnique",
+          "line": 21
+        },
+        {
+          "path": "src/lib/ehrAuthorization.ts",
+          "symbol": "authorizeEhrRequest / authorizeAuditLogAccess",
+          "kind": "code",
+          "anchor": "authorizeEhrRequest",
+          "line": 42
+        },
+        {
+          "path": "src/app/api/ehr/patients/route.ts",
+          "symbol": "providerAccess",
+          "kind": "code",
+          "anchor": "providerAccess",
+          "line": 75
+        }
+      ]
+    },
+    {
+      "id": "admin-guard",
+      "at": "2026-11-23T19:01:45.538Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Actual authorization function used isolated local role records and explicit fictional Clerk responses."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Protected catalog denied anonymous access and returned persisted history only to the fictional administrator. Full browser session is not tested."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Lower external metadata role overrode a local administrator role and was denied with a real isolated audit event."
+        }
+      },
+      "cases": [
+        {
+          "id": "admin-guard:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "admin-guard:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "admin-guard:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "admin-guard:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "admin-guard:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "admin-guard:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "partly_connected",
+      "remainingRequirement": "finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. 持續維護角色邊界回歸測試；帳號管理功能另需完成實作。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "guard",
+        "to": "admin"
+      },
+      "informationExchanged": "管理員判定結果、選單顯示權限及直接網址請求的拒絕結果。",
+      "evidence": [
+        {
+          "path": "src/app/admin/development/architecture-status/page.tsx",
+          "symbol": "canViewArchitectureStatus / notFound",
+          "kind": "code",
+          "anchor": "canViewArchitectureStatus",
+          "line": 4
+        },
+        {
+          "path": "src/app/admin/layout.tsx",
+          "symbol": "showDevelopment",
+          "kind": "code",
+          "anchor": "showDevelopment",
+          "line": 14
+        },
+        {
+          "path": "src/middleware.ts",
+          "symbol": "protectedRoots",
+          "kind": "code",
+          "anchor": "protectedRoots",
+          "line": 5
+        },
+        {
+          "kind": "code",
+          "path": "src/app/admin/layout.tsx",
+          "symbol": "authorizeEhrRequest layout role check",
+          "anchor": "authorizeEhrRequest(['admin', 'clinic_staff'])",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "id": "patient-audit",
+      "at": "2026-11-23T19:01:45.636Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "The exact service source and its persisted hash-chained audit row were verified. No raw event or record was copied into this report."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual audit viewer rendered the specific emitting service event from its real filtered receiving endpoint."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Anonymous access to the receiving audit screen endpoint was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "patient-audit:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-audit:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-audit:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-audit:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-audit:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "patient-audit:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "patientApi",
+        "to": "audit"
+      },
+      "informationExchanged": "業務操作、資源編號、行為人或服務、來源及結果；不傳送完整病歷或訊息本文作為稽核摘要。",
+      "evidence": [
+        {
+          "path": "src/app/api/ehr/intakes/route.ts",
+          "symbol": "writeAuditLog",
+          "kind": "code",
+          "anchor": "writeAuditLog",
+          "line": 5
+        },
+        {
+          "path": "src/lib/auditLog.ts",
+          "symbol": "safeSummary / writeAuditLog",
+          "kind": "code",
+          "anchor": "safeSummary",
+          "line": 62
+        }
+      ]
+    },
+    {
+      "id": "kiosk-audit",
+      "at": "2026-11-23T19:01:45.704Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "The exact service source and its persisted hash-chained audit row were verified. No raw event or record was copied into this report."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual audit viewer rendered the specific emitting service event from its real filtered receiving endpoint."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Anonymous access to the receiving audit screen endpoint was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "kiosk-audit:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-audit:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-audit:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-audit:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-audit:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "kiosk-audit:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "kioskApi",
+        "to": "audit"
+      },
+      "informationExchanged": "業務操作、資源編號、行為人或服務、來源及結果；不傳送完整病歷或訊息本文作為稽核摘要。",
+      "evidence": [
+        {
+          "path": "src/app/api/kiosk/checkin/route.ts",
+          "symbol": "writeAuditLog",
+          "kind": "code",
+          "anchor": "writeAuditLog",
+          "line": 4
+        },
+        {
+          "path": "src/lib/auditLog.ts",
+          "symbol": "safeSummary / writeAuditLog",
+          "kind": "code",
+          "anchor": "safeSummary",
+          "line": 62
+        }
+      ]
+    },
+    {
+      "id": "contact-audit",
+      "at": "2026-11-23T19:01:45.768Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "The exact service source and its persisted hash-chained audit row were verified. No raw event or record was copied into this report."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual audit viewer rendered the specific emitting service event from its real filtered receiving endpoint."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Anonymous access to the receiving audit screen endpoint was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "contact-audit:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-audit:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-audit:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-audit:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-audit:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "contact-audit:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "contactApi",
+        "to": "audit"
+      },
+      "informationExchanged": "業務操作、資源編號、行為人或服務、來源及結果；不傳送完整病歷或訊息本文作為稽核摘要。",
+      "evidence": [
+        {
+          "path": "src/app/api/contact/route.ts",
+          "symbol": "writeAuditLog",
+          "kind": "code",
+          "anchor": "writeAuditLog",
+          "line": 4
+        },
+        {
+          "path": "src/lib/auditLog.ts",
+          "symbol": "safeSummary / writeAuditLog",
+          "kind": "code",
+          "anchor": "safeSummary",
+          "line": 62
+        }
+      ]
+    },
+    {
+      "id": "checkout-audit",
+      "at": "2026-11-23T19:01:45.874Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "The exact service source and its persisted hash-chained audit row were verified. No raw event or record was copied into this report."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual audit viewer rendered the specific emitting service event from its real filtered receiving endpoint."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Anonymous access to the receiving audit screen endpoint was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "checkout-audit:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkout-audit:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkout-audit:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkout-audit:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkout-audit:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "checkout-audit:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "checkout",
+        "to": "audit"
+      },
+      "informationExchanged": "業務操作、資源編號、行為人或服務、來源及結果；不傳送完整病歷或訊息本文作為稽核摘要。",
+      "evidence": [
+        {
+          "path": "src/app/api/payment/checkout-session/route.ts",
+          "symbol": "writeAuditLog",
+          "kind": "code",
+          "anchor": "writeAuditLog",
+          "line": 4
+        },
+        {
+          "path": "src/lib/auditLog.ts",
+          "symbol": "safeSummary / writeAuditLog",
+          "kind": "code",
+          "anchor": "safeSummary",
+          "line": 62
+        }
+      ]
+    },
+    {
+      "id": "business-audit",
+      "at": "2026-11-23T19:01:45.948Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "The exact service source and its persisted hash-chained audit row were verified. No raw event or record was copied into this report."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual audit viewer rendered the specific emitting service event from its real filtered receiving endpoint."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Anonymous access to the receiving audit screen endpoint was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "business-audit:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "business-audit:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "business-audit:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "business-audit:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "business-audit:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "business-audit:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "bookingApi",
+        "to": "audit"
+      },
+      "informationExchanged": "操作、資源識別碼、行為人、角色、來源與結果；病歷服務另傳病人識別碼。",
+      "evidence": [
+        {
+          "path": "src/app/api/appointments/route.ts",
+          "symbol": "writeAuditLog",
+          "kind": "code",
+          "anchor": "writeAuditLog",
+          "line": 4
+        },
+        {
+          "path": "src/app/api/ehr/intakes/route.ts",
+          "symbol": "writeAuditLog",
+          "kind": "code",
+          "anchor": "writeAuditLog",
+          "line": 5
+        },
+        {
+          "path": "src/app/api/kiosk/checkin/route.ts",
+          "symbol": "writeAuditLog",
+          "kind": "code",
+          "anchor": "writeAuditLog",
+          "line": 4
+        },
+        {
+          "path": "src/app/api/contact/route.ts",
+          "symbol": "writeAuditLog",
+          "kind": "code",
+          "anchor": "writeAuditLog",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "id": "webhook-audit",
+      "at": "2026-11-23T19:01:46.008Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "The exact service source and its persisted hash-chained audit row were verified. No raw event or record was copied into this report."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual audit viewer rendered the specific emitting service event from its real filtered receiving endpoint."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Anonymous access to the receiving audit screen endpoint was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "webhook-audit:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "webhook-audit:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "webhook-audit:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "webhook-audit:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "webhook-audit:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "webhook-audit:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "webhook",
+        "to": "audit"
+      },
+      "informationExchanged": "付款或身分事件識別碼、工作階段、行為人、結果與去重收據。",
+      "evidence": [
+        {
+          "path": "src/app/api/webhooks/stripe/route.ts",
+          "symbol": "auditWebhookReceipt / writeAuditLog",
+          "kind": "code",
+          "anchor": "auditWebhookReceipt",
+          "line": 66
+        },
+        {
+          "path": "src/app/api/webhooks/clerk/route.ts",
+          "symbol": "verifyWebhook / auditWebhookReceipt / writeAuditLog",
+          "kind": "code",
+          "anchor": "verifyWebhook",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "audit-storage",
+      "at": "2026-11-23T19:01:46.070Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "The exact service source and its persisted hash-chained audit row were verified. No raw event or record was copied into this report."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual audit viewer rendered the specific emitting service event from its real filtered receiving endpoint."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Anonymous access to the receiving audit screen endpoint was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "audit-storage:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-storage:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-storage:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-storage:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-storage:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-storage:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "audit",
+        "to": "db"
+      },
+      "informationExchanged": "稽核事件、前筆與本筆雜湊、紀錄鏈頭及驗證結果。",
+      "evidence": [
+        {
+          "path": "src/lib/auditLog.ts",
+          "symbol": "appendAuditLog / verifyAuditChain",
+          "kind": "code",
+          "anchor": "appendAuditLog",
+          "line": 231
+        },
+        {
+          "path": "prisma/schema.prisma",
+          "symbol": "AuditLog / AuditLogChain / AuditWebhookReceipt",
+          "kind": "code",
+          "anchor": "AuditLog",
+          "line": 113
+        }
+      ]
+    },
+    {
+      "id": "audit-view",
+      "at": "2026-11-23T19:01:46.135Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "The exact service source and its persisted hash-chained audit row were verified. No raw event or record was copied into this report."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual audit viewer rendered the specific emitting service event from its real filtered receiving endpoint."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Anonymous access to the receiving audit screen endpoint was denied."
+        }
+      },
+      "cases": [
+        {
+          "id": "audit-view:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-view:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-view:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-view:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-view:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "audit-view:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "admin",
+        "to": "audit"
+      },
+      "informationExchanged": "授權角色、篩選與分頁條件；回傳事件清單、總數及紀錄鏈驗證結果。",
+      "evidence": [
+        {
+          "path": "src/app/admin/audit-logs/AuditLogViewer.tsx",
+          "symbol": "fetch / verifyChain",
+          "kind": "code",
+          "anchor": "fetch",
+          "line": 52
+        },
+        {
+          "path": "src/app/api/admin/audit-logs/route.ts",
+          "symbol": "authorizeAuditLogAccess",
+          "kind": "code",
+          "anchor": "authorizeAuditLogAccess",
+          "line": 3
+        },
+        {
+          "path": "src/app/api/admin/audit-logs/verify-chain/route.ts",
+          "symbol": "authorizeAuditLogAccess",
+          "kind": "code",
+          "anchor": "authorizeAuditLogAccess",
+          "line": 2
+        }
+      ]
+    },
+    {
+      "id": "clinical-read",
+      "at": "2026-11-23T19:01:46.350Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "record": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "managementScreen": {
+          "status": "Passed",
+          "detail": "Actual patient record route consumed the authorized detail response and rendered the persisted patient reference."
+        },
+        "audit": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "finalResult": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Executed assertion against the isolated application."
+        }
+      },
+      "cases": [
+        {
+          "id": "clinical-read:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-read:record",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-read:managementScreen",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-read:audit",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-read:finalResult",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-read:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "connected",
+      "remainingRequirement": "Verified scope is isolated application software and receiving component rendering. Production enablement, browser click-through and real external results are separate requirements.",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "db",
+        "to": "clinical"
+      },
+      "informationExchanged": "經病人詳情服務回傳病人、問卷、病史、看診、病歷、治療、帳務及文件關聯。",
+      "evidence": [
+        {
+          "path": "src/app/api/ehr/patients/[id]/route.ts",
+          "symbol": "include / encounters / clinicalNote / documents",
+          "kind": "code",
+          "anchor": "include",
+          "line": 53
+        },
+        {
+          "path": "src/app/ehr/EhrScreens.tsx",
+          "symbol": "PatientRecordRoute / StoredProfileTabs",
+          "kind": "code",
+          "anchor": "PatientRecordRoute",
+          "line": 308
+        }
+      ]
+    },
+    {
+      "id": "clinical-ai",
+      "at": "2026-11-23T19:01:46.351Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed fixed contract/boundary scenario only; actual unsupported business action was not performed."
+        },
+        "record": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "managementScreen": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "audit": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Unavailable business mapping remained Planned rather than being promoted by format success."
+        }
+      },
+      "cases": [
+        {
+          "id": "clinical-ai:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "clinical-ai:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "planned",
+      "remainingRequirement": "record: No executable evidence for this stage. managementScreen: No executable evidence for this stage. audit: No executable evidence for this stage. finalResult: No executable evidence for this stage. 先完成問診收集、資料用途與審核流程，再整合分析服務。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "clinical",
+        "to": "ai"
+      },
+      "informationExchanged": "應傳送：經同意的病人自述資料；回傳逐字稿與摘要，再交醫療人員審核。",
+      "evidence": [
+        {
+          "path": "src/app/ai-health-analysis/page.tsx",
+          "symbol": "RoutePlaceholderPage",
+          "kind": "code",
+          "anchor": "RoutePlaceholderPage",
+          "line": 1
+        },
+        {
+          "path": "src/app/ehr/EhrScreens.tsx",
+          "symbol": "尚未開始問診 / 智慧語音問診",
+          "kind": "code",
+          "anchor": "尚未開始問診",
+          "line": 137
+        },
+        {
+          "path": "prisma/schema.prisma",
+          "symbol": "AiVoiceInterview",
+          "kind": "code",
+          "anchor": "AiVoiceInterview",
+          "line": 120
+        }
+      ]
+    },
+    {
+      "id": "portal-entitlements",
+      "at": "2026-11-23T19:01:46.351Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed fixed contract/boundary scenario only; actual unsupported business action was not performed."
+        },
+        "record": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "managementScreen": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "audit": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Unavailable business mapping remained Planned rather than being promoted by format success."
+        }
+      },
+      "cases": [
+        {
+          "id": "portal-entitlements:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "portal-entitlements:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "planned",
+      "remainingRequirement": "record: No executable evidence for this stage. managementScreen: No executable evidence for this stage. audit: No executable evidence for this stage. finalResult: No executable evidence for this stage. 分別設計學生與病人身分對應、授權資料服務及完成狀態。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "registration",
+        "to": "portals"
+      },
+      "informationExchanged": "應傳送：報名權益、課程出席、完成紀錄與繼續教育學分；病人追蹤需另有本人病歷授權。",
+      "evidence": [
+        {
+          "path": "src/app/courses-events/page.tsx",
+          "symbol": "registrationSteps / 尚未開放",
+          "kind": "code",
+          "anchor": "registrationSteps",
+          "line": 33
+        },
+        {
+          "path": "src/app/patient-center/page.tsx",
+          "symbol": "patientModules",
+          "kind": "code",
+          "anchor": "patientModules",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "id": "account-management",
+      "at": "2026-11-23T19:01:46.351Z",
+      "source": "Isolated Application Test (fictional records; identity/provider fixtures)",
+      "scope": "Actual handlers, isolated PostgreSQL and receiving component effects/rendering. Not a browser click-through or real provider result.",
+      "stages": {
+        "service": {
+          "status": "Passed",
+          "detail": "Executed fixed contract/boundary scenario only; actual unsupported business action was not performed."
+        },
+        "record": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "managementScreen": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "audit": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "No executable evidence for this stage."
+        },
+        "negativeCase": {
+          "status": "Passed",
+          "detail": "Unavailable business mapping remained Planned rather than being promoted by format success."
+        }
+      },
+      "cases": [
+        {
+          "id": "account-management:service",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        },
+        {
+          "id": "account-management:negativeCase",
+          "result": "Passed",
+          "evidence": "scripts/workflow-evidence-cases.cjs"
+        }
+      ],
+      "status": "planned",
+      "remainingRequirement": "record: No executable evidence for this stage. managementScreen: No executable evidence for this stage. audit: No executable evidence for this stage. finalResult: No executable evidence for this stage. 實作管理操作、身分與本機帳號對應、角色更新及稽核。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "admin",
+        "to": "identity"
+      },
+      "informationExchanged": "應傳送：建立帳號、變更角色及停用帳號的已授權指令。",
+      "evidence": [
+        {
+          "path": "src/app/admin/users/page.tsx",
+          "symbol": "AdminUsersPage",
+          "kind": "code",
+          "anchor": "AdminUsersPage",
+          "line": 9
+        },
+        {
+          "path": "src/app/api/webhooks/clerk/route.ts",
+          "symbol": "isUserAccessEvent / writeAuditLog",
+          "kind": "code",
+          "anchor": "isUserAccessEvent",
+          "line": 29
+        }
+      ]
+    },
+    {
+      "id": "ubuntu-application",
+      "at": null,
+      "source": "Not Tested",
+      "scope": "No complete executable witness has been recorded for this connection.",
+      "stages": {
+        "service": {
+          "status": "Planned",
+          "detail": "完成部署與成功回應驗證。"
+        },
+        "record": {
+          "status": "Planned",
+          "detail": "完成部署與成功回應驗證。"
+        },
+        "managementScreen": {
+          "status": "Planned",
+          "detail": "完成部署與成功回應驗證。"
+        },
+        "audit": {
+          "status": "Planned",
+          "detail": "完成部署與成功回應驗證。"
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Planned",
+          "detail": "完成部署與成功回應驗證。"
+        }
+      },
+      "cases": [],
+      "status": "planned",
+      "remainingRequirement": "service: 完成部署與成功回應驗證。 record: 完成部署與成功回應驗證。 managementScreen: 完成部署與成功回應驗證。 audit: 完成部署與成功回應驗證。 finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. negativeCase: 完成部署與成功回應驗證。 完成部署與成功回應驗證。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "ubuntuHost",
+        "to": "public"
+      },
+      "informationExchanged": "應傳送：網站請求、服務狀態與不含內容的健康回應。",
+      "evidence": [
+        {
+          "kind": "plan",
+          "path": "docs/architecture-final-project.md",
+          "symbol": "## Ubuntu 主機",
+          "anchor": "## Ubuntu 主機",
+          "line": 3
+        },
+        {
+          "kind": "plan",
+          "path": "docs/architecture-final-project.md",
+          "symbol": "## 資料庫伺服器",
+          "anchor": "## 資料庫伺服器",
+          "line": 8
+        }
+      ]
+    },
+    {
+      "id": "ubuntu-database",
+      "at": null,
+      "source": "Not Tested",
+      "scope": "No complete executable witness has been recorded for this connection.",
+      "stages": {
+        "service": {
+          "status": "Planned",
+          "detail": "完成驅動、網路設定與唯讀連線測試。"
+        },
+        "record": {
+          "status": "Planned",
+          "detail": "完成驅動、網路設定與唯讀連線測試。"
+        },
+        "managementScreen": {
+          "status": "Planned",
+          "detail": "完成驅動、網路設定與唯讀連線測試。"
+        },
+        "audit": {
+          "status": "Planned",
+          "detail": "完成驅動、網路設定與唯讀連線測試。"
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Planned",
+          "detail": "完成驅動、網路設定與唯讀連線測試。"
+        }
+      },
+      "cases": [],
+      "status": "planned",
+      "remainingRequirement": "service: 完成驅動、網路設定與唯讀連線測試。 record: 完成驅動、網路設定與唯讀連線測試。 managementScreen: 完成驅動、網路設定與唯讀連線測試。 audit: 完成驅動、網路設定與唯讀連線測試。 finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. negativeCase: 完成驅動、網路設定與唯讀連線測試。 完成驅動、網路設定與唯讀連線測試。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "ubuntuHost",
+        "to": "databaseServer"
+      },
+      "informationExchanged": "應交換：受保護的資料存取請求；儀表板僅保留連通狀態。",
+      "evidence": [
+        {
+          "kind": "plan",
+          "path": "docs/architecture-final-project.md",
+          "symbol": "## Ubuntu 主機",
+          "anchor": "## Ubuntu 主機",
+          "line": 3
+        },
+        {
+          "kind": "plan",
+          "path": "docs/architecture-final-project.md",
+          "symbol": "## 資料庫伺服器",
+          "anchor": "## 資料庫伺服器",
+          "line": 8
+        }
+      ]
+    },
+    {
+      "id": "database-migration",
+      "at": null,
+      "source": "Not Tested",
+      "scope": "No complete executable witness has been recorded for this connection.",
+      "stages": {
+        "service": {
+          "status": "Planned",
+          "detail": "確認目標資料庫相容性並驗證遷移。"
+        },
+        "record": {
+          "status": "Planned",
+          "detail": "確認目標資料庫相容性並驗證遷移。"
+        },
+        "managementScreen": {
+          "status": "Planned",
+          "detail": "確認目標資料庫相容性並驗證遷移。"
+        },
+        "audit": {
+          "status": "Planned",
+          "detail": "確認目標資料庫相容性並驗證遷移。"
+        },
+        "finalResult": {
+          "status": "Not Tested",
+          "detail": "Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient."
+        },
+        "negativeCase": {
+          "status": "Planned",
+          "detail": "確認目標資料庫相容性並驗證遷移。"
+        }
+      },
+      "cases": [],
+      "status": "planned",
+      "remainingRequirement": "service: 確認目標資料庫相容性並驗證遷移。 record: 確認目標資料庫相容性並驗證遷移。 managementScreen: 確認目標資料庫相容性並驗證遷移。 audit: 確認目標資料庫相容性並驗證遷移。 finalResult: Real provider/session/deployment or actual authorization boundary requires independent evidence; fixtures and read-only probes are insufficient. negativeCase: 確認目標資料庫相容性並驗證遷移。 確認目標資料庫相容性並驗證遷移。",
+      "safeError": "If the result cannot be confirmed, reload the saved record and retry with the same submission identifier. Do not infer external success.",
+      "connectedComponents": {
+        "from": "db",
+        "to": "databaseServer"
+      },
+      "informationExchanged": "應交換：版本化資料結構與遷移結果；不展示資料列。",
+      "evidence": [
+        {
+          "kind": "plan",
+          "path": "docs/architecture-final-project.md",
+          "symbol": "## Ubuntu 主機",
+          "anchor": "## Ubuntu 主機",
+          "line": 3
+        },
+        {
+          "kind": "plan",
+          "path": "docs/architecture-final-project.md",
+          "symbol": "## 資料庫伺服器",
+          "anchor": "## 資料庫伺服器",
+          "line": 8
+        }
+      ]
+    }
+  ]
+}

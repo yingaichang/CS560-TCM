@@ -16,18 +16,18 @@ try {
   let snapshot = scan(temporary, definitions)
   assert.equal(snapshot.routes.length, 1)
   assert.equal(snapshot.connections.length, 2)
-  assert.equal(snapshot.connections.find(item => item.path === '/api/weekly').status, 'connected')
-  assert.equal(snapshot.connections.find(item => item.path === '/api/later').status, 'partly_connected')
+  assert.equal(snapshot.connections.find(item => item.path === '/api/weekly').status, 'partly_connected')
+  assert.equal(snapshot.connections.find(item => item.path === '/api/later').status, 'unknown')
   for (const value of ['SENSITIVE_QUERY_CANARY', 'PRIVATE_BODY_CANARY', 'PRIVATE_ENV_CANARY', 'PRIVATE_LOG_CANARY', 'PRIVATE_URL_CANARY']) {
     assert.ok(!JSON.stringify(snapshot).includes(value), 'Snapshot must contain only safe structural metadata')
   }
   fs.mkdirSync(path.join(temporary, 'src/app/api/later'), { recursive: true })
   fs.writeFileSync(path.join(temporary, 'src/app/api/later/route.ts'), 'export async function POST() { return null }\n')
   snapshot = scan(temporary, definitions)
-  assert.equal(snapshot.connections.find(item => item.path === '/api/later').status, 'connected', 'New weekly handler must be discovered on the next scan')
+  assert.equal(snapshot.connections.find(item => item.path === '/api/later').status, 'partly_connected', 'New weekly handler must be discovered on the next scan')
   fs.writeFileSync(path.join(temporary, 'src/app/api/later/route.ts'), 'export async function GET() { return null }\n')
   snapshot = scan(temporary, definitions)
-  assert.equal(snapshot.connections.find(item => item.path === '/api/later').status, 'partly_connected', 'Wrong method must not count as connected')
+  assert.equal(snapshot.connections.find(item => item.path === '/api/later').status, 'unknown', 'Wrong method must not count as connected')
   assert.ok(!safePath('.env') && !safePath('src/../.env') && !safePath('private.log'))
   const reference = { path: 'src/components/Weekly.tsx', symbol: 'weekly', anchor: 'NO_LONGER_PRESENT' }
   snapshot = scan(temporary, { componentDefinitions: { sample: { evidence: [reference] } }, connectionDefinitions: [] })

@@ -2,23 +2,25 @@ import kioskVerification from '@/data/kioskConnectionVerification.json'
 import snapshot from '@/data/architectureStatusSnapshot.json'
 import verification from '@/data/architectureStatusVerification.json'
 import softwareVerification from '@/data/softwareConnectionVerification.json'
+import workflowVerification from '@/data/workflowConnectionVerification.json'
 
 export type ConnectionStatus = 'connected' | 'partly_connected' | 'planned' | 'unknown' | 'failed'
 export type Evidence = { kind: 'code' | 'plan'; path: string; symbol: string; anchor: string; line: number }
-export type TestRecord = { at: string; command: string; scope: string; result: 'passed' | 'failed' }
+export type TestRecord = { at: string; command: string; scope: string; result: 'passed' | 'failed'; source?: string }
+export type WorkflowWitness = { id: string; at: string | null; source: string; scope: string; status: ConnectionStatus; stages: Record<string, { status: string; detail: string }>; cases: { id: string; result: string; evidence: string }[]; remainingRequirement: string; safeError: string }
 export type ArchitectureComponent = {
   name: string; layer: string; purpose: string; status: ConnectionStatus; assessment: string
   missingRequirement: string; safeError: string | null; evidence: Evidence[]; lastTest: TestRecord | null
 }
-export type ComponentId = 'public' | 'admin' | 'clinical' | 'kiosk' | 'payment' | 'contact' | 'portals' | 'identity' | 'guard' | 'bookingApi' | 'patientApi' | 'clinicalWrite' | 'kioskApi' | 'checkout' | 'webhook' | 'contactApi' | 'audit' | 'db' | 'mail' | 'sms' | 'stripe' | 'registration' | 'ai' | 'ubuntuHost' | 'databaseServer'
+export type ComponentId = 'public' | 'admin' | 'clinical' | 'kiosk' | 'payment' | 'contact' | 'portals' | 'identity' | 'guard' | 'bookingApi' | 'patientApi' | 'clinicalWrite' | 'kioskApi' | 'checkout' | 'webhook' | 'contactApi' | 'audit' | 'db' | 'mail' | 'sms' | 'stripe' | 'registration' | 'ai' | 'ubuntuHost' | 'databaseServer' | 'testCenter' | 'integrationAdapter'
 export type ArchitectureConnection = {
   id: string; from: ComponentId; to: ComponentId; status: ConnectionStatus
   description: string; data: string; assessment: string; evidence: Evidence[]
-  next: string; missingRequirement: string; safeError: string | null; lastTest: TestRecord | null
+  next: string; missingRequirement: string; safeError: string | null; lastTest: TestRecord | null; verification?: WorkflowWitness; liveObservation?: { at: string; status: ConnectionStatus; detail: string; source: string }
 }
 
 export const systemStatuses: Record<ConnectionStatus, { label: string; style: string; explanation: string }> = {
-  connected: { label: '已連接', style: 'border-green-300 bg-green-50 text-green-900', explanation: '有可查核的程式碼路徑或測試證據；證據範圍不等於正式環境已驗證。' },
+  connected: { label: '已連接', style: 'border-green-300 bg-green-50 text-green-900', explanation: '該連線於列明範圍具有完整、符合目前程式版本的逐條流程證據；模擬不等於正式外部服務成功。' },
   partly_connected: { label: '部分連接', style: 'border-amber-300 bg-amber-50 text-amber-950', explanation: '已有部分實作，但仍有已知設定、環境或流程缺口。' },
   planned: { label: '規劃中', style: 'border-slate-300 bg-slate-100 text-slate-800', explanation: '已有需求或模型，所需連線或完整服務尚未建置。' },
   unknown: { label: '未知', style: 'border-blue-300 bg-blue-50 text-blue-950', explanation: '目前證據不足以確認實際服務或資料庫連線結果。' },
@@ -1507,6 +1509,42 @@ export const componentDefinitions: Record<ComponentId, Omit<ArchitectureComponen
         "line": 8
       }
     ]
+  },
+  "testCenter": {
+    "name": "Architecture Test Center",
+    "layer": "Administrator tooling",
+    "purpose": "Protected workflow evidence and development simulation",
+    "status": "partly_connected",
+    "assessment": "Administrator APIs, feature gates and safe audit history are implemented.",
+    "missingRequirement": "Independent per-connection workflow evidence; real services remain separate.",
+    "safeError": null,
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/app/api/admin/development/architecture-tests/route.ts",
+        "symbol": "authorizeEhrRequest",
+        "anchor": "authorizeEhrRequest",
+        "line": 3
+      }
+    ]
+  },
+  "integrationAdapter": {
+    "name": "Signed receipt adapters",
+    "layer": "Application integration",
+    "purpose": "Validate signed events and record receipt-only evidence",
+    "status": "partly_connected",
+    "assessment": "Six disabled-by-default HMAC adapters; accepted is not applied.",
+    "missingRequirement": "Provider configuration and approved person/record mappings.",
+    "safeError": null,
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/integrations/receiptAdapter.ts",
+        "symbol": "receiveAdapterEvent",
+        "anchor": "receiveAdapterEvent",
+        "line": 21
+      }
+    ]
   }
 }
 
@@ -2784,6 +2822,195 @@ export const connectionDefinitions: Omit<ArchitectureConnection, 'lastTest'>[] =
         "line": 8
       }
     ]
+  },
+  {
+    "id": "adapter-scanner",
+    "from": "integrationAdapter",
+    "to": "audit",
+    "status": "partly_connected",
+    "description": "scanner signed event to receipt/audit",
+    "data": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/integrations/receiptAdapter.ts",
+        "symbol": "receiveAdapterEvent",
+        "anchor": "receiveAdapterEvent",
+        "line": 21
+      }
+    ]
+  },
+  {
+    "id": "adapter-sms",
+    "from": "integrationAdapter",
+    "to": "audit",
+    "status": "partly_connected",
+    "description": "sms signed event to receipt/audit",
+    "data": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/integrations/receiptAdapter.ts",
+        "symbol": "receiveAdapterEvent",
+        "anchor": "receiveAdapterEvent",
+        "line": 21
+      }
+    ]
+  },
+  {
+    "id": "adapter-voice",
+    "from": "integrationAdapter",
+    "to": "audit",
+    "status": "partly_connected",
+    "description": "voice signed event to receipt/audit",
+    "data": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/integrations/receiptAdapter.ts",
+        "symbol": "receiveAdapterEvent",
+        "anchor": "receiveAdapterEvent",
+        "line": 21
+      }
+    ]
+  },
+  {
+    "id": "adapter-learning",
+    "from": "integrationAdapter",
+    "to": "audit",
+    "status": "partly_connected",
+    "description": "learning signed event to receipt/audit",
+    "data": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/integrations/receiptAdapter.ts",
+        "symbol": "receiveAdapterEvent",
+        "anchor": "receiveAdapterEvent",
+        "line": 21
+      }
+    ]
+  },
+  {
+    "id": "adapter-storage",
+    "from": "integrationAdapter",
+    "to": "audit",
+    "status": "partly_connected",
+    "description": "storage signed event to receipt/audit",
+    "data": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/integrations/receiptAdapter.ts",
+        "symbol": "receiveAdapterEvent",
+        "anchor": "receiveAdapterEvent",
+        "line": 21
+      }
+    ]
+  },
+  {
+    "id": "adapter-measurements",
+    "from": "integrationAdapter",
+    "to": "audit",
+    "status": "partly_connected",
+    "description": "measurements signed event to receipt/audit",
+    "data": "Versioned event, HMAC, event UUID and canonical fingerprint; response accepted=true, applied=false, Planned. Raw input discarded.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/integrations/receiptAdapter.ts",
+        "symbol": "receiveAdapterEvent",
+        "anchor": "receiveAdapterEvent",
+        "line": 21
+      }
+    ]
+  },
+  {
+    "id": "test-center-access",
+    "from": "admin",
+    "to": "testCenter",
+    "status": "partly_connected",
+    "description": "Administrator to protected test catalog",
+    "data": "Authenticated administrator authorization and safe test metadata.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/app/api/admin/development/architecture-tests/route.ts",
+        "symbol": "authorizeEhrRequest",
+        "anchor": "authorizeEhrRequest",
+        "line": 3
+      }
+    ]
+  },
+  {
+    "id": "test-center-simulation",
+    "from": "testCenter",
+    "to": "audit",
+    "status": "partly_connected",
+    "description": "Development fictional workflow to safe audit",
+    "data": "Fixed fixture, run UUID and Development Simulation source; safe step outcomes only.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/architectureTests/service.ts",
+        "symbol": "simulate",
+        "anchor": "simulate",
+        "line": 31
+      }
+    ]
+  },
+  {
+    "id": "test-center-live",
+    "from": "testCenter",
+    "to": "audit",
+    "status": "partly_connected",
+    "description": "Read-only probes to safe audit",
+    "data": "Read-only outcomes, run UUID and Application Read-only Check source; no external business actions.",
+    "assessment": "Executable application boundary prepared; complete evidence must be checked per connection.",
+    "missingRequirement": "Configuration, independent tests and applicable record mapping.",
+    "safeError": null,
+    "next": "Inspect independent stage evidence; do not infer real-service success.",
+    "evidence": [
+      {
+        "kind": "code",
+        "path": "src/lib/architectureTests/service.ts",
+        "symbol": "runReadOnly",
+        "anchor": "runReadOnly",
+        "line": 45
+      }
+    ]
   }
 ]
 
@@ -2793,14 +3020,44 @@ function checked<T extends { status: ConnectionStatus; evidence: Evidence[]; saf
   return { ...item, status: item.status === 'connected' && !valid ? 'unknown' : item.status, safeError: item.status === 'connected' && !valid ? '來源證據需要重新確認。' : item.safeError, evidence: item.evidence.map(evidence => ({ ...evidence, line: checks[evidence.path + '|' + evidence.symbol]?.line ?? evidence.line })) }
 }
 
-export const architectureComponents: Record<ComponentId, ArchitectureComponent> = Object.fromEntries(Object.entries(componentDefinitions).map(([id, component]) => [id, { ...checked(component), lastTest: lastTest('component', id) }])) as Record<ComponentId, ArchitectureComponent>
-export const architectureConnections: ArchitectureConnection[] = connectionDefinitions.map(connection => ({ ...checked(connection), lastTest: lastTest('connection', connection.id) }))
+const stageIds = ['service', 'record', 'managementScreen', 'audit', 'finalResult', 'negativeCase']
+function witnessFor(id: string): WorkflowWitness | undefined {
+  if (!workflowVerification.sourceDigest || workflowVerification.sourceDigest !== (snapshot as { workflowSourceDigest?: string }).workflowSourceDigest) return undefined
+  const entries = workflowVerification.connections as unknown as WorkflowWitness[]
+  const matches = entries.filter(entry => entry.id === id)
+  if (matches.length !== 1) return undefined
+  const entry = matches[0]
+  if (!entry.stages || !entry.cases || !entry.source || !entry.remainingRequirement || !entry.safeError) return undefined
+  if (entry.at !== null && !Number.isFinite(Date.parse(entry.at))) return undefined
+  if (!Object.prototype.hasOwnProperty.call(systemStatuses, entry.status)) return undefined
+  if (!['Not Tested', 'Isolated Application Test (fictional records; identity/provider fixtures)'].includes(entry.source)) return undefined
+  if (!stageIds.every(id => entry.stages[id] && ['Passed', 'Failed', 'Not Tested', 'Planned', 'Not Applicable'].includes(entry.stages[id].status))) return undefined
+  return entry
+}
+function completeWitness(entry?: WorkflowWitness) {
+  return entry?.status === 'connected' && Boolean(entry.at && Number.isFinite(Date.parse(entry.at))) && entry.source !== 'Not Tested' && stageIds.every(id => {
+    const stage = entry.stages[id]
+    return stage?.detail && (stage.status === 'Not Applicable' || stage.status === 'Passed' && entry.cases.some(test => test.id === `${entry.id}:${id}` && test.result === 'Passed' && test.evidence === 'scripts/workflow-evidence-cases.cjs'))
+  })
+}
+export const architectureConnections: ArchitectureConnection[] = connectionDefinitions.map(connection => {
+  const item = checked(connection), witness = witnessFor(connection.id)
+  const status: ConnectionStatus = item.status === 'unknown' ? 'unknown' : witness?.status === 'failed' ? 'failed' : completeWitness(witness) ? 'connected' : item.status === 'planned' ? 'planned' : 'partly_connected'
+  return { ...item, status, verification: witness, missingRequirement: witness?.remainingRequirement || '尚缺符合目前程式版本的逐條流程測試證據。' + item.missingRequirement, safeError: witness?.safeError || '測試證據尚未確認；請重新驗證，不要將畫面或設定存在當成連線成功。', lastTest: witness?.at ? { at: witness.at, command: 'isolated PostgreSQL: node scripts/test-software-connections.cjs', scope: witness.scope, source: witness.source, result: witness.status === 'failed' ? 'failed' : 'passed' } : null }
+})
+export const architectureComponents: Record<ComponentId, ArchitectureComponent> = Object.fromEntries(Object.entries(componentDefinitions).map(([id, component]) => {
+  const item = checked(component)
+  const related = architectureConnections.filter(connection => connection.from === id || connection.to === id)
+  const status = item.status === 'connected' && (!related.length || related.some(connection => connection.status !== 'connected')) ? 'partly_connected' : item.status
+  return [id, { ...item, status, lastTest: lastTest('component', id) }]
+})) as Record<ComponentId, ArchitectureComponent>
 export const architectureDiscovery = snapshot
 export const architectureWorkflows = [
+  { id: "integration-testing", name: "Architecture tests and signed receipt adapters", outcome: "Each adapter is receipt-only; simulations do not assert external success.", connections: ["test-center-access", "test-center-simulation", "test-center-live", "adapter-scanner", "adapter-sms", "adapter-voice", "adapter-learning", "adapter-storage", "adapter-measurements"] },
   {
     "id": "identity",
     "name": "登入、角色與後台存取",
-    "outcome": "本架構頁已具管理員檢查；其他後台頁與帳號管理仍須補齊。",
+    "outcome": "角色與後台拒絕案例獨立驗證；真實登入與外部帳號異動另需身分服務證據。",
     "connections": [
       "identity-session",
       "identity-role",
@@ -2824,7 +3081,7 @@ export const architectureWorkflows = [
   {
     "id": "clinical",
     "name": "預約轉病人、問卷與臨床照護",
-    "outcome": "預約可由人員明確連結病人，報到可為已連結預約建立待指派看診；草稿寫入已接線，臨床簽核與帳務未完成。",
+    "outcome": "開發環境已具病人連結、草稿、簽核、治療與帳務紀錄；逐條驗證持久化、接收畫面與稽核，正式臨床寫入仍停用。",
     "connections": [
       "booking-patient",
       "patient-entry",
@@ -2887,7 +3144,7 @@ export const architectureWorkflows = [
   {
     "id": "infrastructure",
     "name": "期末部署：Ubuntu 主機與資料庫伺服器",
-    "outcome": "目前僅有本機資料庫模型；兩個期末部署元件與三條連線均保持規劃中。",
+    "outcome": "Ubuntu 已部署；唯讀健康與欄位觀察分開顯示，不當作業務寫入、完整流程或已執行遷移的證據。",
     "connections": [
       "ubuntu-application",
       "ubuntu-database",

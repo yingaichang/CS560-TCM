@@ -47,6 +47,7 @@ try {
     '@/data/kioskConnectionVerification.json': original,
     '@/data/architectureStatusVerification.json': JSON.parse(fs.readFileSync('src/data/architectureStatusVerification.json', 'utf8')),
     '@/data/softwareConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')),
+    '@/data/workflowConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/workflowConnectionVerification.json', 'utf8')),
     '@/data/architectureStatusSnapshot.json': JSON.parse(fs.readFileSync('src/data/architectureStatusSnapshot.json', 'utf8')),
   })
   const View = load('src/components/admin/ArchitectureMap.tsx', {
@@ -64,7 +65,8 @@ try {
   assert.ok(kioskCard(html).includes('簡訊替身拒收'))
   assert.ok(kioskCard(html).includes('src/app/kiosk/page.tsx:'))
   for (const id of ['kiosk-request', 'kiosk-save', 'kiosk-sms', 'kiosk-audit']) {
-    assert.ok(html.split(`id="connection-${id}"`)[1].split('</article>')[0].includes(`dateTime="${original.at}"`))
+    const row = html.split(`id="connection-${id}"`)[1].split('id="connection-')[0]
+    assert.ok(!row.includes(`dateTime="${original.at}"`), 'A batch kiosk report must not overwrite independent connection evidence')
   }
   const newer = { ...original, at: new Date(Date.parse(original.at) + 1000).toISOString() }
   writeReport(temporary, newer)

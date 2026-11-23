@@ -32,6 +32,7 @@ async function main() {
     '@/data/architectureStatusVerification.json': verification,
     '@/data/softwareConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')),
     '@/data/kioskConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8')),
+    '@/data/workflowConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/workflowConnectionVerification.json', 'utf8')),
     '@/data/architectureStatusSnapshot.json': JSON.parse(fs.readFileSync('src/data/architectureStatusSnapshot.json', 'utf8')),
   })
   const ArchitectureMap = load('src/components/admin/ArchitectureMap.tsx', {
@@ -58,7 +59,8 @@ async function main() {
     if (item.status === 'failed') assert.ok(item.safeError, 'Failures must provide a safe error message')
     if (item.lastTest) {
       assert.ok(!Number.isNaN(Date.parse(item.lastTest.at)))
-      assert.ok([verification.at, JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8')).at, JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')).at].includes(item.lastTest.at))
+      const workflowTimes = JSON.parse(fs.readFileSync('src/data/workflowConnectionVerification.json', 'utf8')).connections.map(c => c.at)
+      assert.ok([verification.at, JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8')).at, JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')).at, ...workflowTimes].includes(item.lastTest.at))
       assert.ok(item.lastTest.command && item.lastTest.scope)
     }
   }
@@ -69,6 +71,7 @@ async function main() {
     '@/data/softwareConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/softwareConnectionVerification.json', 'utf8')),
     '@/data/kioskConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/kioskConnectionVerification.json', 'utf8')),
     '@/data/architectureStatusVerification.json': verification,
+    '@/data/workflowConnectionVerification.json': JSON.parse(fs.readFileSync('src/data/workflowConnectionVerification.json', 'utf8')),
     '@/data/architectureStatusSnapshot.json': { generatedAt: null, evidence: {}, routes: [], connections: [] },
   })
   assert.equal(withoutEvidence.architectureComponents.bookingApi.status, 'unknown', 'Missing evidence must downgrade connected components')
