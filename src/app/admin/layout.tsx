@@ -2,12 +2,15 @@ import React from 'react'
 import ClerkAuthControls from '../../components/ClerkAuthControls'
 import AdminSidebar from '../../components/AdminSidebar'
 import { canViewArchitectureStatus } from '@/lib/architectureStatusAccess'
+import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
+import { notFound } from 'next/navigation'
 
 export const metadata = {
   title: '診所管理系統',
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  if (!(await authorizeEhrRequest(['admin', 'clinic_staff']))) notFound()
   const showDevelopment = await canViewArchitectureStatus()
 
   return (
