@@ -79,13 +79,17 @@ async function inspect(): Promise<SystemConnectionReport> {
       const port = Number(process.env.SMTP_PORT || 465)
       const transporter = nodemailer.createTransport({ host, port, secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : port === 465, auth: { user, pass }, connectionTimeout: 5000, greetingTimeout: 5000, socketTimeout: 5000 })
       try { await transporter.verify(); return passed('SMTP 連線及登入驗證成功；本次未寄出郵件，不代表實際收件成功。') }
+      catch (error) {
+        const code = (error as { code?: string }).code
+        return failed(code === 'EAUTH' ? 'SMTP 伺服器拒絕登入；請更新帳號及供應商應用程式密碼。' : code === 'ETIMEDOUT' ? 'SMTP 連線逾時；請確認供應商主機、連接埠及網路存取。' : 'SMTP 連線驗證失敗；請檢查供應商及 TLS 設定。')
+      }
       finally { transporter.close() }
     }, 'SMTP 連線或登入驗證失敗；未寄出郵件或顯示憑證。'),
     check('stripe', 'Stripe 付款 API', async () => {
       if (!process.env.STRIPE_SECRET_KEY) return incomplete('缺少 Stripe 伺服器金鑰。')
       const response = await get('https://api.stripe.com/v1/balance', { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` })
       await response.arrayBuffer()
-      return response.status === 200 ? passed(`${process.env.STRIPE_SECRET_KEY.startsWith('sk_test_') ? '測試模式' : '正式模式'} Stripe 唯讀 API 成功；未建立付款或收費。`) : failed('Stripe API 未接受連線或金鑰；未顯示付款資料。')
+      return response.status === 200 ? passed(`${process.env.STRIPE_SECRET_KEY.startsWith('sk_test_') ? '測試模式' : '正式模式'} Stripe 唯讀 API 成功；未建立付款或收費。`) : failed(response.status === 401 ? 'Stripe 拒絕目前金鑰；請更新有效的伺服器金鑰。' : response.status === 403 ? 'Stripe 金鑰缺少唯讀 API 權限；請確認金鑰權限。' : 'Stripe API 未接受連線；未顯示付款資料。')
     }, 'Stripe API 無法連線或逾時。'),
     check('stripeWebhook', 'Stripe 付款回呼', async () => process.env.STRIPE_WEBHOOK_SECRET
       ? incomplete('簽章設定存在；仍須驗證供應商向目前公開網址投遞事件及重送。')
