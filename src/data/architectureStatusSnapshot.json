@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T18:04:25.759Z",
+  "generatedAt": "2026-11-23T18:26:06.811Z",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
