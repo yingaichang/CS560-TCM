@@ -12,8 +12,8 @@ function StatusBadge({ status }: { status: ConnectionStatus }) {
 }
 
 function EvidenceList({ evidence }: { evidence: Evidence[] }) {
-  return <ul className="space-y-2 text-sm leading-6 text-gray-600">{evidence.map(item => (
-    <li key={`${item.path}-${item.symbol}`}>
+  return <ul className="space-y-2 text-sm leading-6 text-gray-600">{evidence.map((item, index) => (
+    <li key={`${item.path}-${item.symbol}-${index}`}>
       <span className="font-medium text-gray-900">安全來源參照：</span><code className="break-all rounded bg-gray-50 px-1.5 py-0.5">{item.path}:{item.line > 0 ? item.line : '待確認'}</code>
       <p className="mt-1">查核類型：{item.kind === 'plan' ? '期末部署需求文件' : '程式碼路徑'}。不展示原始碼內容或日誌。</p>
     </li>
