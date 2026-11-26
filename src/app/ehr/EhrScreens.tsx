@@ -3,7 +3,6 @@
 import { chineseText } from '@/lib/chinese'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import {
   AudioLines, CalendarClock, Check, FilePlus2, Plus, Search, ShieldCheck,
@@ -12,6 +11,7 @@ import { medicalConditions, symptomGroups } from '@/lib/ehr/catalog'
 import type { DemoPatient } from '@/lib/ehr/demoPatients'
 import EncounterQueueScreen from './EncounterQueueScreen'
 import WorkflowScreen from './WorkflowScreen'
+import PatientIntakeForm from '@/components/admin/PatientIntakeForm'
 
 function DemoBanner({ children = 'Synthetic development records only. Do not enter real patient information.' }: { children?: string }) {
   return <div className="ehr-demo-banner"><ShieldCheck aria-hidden="true" />{chineseText(children)}</div>
@@ -350,49 +350,9 @@ export function PatientRecordRoute({ id }: { id: string }) {
 }
 
 export function NewPatientScreen() {
-  const submissionKeys = useRef(new Map<string, string>())
-  const router = useRouter()
-  const [message, setMessage] = useState('')
-  const [busy, setBusy] = useState(false)
-
-  async function createPatient(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setBusy(true)
-    setMessage('')
-    const raw = Object.fromEntries(new FormData(event.currentTarget).entries())
-    const payload = Object.fromEntries(Object.entries(raw).map(([key, value]) => [key, value === '' ? undefined : value]))
-    try {
-      const signature = JSON.stringify(payload)
-      const key = submissionKeys.current.get(signature) || crypto.randomUUID()
-      submissionKeys.current.set(signature, key)
-      const response = await fetch('/api/ehr/patients', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: signature })
-      const result = await response.json()
-      if (!response.ok) {
-        setMessage(result.error ?? 'Unable to create patient.')
-        return
-      }
-      router.push(`/ehr/patients/${encodeURIComponent(result.patient.id)}`)
-    } catch {
-      setMessage('Unable to reach the development EHR API.')
-    } finally {
-      setBusy(false)
-    }
-  }
-
   return <>
-    <PageHeading eyebrow="病人建檔" title="新增病人" description="建立病人基本資料，臨床資料另於初診問卷中收集。" action={<Link className="ehr-button ehr-button-light" href="/ehr/patients">返回病人清單</Link>} />
+    <PageHeading eyebrow="Patient registration" title="Patient Intake Form" description="Complete the patient?s intake information for Traditional Chinese Medicine care." action={<Link className="ehr-button ehr-button-light" href="/ehr/patients">Back to Patients</Link>} />
     <DemoBanner />
-    <form onSubmit={createPatient}>
-      <section className="ehr-form-section"><h2>病人資料</h2><div className="ehr-form-grid">
-        <Field label="名字" name="firstName" /><Field label="中間名" name="middleName" />
-        <Field label="姓氏" name="lastName" /><Field label="出生日期" name="dateOfBirth" type="date" />
-        <Field label="性別" name="gender" options={['Female', 'Male', 'Non-binary', 'Prefer not to say', 'Other']} />
-        <Field label="偏好語言" name="preferredLanguage" options={['English', 'Mandarin', 'Cantonese', 'Other']} />
-        <Field label="電話" name="phone" type="tel" /><Field label="電子郵件" name="email" type="email" />
-        <Field label="地址" name="address" /><Field label="緊急聯絡人" name="emergencyContact" />
-        <Field label="關係" name="emergencyRelationship" /><Field label="緊急聯絡人電話" name="emergencyContactPhone" type="tel" />
-      </div></section>
-      <div className="ehr-form-actions"><span className="ehr-form-message" role="status">{chineseText(message)}</span><button className="ehr-button" type="submit" disabled={busy}>{busy ? 'Creating…' : <><Plus /> 新增病人</>}</button></div>
-    </form>
+    <PatientIntakeForm variant="ehr" />
   </>
 }

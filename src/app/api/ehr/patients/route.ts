@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { intakeSteps, fieldIsVisible, validateIntakeStep } from '@/lib/ehr/patientIntakeForm'
 import { authorizeEhrRequest } from '@/lib/ehrAuthorization'
 import { prisma } from '@/lib/prisma'
 import { writeAuditLog } from '@/lib/auditLog'
@@ -34,7 +35,16 @@ const patientInput = z.object({
   emergencyContactPhone: optionalPhone.optional(),
   emergencyContactEmail: z.email().optional().or(z.literal('')),
   requireCompleteProfile: z.boolean().optional(),
+  intake: z.record(z.string(), z.string().max(2000)).optional(),
 }).superRefine((data, context) => {
+  if (data.intake) {
+    const answers = { ...data.intake, ...Object.fromEntries(Object.entries(data).filter(([key]) => key !== 'intake' && key !== 'requireCompleteProfile')) } as Record<string, string>
+    for (let step = 0; step < intakeSteps.length; step++) {
+      for (const [field, message] of Object.entries(validateIntakeStep(step, answers))) {
+        context.addIssue({ code: 'custom', path: [field], message })
+      }
+    }
+  }
   if (!data.requireCompleteProfile) return
 
   const requiredFields = [
@@ -139,6 +149,9 @@ export async function POST(request: NextRequest) {
   }
 
   const data = parsed.data
+  // Persist only recognized, applicable answers alongside the validated profile.
+  const answers = data.intake ? { ...data.intake, ...Object.fromEntries(Object.entries(data).filter(([key]) => key !== 'intake' && key !== 'requireCompleteProfile')) } as Record<string, string> : null
+  const intake = answers ? Object.fromEntries(intakeSteps.flatMap(step => step.fields).filter(field => fieldIsVisible(field, answers)).map(field => [field.name, answers[field.name] || ''])) : null
   try {
     const result = await runSoftwareCommand(`patient-create:${actor.userId || actor.externalUserId}`, request.headers.get('idempotency-key'), data, async (transaction) => {
       const created = await transaction.patient.create({
@@ -152,6 +165,24 @@ export async function POST(request: NextRequest) {
           phone: data.phone || null,
           email: data.email || null,
           preferredLanguage: data.preferredLanguage || null,
+          ...(intake ? {
+            intakes: { create: {
+              completedAt: new Date(), majorComplaints: intake.majorComplaints,
+              onsetDate: intake.onsetDate ? new Date(intake.onsetDate + 'T00:00:00.000Z') : null,
+              frequency: intake.symptomFrequency, patientConcerns: intake.healthGoals,
+              previousProviders: intake.primaryProvider, signatureName: intake.signatureName,
+              signatureDate: new Date(intake.signatureDate + 'T00:00:00.000Z'),
+              additionalInformation: JSON.stringify({ form: 'patient-intake', version: 1, answers: intake }),
+            } },
+            medicalHistories: { create: [
+              { category: 'patient_reported', condition: 'Medical history', details: intake.medicalHistory },
+              { category: 'disease_surgery', condition: 'Surgeries, injuries, and hospitalizations', details: intake.surgeries },
+            ] },
+            lifestyleEntries: { create: [
+              { category: 'Sleep', notes: intake.sleep }, { category: 'Restricted diet', notes: intake.diet },
+              { category: 'Exercise', notes: intake.exercise }, { category: 'Other habits', notes: intake.substanceUse },
+            ] },
+          } : {}),
           profile: {
             create: {
               address: data.address || null,

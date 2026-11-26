@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-26T00:45:01.805Z",
-  "workflowSourceDigest": "2718e01715052d45941000c141bb838d3bd52c9944d6cfc7a3f120cc45e77f20",
+  "generatedAt": "2026-11-26T00:48:38.869Z",
+  "workflowSourceDigest": "3999bfbde53b7ea92b56b4a6f7b0006b8d53ddfeb05b7300b99a4f50a3426497",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
@@ -72,7 +72,7 @@
     },
     "src/app/api/ehr/patients/route.ts|NODE_ENV === production": {
       "valid": true,
-      "line": 116
+      "line": 126
     },
     "src/app/api/ehr/intakes/route.ts|NODE_ENV === production": {
       "valid": true,
@@ -164,7 +164,7 @@
     },
     "src/app/api/ehr/patients/route.ts|providerAccess": {
       "valid": true,
-      "line": 75
+      "line": 85
     },
     "src/app/admin/layout.tsx|authorizeEhrRequest layout role check": {
       "valid": true,
@@ -220,7 +220,7 @@
     },
     "src/app/api/ehr/patients/route.ts|patient.create / providerAccess": {
       "valid": true,
-      "line": 144
+      "line": 157
     },
     "src/app/api/ehr/intakes/route.ts|patientIntake.create / lifestyleEntry.upsert": {
       "valid": true,
@@ -757,14 +757,6 @@
       "path": "/api/ehr/intakes",
       "method": "POST",
       "handler": "src/app/api/ehr/intakes/route.ts",
-      "status": "partly_connected"
-    },
-    {
-      "caller": "src/app/ehr/EhrScreens.tsx",
-      "line": 368,
-      "path": "/api/ehr/patients",
-      "method": "POST",
-      "handler": "src/app/api/ehr/patients/route.ts",
       "status": "partly_connected"
     },
     {

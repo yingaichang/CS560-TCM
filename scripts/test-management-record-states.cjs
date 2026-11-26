@@ -18,6 +18,7 @@ async function renderDirectory(response) {
     '@/lib/chinese': { chineseText: value => value },
     '@/lib/ehr/catalog': { medicalConditions: [], symptomGroups: [] },
     './EncounterQueueScreen': { __esModule: true, default: () => null },
+    '@/components/admin/PatientIntakeForm': { __esModule: true, default: () => null },
     './WorkflowScreen': { __esModule: true, default: () => null },
   }
   try {
