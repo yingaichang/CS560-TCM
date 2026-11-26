@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-26T00:42:32.159Z",
-  "workflowSourceDigest": "90028e49de7f48d79b525d11e982ba27c47ded72732a33770490351d15edd152",
+  "generatedAt": "2026-11-26T00:44:02.887Z",
+  "workflowSourceDigest": "6348b293519b8986e306331373f8fdf7c48532af4ec9e98e255275c6ac6982d4",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
