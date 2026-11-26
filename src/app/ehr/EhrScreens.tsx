@@ -351,7 +351,7 @@ export function PatientRecordRoute({ id }: { id: string }) {
 
 export function NewPatientScreen() {
   return <>
-    <PageHeading eyebrow="Patient registration" title="Patient Intake Form" description="Complete the patient?s intake information for Traditional Chinese Medicine care." action={<Link className="ehr-button ehr-button-light" href="/ehr/patients">Back to Patients</Link>} />
+    <PageHeading eyebrow="病人建檔" title="病人初診資料表" description="請依序填寫中醫診所所需的病人初診資料。" action={<Link className="ehr-button ehr-button-light" href="/ehr/patients">返回病人清單</Link>} />
     <DemoBanner />
     <PatientIntakeForm variant="ehr" />
   </>

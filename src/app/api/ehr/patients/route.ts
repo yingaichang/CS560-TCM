@@ -175,8 +175,8 @@ export async function POST(request: NextRequest) {
               additionalInformation: JSON.stringify({ form: 'patient-intake', version: 1, answers: intake }),
             } },
             medicalHistories: { create: [
-              { category: 'patient_reported', condition: 'Medical history', details: intake.medicalHistory },
-              { category: 'disease_surgery', condition: 'Surgeries, injuries, and hospitalizations', details: intake.surgeries },
+              { category: 'patient_reported', condition: '既往與目前病史', details: intake.medicalHistory },
+              { category: 'disease_surgery', condition: '手術、受傷及住院紀錄', details: intake.surgeries },
             ] },
             lifestyleEntries: { create: [
               { category: 'Sleep', notes: intake.sleep }, { category: 'Restricted diet', notes: intake.diet },

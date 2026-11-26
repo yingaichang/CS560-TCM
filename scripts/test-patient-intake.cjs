@@ -24,7 +24,7 @@ assert.ok(validateIntakeStep(0, {...answers, dateOfBirth:'2025-02-30'}).dateOfBi
 assert.ok(validateIntakeStep(1, {...answers, email:'bad', phone:'123'}).email)
 assert.ok(validateIntakeStep(1, {...answers, phone:'123'}).phone)
 assert.ok(validateIntakeStep(7, {...answers, insuranceProvider:''}).insuranceProvider)
-assert.deepEqual(validateIntakeStep(7, {...answers, insuranceStatus:'Self-pay / no insurance', insuranceProvider:'', memberId:'', policyholder:''}), {})
+assert.deepEqual(validateIntakeStep(7, {...answers, insuranceStatus:'自費／無保險', insuranceProvider:'', memberId:'', policyholder:''}), {})
 assert.ok(validateIntakeStep(8, {...answers, privacyAcknowledged:'false'}).privacyAcknowledged)
 
 const states=[], refs=[]
@@ -39,14 +39,14 @@ function render() { cursor=0; refCursor=0; return Form({}) }
 function text() { return renderToStaticMarkup(render()) }
 const event={preventDefault(){}}
 async function main() {
-  assert.ok(text().includes('Patient Information'))
-  assert.ok(!text().includes('Contact’s full name'))
+  assert.ok(text().includes('病人基本資料'))
+  assert.ok(!text().includes('聯絡人姓名'))
   await render().props.onSubmit(event)
   assert.equal(states[0],0)
-  assert.ok(text().includes('This field is required.'))
+  assert.ok(text().includes('此欄位為必填。'))
   states[1]={...answers}
   for(let i=0;i<8;i++) { await render().props.onSubmit(event); assert.equal(states[0],i+1) }
-  assert.ok(text().includes('Save Patient'))
+  assert.ok(text().includes('儲存病人資料'))
   // Back retains answers.
   const tree=render(); tree.props.children.at(-1).props.children[0].props.onClick()
   assert.equal(states[0],7); assert.equal(states[1].firstName,answers.firstName)
@@ -59,7 +59,7 @@ async function main() {
   assert.equal(calls[0].intake.medications,answers.medications)
   global.fetch=async()=>({ok:true,json:async()=>({patient:{id:'synthetic',patientId:'SYN-001'}})})
   await render().props.onSubmit(event)
-  assert.ok(text().includes('All nine sections have been saved'))
+  assert.ok(text().includes('九個部分的資料皆已儲存'))
   global.fetch=original
   console.log('PASS: all nine validation steps, invalid dates/contact details, conditional insurance, consent, navigation, retained answers, save payload, retry, and success state.')
 }
