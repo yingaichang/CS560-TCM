@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-26T00:44:02.887Z",
-  "workflowSourceDigest": "6348b293519b8986e306331373f8fdf7c48532af4ec9e98e255275c6ac6982d4",
+  "generatedAt": "2026-11-26T00:45:01.805Z",
+  "workflowSourceDigest": "2718e01715052d45941000c141bb838d3bd52c9944d6cfc7a3f120cc45e77f20",
   "evidence": {
     "src/components/appointment/AppointmentForm.tsx|fetch /api/appointments": {
       "valid": true,
@@ -720,14 +720,6 @@
       "status": "partly_connected"
     },
     {
-      "caller": "src/app/admin/patients/new/page.tsx",
-      "line": 96,
-      "path": "/api/ehr/patients",
-      "method": "POST",
-      "handler": "src/app/api/ehr/patients/route.ts",
-      "status": "partly_connected"
-    },
-    {
       "caller": "src/app/admin/patients/page.tsx",
       "line": 33,
       "path": "/api/ehr/patients",
@@ -877,6 +869,14 @@
       "path": "/api/admin/development/architecture-tests",
       "method": "GET",
       "handler": "src/app/api/admin/development/architecture-tests/route.ts",
+      "status": "partly_connected"
+    },
+    {
+      "caller": "src/components/admin/PatientIntakeForm.tsx",
+      "line": 61,
+      "path": "/api/ehr/patients",
+      "method": "POST",
+      "handler": "src/app/api/ehr/patients/route.ts",
       "status": "partly_connected"
     },
     {
